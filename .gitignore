@@ -1,9 +1,10 @@
 .DS_Store
 /var/bootstrap.php.cache
-/var/cache/*
+#/var/cache/*
+/var/*
 !var/cache/.gitkeep
 /app/config/parameters.yml
-/var/logs/*
+#/var/logs/*
 !var/logs/.gitkeep
 /app/phpunit.xml
 /bin/
