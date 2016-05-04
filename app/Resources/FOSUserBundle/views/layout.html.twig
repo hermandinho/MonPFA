@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>{% block title %}Demo Application{% endblock %}</title>
+
+    {% block stylesheets %}
+        {% stylesheets '@PFAMainBundle/Resources/public/css/materialize.min.css' filter='cssrewrite' %}
+             <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock  %}
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+{% block javascripts %}
+    {% javascripts
+    '@PFAMainBundle/Resources/public/js/Jquery2.js'
+    '@PFAMainBundle/Resources/public/js/materialize.min.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+</body>
+</html>
+
+
+
+{% block content %}
+    {% block fos_user_content %}{% endblock %}
+{% endblock %}
