@@ -2,12 +2,60 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>PFA - {% block title %}Home{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        {% block stylesheets %}
+            <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            {% stylesheets
+                '@PFAMainBundle/Resources/public/css/materialize.min.css' filter='cssrewrite'
+            %}
+            <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
+            {% endstylesheets %}
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block body %}
+        {% endblock %}
+        {% block javascripts %}
+            {% javascripts
+            '@PFAMainBundle/Resources/public/js/Jquery2.js'
+            '@PFAMainBundle/Resources/public/js/materialize.min.js'
+            %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            {{ ws_client() }}
+
+            <script>
+                var _WS_URI = "ws://{{ gos_web_socket_server_host }}:{{ gos_web_socket_server_port }}";
+                var webSocket = WS.connect(_WS_URI);
+
+                webSocket.on("socket/connect", function (session) {
+                    //session is an Autobahn JS WAMP session.
+                    session.call("rpctest/test_func", {"term1": 2, "term2": 5}).then(
+                            function(result)
+                            {
+                                console.log("RPC Valid!", result);
+                            },
+                            function(error, desc)
+                            {
+                                console.log("RPC Error", error, desc);
+                            }
+                    );
+
+                    console.log("Successfully Connected!");
+                });
+
+                webSocket.on("socket/disconnect", function (error) {
+                    //error provides us with some insight into the disconnection: error.reason and error.code
+
+                    console.log("Disconnected for " + error.reason + " with code " + error.code);
+                });
+
+            </script>
+
+        {% endblock %}
     </body>
 </html>

@@ -79,3 +79,12 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: PFA\MainBundle\Entity\User
+
+#GOS Websocket
+gos_web_socket:
+    server:
+        port: "%websocket_port%"        #The port the socket server will listen on
+        host: "%websocket_host%"   #The host ip to bind to
+        router:
+            resources:
+                - '@PFAMainBundle/Resources/config/pubsub/routing.yml'
