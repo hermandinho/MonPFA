@@ -1,0 +1,7 @@
+pfa_rpc_main_test:
+    channel: rpctest/{method}
+    handler:
+        callback: 'pfa.main.rpc' #related to the getName() or your RPC service
+    requirements:
+        method:
+            pattern: "[a-z_]+" #accept all valid regex, don't put delimiters !
