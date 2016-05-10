@@ -1,6 +1,8 @@
+/.idea/workspace.xml
 # Created by .ignore support plugin (hsz.mobi)
 ### Symfony template
 
+/app/config/parameters.yml
 /.idea/
 # Email spool folder
 /app/spool/*
@@ -47,4 +49,3 @@
 
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
-

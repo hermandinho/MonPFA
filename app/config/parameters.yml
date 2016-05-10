@@ -9,6 +9,6 @@ parameters:
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    secret: ThisTokenIsNotSoSecretChangeIt
-    websocket_port: 1337
+    secret: 6ab3acaad1b3db1d6ae6b366e292c39b7784814f
     websocket_host: localhost
+    websocket_port: 1337
