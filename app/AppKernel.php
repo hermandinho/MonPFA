@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Gos\Bundle\PubSubRouterBundle\GosPubSubRouterBundle(),
             new PFA\MaillingBundle\PFAMaillingBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new PFA\CoreBundle\PFACoreBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

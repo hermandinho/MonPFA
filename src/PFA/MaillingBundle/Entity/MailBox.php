@@ -26,8 +26,7 @@ class MailBox extends BaseEntity
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", mappedBy="mailBox")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="mailBox")
      */
     private $owner;
 
