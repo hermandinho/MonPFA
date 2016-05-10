@@ -25,11 +25,9 @@ class User extends BaseUser
 
     /**
      * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", inversedBy="owner", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", inversedBy="owner")
      */
     private $mailBox;
-
-
 
     /**
      * User constructor.
@@ -49,28 +47,5 @@ class User extends BaseUser
     {
         return $this->id;
     }
-
-    /**
-     * Set mailBox
-     *
-     * @param \PFA\MaillingBundle\Entity\MailBox $mailBox
-     *
-     * @return User
-     */
-    public function setMailBox(\PFA\MaillingBundle\Entity\MailBox $mailBox = null)
-    {
-        $this->mailBox = $mailBox;
-
-        return $this;
-    }
-
-    /**
-     * Get mailBox
-     *
-     * @return \PFA\MaillingBundle\Entity\MailBox
-     */
-    public function getMailBox()
-    {
-        return $this->mailBox;
-    }
 }
+

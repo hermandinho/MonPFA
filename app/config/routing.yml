@@ -1,3 +1,8 @@
+pfa_mailling:
+    resource: "@PFAMaillingBundle/Controller/"
+    type:     annotation
+    prefix:   /mailbox
+
 pfa_main:
     resource: "@PFAMainBundle/Controller/"
     type:     annotation

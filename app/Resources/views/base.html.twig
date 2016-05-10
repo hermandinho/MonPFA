@@ -9,21 +9,76 @@
         {% block stylesheets %}
             <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             {% stylesheets
-                '@PFAMainBundle/Resources/public/css/materialize.min.css' filter='cssrewrite'
+                '@PFAMainBundle/Resources/public/css/materialize.min.css'
+                '@PFAMainBundle/Resources/public/css/pace.css'
+                filter='cssrewrite'
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
             {% endstylesheets %}
         {% endblock %}
+
+        {% block additional_stylesheets %}
+        {% endblock %}
     </head>
     <body>
 
-
         {% block body %}
         {% endblock %}
+        <div class="">
+            {% block body %}
+                <!-- Block Header -->
+                {% block header %}
+                    <header>
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a href="#!" class="brand-logo">Logo</a>
+                                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                                <ul class="right hide-on-med-and-down">
+                                    <li class="active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
+                                    <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
+                                    <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Messages"><i class="material-icons medium">message</i> </a></li>
+                                    <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
+                                    <li><a href="javascript:;" class="dropdown-button" data-activates='dropdown1'><i class="material-icons">more_vert</i></a></li>
+                                </ul>
+
+                                <ul id='dropdown1' class='dropdown-content'>
+                                    <li><a href="#!">one</a></li>
+                                    <li><a href="#!">two</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ path("fos_user_security_logout") }}">Déconnexion</a></li>
+                                </ul>
+
+                                <ul class="side-nav" id="mobile-demo">
+                                    <li><a href="sass.html">Sass</a></li>
+                                    <li><a href="badges.html">Components</a></li>
+                                    <li><a href="collapsible.html">Javascript</a></li>
+                                    <li><a href="mobile.html">Mobile</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </header>
+                {% endblock %}
+                <!-- End Block Header -->
+
+                <!-- Block Content -->
+                {% block content %}
+
+                {% endblock %}
+                <!-- Block Content -->
+
+                <!-- Block Footer -->
+                {% block footer %}
+
+                {% endblock %}
+                <!-- Block Footer -->
+            {% endblock %}
+        </div>
+
         {% block javascripts %}
             {% javascripts
             '@PFAMainBundle/Resources/public/js/Jquery2.js'
             '@PFAMainBundle/Resources/public/js/materialize.min.js'
+            '@PFAMainBundle/Resources/public/js/pace.js'
             %}
             <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
@@ -55,9 +110,14 @@
 
                     console.log("Disconnected for " + error.reason + " with code " + error.code);
                 });
-
+                $(document).ready(function () {
+                    $(".button-collapse").sideNav();
+                })
             </script>
 
+        {% endblock %}
+
+        {% block additional_javascripts %}
         {% endblock %}
     </body>
 </html>
