@@ -4,6 +4,7 @@ namespace PFA\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use PFA\CoreBundle\Entity\ForumInteractions;
 use PFA\MaillingBundle\Entity\MailBox;
 
 /**
@@ -25,9 +26,16 @@ class User extends BaseUser
 
     /**
      * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", inversedBy="owner", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", mappedBpy="owner", orphanRemoval=true)
      */
     private $mailBox;
+
+    /**
+     * @var ForumInteractions
+     * 
+     * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\ForumInteractions", mappedBy="owner")
+     */
+    private $forumInteraction;
 
 
 
@@ -72,5 +80,29 @@ class User extends BaseUser
     public function getMailBox()
     {
         return $this->mailBox;
+    }
+
+    /**
+     * Set forumInteraction
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractions $forumInteraction
+     *
+     * @return User
+     */
+    public function setForumInteraction(\PFA\CoreBundle\Entity\ForumInteractions $forumInteraction = null)
+    {
+        $this->forumInteraction = $forumInteraction;
+
+        return $this;
+    }
+
+    /**
+     * Get forumInteraction
+     *
+     * @return \PFA\CoreBundle\Entity\ForumInteractions
+     */
+    public function getForumInteraction()
+    {
+        return $this->forumInteraction;
     }
 }

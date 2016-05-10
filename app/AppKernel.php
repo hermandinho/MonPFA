@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new PFA\MaillingBundle\PFAMaillingBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
+            new PFA\CoreBundle\PFACoreBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
