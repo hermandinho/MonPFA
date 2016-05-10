@@ -89,3 +89,32 @@ gos_web_socket:
         router:
             resources:
                 - '@PFAMainBundle/Resources/config/pubsub/routing.yml'
+
+
+#CK Editor
+ivory_ck_editor:
+    enable: true
+    autoload: true
+    default_config: my_config
+    toolbars:
+        configs:
+            document_template: [ "@tb1", "@tb2", "@tb3", "@tb4", "@tb5", "@tb10", "@tb11", "/", "@tb6", "@tb7", "@tb8", "@tb9" ]
+        items:
+            tb1: ['Source', '-', 'NewPage', 'Preview', 'Print', '-', 'Templates']
+            tb2: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            tb3: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
+            tb4: ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'SelectField', 'Button', 'ImageButton', 'HiddenField']
+            tb5: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            tb6: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',]
+            tb7: ['Link', 'Unlink', 'Anchor']
+            tb8: ['Image', 'FLash', 'Table', 'HorizontalRule', 'SpecialChar', 'Smiley', 'PageBreak', 'Iframe']
+            tb9: ['Styles', 'Format', 'Font', 'FontSize', 'TextColor', 'BGColor']
+            tb10: ['Maximize', 'ShowBlocks']
+            tb11: ['Variables']
+    configs:
+        my_config:
+            #toolbar: [ ["Source", "-", "Save"], "/", ["Anchor"], "/", ["Maximize"] ]
+            toolbar: document_template
+            #uiColor:                "#000000"
+            filebrowserUploadRoute: "mailbox_home"
+            #extraPlugins:           "wordcount"
