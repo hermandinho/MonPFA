@@ -9,8 +9,9 @@
         {% block stylesheets %}
             <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             {% stylesheets
-                '@PFAMainBundle/Resources/public/css/materialize.min.css'
-                '@PFAMainBundle/Resources/public/css/pace.css'
+                '@PFACoreBundle/Resources/public/css/materialize.min.css'
+                '@PFACoreBundle/Resources/public/css/pace.css'
+                '@PFACoreBundle/Resources/public/css/ladda.min.css'
                 filter='cssrewrite'
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
@@ -22,8 +23,6 @@
     </head>
     <body>
 
-        {% block body %}
-        {% endblock %}
         <div class="">
             {% block body %}
                 <!-- Block Header -->
@@ -76,10 +75,14 @@
 
         {% block javascripts %}
             {% javascripts
-            '@PFAMainBundle/Resources/public/js/Jquery2.js'
-            '@PFAMainBundle/Resources/public/js/materialize.min.js'
-            '@PFAMainBundle/Resources/public/js/Global.js'
-            '@PFAMainBundle/Resources/public/js/pace.js'
+            '@PFACoreBundle/Resources/public/js/Jquery2.js'
+            '@PFACoreBundle/Resources/public/js/react-with-addons.js'
+            '@PFACoreBundle/Resources/public/js/spin.min.js'
+            '@PFACoreBundle/Resources/public/js/ladda.min.js'
+            '@PFACoreBundle/Resources/public/js/react-dom.js'
+            '@PFACoreBundle/Resources/public/js/materialize.min.js'
+            '@PFACoreBundle/Resources/public/js/ReactMaterializeComponents.js'
+            '@PFACoreBundle/Resources/public/js/pace.js'
             %}
                 <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
