@@ -26,7 +26,7 @@ class User extends BaseUser
 
     /**
      * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", mappedBpy="owner", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", mappedBy="owner", orphanRemoval=true)
      */
     private $mailBox;
 

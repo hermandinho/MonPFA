@@ -78,16 +78,17 @@
             '@PFAMainBundle/Resources/public/js/react-with-addons.js'
             '@PFAMainBundle/Resources/public/js/react-dom.js'
             '@PFAMainBundle/Resources/public/js/materialize.min.js'
+            '@PFAMainBundle/Resources/public/js/Global.js'
             '@PFAMainBundle/Resources/public/js/pace.js'
             %}
-            <script src="{{ asset_url }}"></script>
+                <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
 
             {{ ws_client() }}
 
             <script>
                 var _WS_URI = "ws://{{ gos_web_socket_server_host }}:{{ gos_web_socket_server_port }}";
-                var webSocket = WS.connect(_WS_URI);
+                /*var webSocket = WS.connect(_WS_URI);
 
                 webSocket.on("socket/connect", function (session) {
                     //session is an Autobahn JS WAMP session.
@@ -112,7 +113,7 @@
                 });
                 $(document).ready(function () {
                     $(".button-collapse").sideNav();
-                })
+                })*/
             </script>
 
         {% endblock %}
