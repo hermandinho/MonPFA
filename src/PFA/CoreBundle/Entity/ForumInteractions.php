@@ -39,6 +39,8 @@ class ForumInteractions extends BaseEntity
 
     /**
      * @var ForumInteractions
+     *
+     * @ORM\Column(name="parent", type="integer", nullable=true)
      */
     private $parent = null;
 
@@ -161,5 +163,29 @@ class ForumInteractions extends BaseEntity
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param integer $parent
+     *
+     * @return ForumInteractions
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return integer
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

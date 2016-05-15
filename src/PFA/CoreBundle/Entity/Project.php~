@@ -4,6 +4,7 @@ namespace PFA\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use PFA\MainBundle\Entity\BaseEntity;
+use PFA\MainBundle\Entity\ChatRoom;
 
 /**
  * Project
@@ -56,6 +57,13 @@ class Project extends BaseEntity
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\Forum", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $forum;
+
+    /**
+     * @var ChatRoom
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"}, orphanRemoval=true)
+     *
+     */
+    private $chatRoom;
 
     /**
      * Get id

@@ -1,19 +1,16 @@
 <?php
 
-namespace PFA\MaillingBundle\Entity;
+namespace PFA\MainBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use PFA\MainBundle\Entity\BaseEntity;
-use PFA\MainBundle\Entity\User;
 
 /**
- * Mail
+ * ChatRoomMessages
  *
- * @ORM\Table(name="mail")
- * @ORM\Entity(repositoryClass="PFA\MaillingBundle\Repository\MailRepository")
+ * @ORM\Table(name="chat_room_messages")
+ * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\ChatRoomMessagesRepository")
  */
-class Mail extends BaseEntity
+class ChatRoomMessages extends BaseEntity
 {
     /**
      * @var int
@@ -27,16 +24,22 @@ class Mail extends BaseEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="subject", type="string", length=255)
+     * @ORM\Column(name="content", type="text")
      */
-    private $subject;
+    private $content;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="body", type="text")
+     * @ORM\Column(name="date", type="datetime")
      */
-    private $body;
+    private $date;
+
+    /**
+     * @var ChatRoom
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"})
+     */
+    private $chatRoom;
 
     /**
      * @var bool
@@ -59,17 +62,6 @@ class Mail extends BaseEntity
      */
     private $receiver;
 
-    /**
-     * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", cascade={"persist","remove"})
-     */
-    private $mailBox;
-
-    /**
-     * @var ArrayCollection
-     * @ORM\Column(name="attachements", type="json_array", nullable=true)
-     */
-    private $attachements;
 
     /**
      * Get id
@@ -82,51 +74,75 @@ class Mail extends BaseEntity
     }
 
     /**
-     * Set subject
+     * Set content
      *
-     * @param string $subject
+     * @param string $content
      *
-     * @return Mail
+     * @return ChatRoomMessages
      */
-    public function setSubject($subject)
+    public function setContent($content)
     {
-        $this->subject = $subject;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get subject
+     * Get content
      *
      * @return string
      */
-    public function getSubject()
+    public function getContent()
     {
-        return $this->subject;
+        return $this->content;
     }
 
     /**
-     * Set body
+     * Set date
      *
-     * @param string $body
+     * @param \DateTime $date
      *
-     * @return Mail
+     * @return ChatRoomMessages
      */
-    public function setBody($body)
+    public function setDate($date)
     {
-        $this->body = $body;
+        $this->date = $date;
 
         return $this;
     }
 
     /**
-     * Get body
+     * Get date
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getBody()
+    public function getDate()
     {
-        return $this->body;
+        return $this->date;
+    }
+
+    /**
+     * Set chatRoom
+     *
+     * @param \PFA\MainBundle\Entity\ChatRoom $chatRoom
+     *
+     * @return ChatRoomMessages
+     */
+    public function setChatRoom(\PFA\MainBundle\Entity\ChatRoom $chatRoom = null)
+    {
+        $this->chatRoom = $chatRoom;
+
+        return $this;
+    }
+
+    /**
+     * Get chatRoom
+     *
+     * @return \PFA\MainBundle\Entity\ChatRoom
+     */
+    public function getChatRoom()
+    {
+        return $this->chatRoom;
     }
 
     /**
@@ -134,7 +150,7 @@ class Mail extends BaseEntity
      *
      * @param boolean $isRead
      *
-     * @return Mail
+     * @return ChatRoomMessages
      */
     public function setIsRead($isRead)
     {
@@ -146,7 +162,7 @@ class Mail extends BaseEntity
     /**
      * Get isRead
      *
-     * @return bool
+     * @return boolean
      */
     public function getIsRead()
     {
@@ -158,7 +174,7 @@ class Mail extends BaseEntity
      *
      * @param \PFA\MainBundle\Entity\User $sender
      *
-     * @return Mail
+     * @return ChatRoomMessages
      */
     public function setSender(\PFA\MainBundle\Entity\User $sender = null)
     {
@@ -182,7 +198,7 @@ class Mail extends BaseEntity
      *
      * @param \PFA\MainBundle\Entity\User $receiver
      *
-     * @return Mail
+     * @return ChatRoomMessages
      */
     public function setReceiver(\PFA\MainBundle\Entity\User $receiver = null)
     {
@@ -199,29 +215,5 @@ class Mail extends BaseEntity
     public function getReceiver()
     {
         return $this->receiver;
-    }
-
-    /**
-     * Set mailBox
-     *
-     * @param \PFA\MaillingBundle\Entity\MailBox $mailBox
-     *
-     * @return Mail
-     */
-    public function setMailBox(\PFA\MaillingBundle\Entity\MailBox $mailBox = null)
-    {
-        $this->mailBox = $mailBox;
-
-        return $this;
-    }
-
-    /**
-     * Get mailBox
-     *
-     * @return \PFA\MaillingBundle\Entity\MailBox
-     */
-    public function getMailBox()
-    {
-        return $this->mailBox;
     }
 }

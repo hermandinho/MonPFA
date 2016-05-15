@@ -2,6 +2,7 @@
 
 namespace PFA\CoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use PFA\MainBundle\Entity\BaseEntity;
 
@@ -28,6 +29,13 @@ class ShareZone extends BaseEntity
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\Project", mappedBy="ressources", orphanRemoval=true)
      */
     private $project;
+
+    /**
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\Documents", mappedBy="shareZone")
+     */
+    private $documents;
 
 
     /**
@@ -62,5 +70,46 @@ class ShareZone extends BaseEntity
     public function getProject()
     {
         return $this->project;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add document
+     *
+     * @param \PFA\MainBundle\Entity\Documents $document
+     *
+     * @return ShareZone
+     */
+    public function addDocument(\PFA\MainBundle\Entity\Documents $document)
+    {
+        $this->documents[] = $document;
+
+        return $this;
+    }
+
+    /**
+     * Remove document
+     *
+     * @param \PFA\MainBundle\Entity\Documents $document
+     */
+    public function removeDocument(\PFA\MainBundle\Entity\Documents $document)
+    {
+        $this->documents->removeElement($document);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 }

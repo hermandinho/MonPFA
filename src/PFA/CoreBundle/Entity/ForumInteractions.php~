@@ -39,6 +39,8 @@ class ForumInteractions extends BaseEntity
 
     /**
      * @var ForumInteractions
+     *
+     * @ORM\Column(name="parent", type="integer", nullable=true)
      */
     private $parent = null;
 

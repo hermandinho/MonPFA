@@ -2,6 +2,7 @@
 
 namespace PFA\MaillingBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use PFA\MainBundle\Entity\BaseEntity;
 use PFA\MainBundle\Entity\User;
@@ -57,6 +58,18 @@ class Mail extends BaseEntity
      * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
      */
     private $receiver;
+
+    /**
+     * @var MailBox
+     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", cascade={"persist","remove"})
+     */
+    private $mailBox;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\Column(name="attachements", type="json_array", nullable=true)
+     */
+    private $attachements;
 
     /**
      * Get id
@@ -186,5 +199,53 @@ class Mail extends BaseEntity
     public function getReceiver()
     {
         return $this->receiver;
+    }
+
+    /**
+     * Set mailBox
+     *
+     * @param \PFA\MaillingBundle\Entity\MailBox $mailBox
+     *
+     * @return Mail
+     */
+    public function setMailBox(\PFA\MaillingBundle\Entity\MailBox $mailBox = null)
+    {
+        $this->mailBox = $mailBox;
+
+        return $this;
+    }
+
+    /**
+     * Get mailBox
+     *
+     * @return \PFA\MaillingBundle\Entity\MailBox
+     */
+    public function getMailBox()
+    {
+        return $this->mailBox;
+    }
+
+    /**
+     * Set attachements
+     *
+     * @param array $attachements
+     *
+     * @return Mail
+     */
+    public function setAttachements($attachements)
+    {
+        $this->attachements = $attachements;
+
+        return $this;
+    }
+
+    /**
+     * Get attachements
+     *
+     * @return array
+     */
+    public function getAttachements()
+    {
+        return $this->attachements;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace PFA\MainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use FOS\UserBundle\Model\User as BaseUser;
 use PFA\CoreBundle\Entity\ForumInteractions;
 use PFA\MaillingBundle\Entity\MailBox;
@@ -37,6 +39,24 @@ class User extends BaseUser
      */
     private $forumInteraction;
 
+    /**
+     * @var Calender
+     *
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
+     */
+    private $calender;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="PFA\CoreBundle\Entity\Project")
+     * @ORM\JoinTable(name="project_members",
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="project_id", referencedColumnName="id")}
+     * )
+     *
+     */
+    private $projects;
+
 
 
     /**
@@ -45,6 +65,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->projects = new ArrayCollection();
     }
 
 
@@ -104,5 +125,63 @@ class User extends BaseUser
     public function getForumInteraction()
     {
         return $this->forumInteraction;
+    }
+
+    /**
+     * Set calender
+     *
+     * @param \PFA\MainBundle\Entity\Calender $calender
+     *
+     * @return User
+     */
+    public function setCalender(\PFA\MainBundle\Entity\Calender $calender = null)
+    {
+        $this->calender = $calender;
+
+        return $this;
+    }
+
+    /**
+     * Get calender
+     *
+     * @return \PFA\MainBundle\Entity\Calender
+     */
+    public function getCalender()
+    {
+        return $this->calender;
+    }
+
+    /**
+     * Add project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     *
+     * @return User
+     */
+    public function addProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects[] = $project;
+
+        return $this;
+    }
+
+    /**
+     * Remove project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     */
+    public function removeProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects->removeElement($project);
+    }
+
+    /**
+     * Get projects
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjects()
+    {
+        return $this->projects;
     }
 }

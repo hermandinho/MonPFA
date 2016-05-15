@@ -2,8 +2,11 @@
 
 namespace PFA\CoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use PFA\MainBundle\Entity\BaseEntity;
+use PFA\MainBundle\Entity\Calender;
+use PFA\MainBundle\Entity\ChatRoom;
 
 /**
  * Project
@@ -56,6 +59,27 @@ class Project extends BaseEntity
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\Forum", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $forum;
+
+    /**
+     * @var ChatRoom
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"}, orphanRemoval=true)
+     *
+     */
+    private $chatRoom;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\User")
+     *
+     */
+    //private $members;
+
+    /**
+     * @var Calender
+     *
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
+     */
+    private $calender;
 
     /**
      * Get id
@@ -185,5 +209,29 @@ class Project extends BaseEntity
     public function getForum()
     {
         return $this->forum;
+    }
+
+    /**
+     * Set chatRoom
+     *
+     * @param \PFA\MainBundle\Entity\ChatRoom $chatRoom
+     *
+     * @return Project
+     */
+    public function setChatRoom(\PFA\MainBundle\Entity\ChatRoom $chatRoom = null)
+    {
+        $this->chatRoom = $chatRoom;
+
+        return $this;
+    }
+
+    /**
+     * Get chatRoom
+     *
+     * @return \PFA\MainBundle\Entity\ChatRoom
+     */
+    public function getChatRoom()
+    {
+        return $this->chatRoom;
     }
 }
