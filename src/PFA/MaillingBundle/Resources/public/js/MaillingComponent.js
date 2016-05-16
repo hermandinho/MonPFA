@@ -52,13 +52,11 @@ var MaillingComponent = (function () {
         },
         
         render: function () {
-            var data = this.props.data || this.state.data,
-                folders = this.props.folders;
+            var data = this.props.data || this.state.data;
             var $this = this;
-            /*var folders = folders.map(function (item, i) {
+            var folders = data.map(function (item, i) {
                 return item.folder;
-            });*/
-
+            });
             var buildFolders = folders.map(function (item, i) {
                 var unreadMails = data.filter(function (elt,j) {
                     return item.name == elt.folder.name && elt.is_read == false;
@@ -220,7 +218,8 @@ var MaillingComponent = (function () {
                     React.createElement(
                         EmailsList,
                         {
-                            data: this.state.selectedFolderContent
+                            data: this.state.selectedFolderContent,
+                            handleFolderRowClick: this.handleFolderRowClick
                         }
                     )
                 )
