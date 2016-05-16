@@ -38,6 +38,6 @@ class MailFolderManager
      */
     public function getUserFolders(User $user)
     {
-        return $this->em->getRepository("PFAMaillingBundle:MailFolder");
+        return $this->em->getRepository("PFAMaillingBundle:MailFolder")->getUserFolders($user);
     }
 }
