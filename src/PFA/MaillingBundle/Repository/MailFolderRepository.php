@@ -1,6 +1,7 @@
 <?php
 
 namespace PFA\MaillingBundle\Repository;
+use PFA\MainBundle\Entity\User;
 
 /**
  * MailFolderRepository
@@ -10,4 +11,12 @@ namespace PFA\MaillingBundle\Repository;
  */
 class MailFolderRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getUserFolders(User $user)
+    {
+        $query = $this->createQueryBuilder("f")
+                ->where("f.owner = :owner")
+                ->setParameter("owner", $user)
+                ->getQuery();
+        return $query->getArrayResult();
+    }
 }

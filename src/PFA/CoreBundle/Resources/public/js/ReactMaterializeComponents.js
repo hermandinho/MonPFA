@@ -229,7 +229,7 @@ var FloatingAction = React.createClass({
     }
 });
 
-ReactDOM.render(React.createElement(Button,{ color: "red",btnType: "btn-flat",title:'Hello boss', iconSide: "right", isEnabled: false, icon: "send", text: "GO", onClick: function () {
+/*ReactDOM.render(React.createElement(Button,{ color: "red",btnType: "btn-flat",title:'Hello boss', iconSide: "right", isEnabled: false, icon: "send", text: "GO", onClick: function () {
     console.log("Hello");
 } }), document.getElementById("textZone"));
 
@@ -237,4 +237,4 @@ ReactDOM.render(React.createElement(FloatingButton, { FABEvent: "click-to-toggle
     actions: [{icon: 'add', color: 'blue'},{icon: 'attach_file', color: 'green',onClick: function () {
         console.log("Hello !!! ");
     }  }]
-}), document.getElementById("textFloatingZone"));
+}), document.getElementById("textFloatingZone")); */

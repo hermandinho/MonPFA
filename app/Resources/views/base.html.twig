@@ -91,6 +91,10 @@
 
             <script>
                 var _WS_URI = "ws://{{ gos_web_socket_server_host }}:{{ gos_web_socket_server_port }}";
+
+                /************ ROUTES *****************/
+                var MAILLING_HOME_ROUTE = '{{ path("mail_box_data") }}';
+
                 /*var webSocket = WS.connect(_WS_URI);
 
                 webSocket.on("socket/connect", function (session) {

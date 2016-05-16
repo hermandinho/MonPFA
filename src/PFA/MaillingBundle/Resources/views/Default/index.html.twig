@@ -1,1 +1,13 @@
 {% extends "PFAMaillingBundle::layout.html.twig" %}
+
+{% block content %}
+    <div id="mail_Layout"></div>
+{% endblock %}
+
+{% block additional_javascripts %}
+    {% javascripts
+        "@PFAMaillingBundle/Resources/public/js/MaillingComponent.js"
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

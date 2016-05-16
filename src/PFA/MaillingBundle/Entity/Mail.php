@@ -47,21 +47,21 @@ class Mail extends BaseEntity
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", orphanRemoval=true,cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="sender", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User",cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="sender", referencedColumnName="id", unique=false)
      */
     private $sender;
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User",orphanRemoval=true, cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="receiver", referencedColumnName="id", unique=false)
      */
     private $receiver;
 
     /**
      * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", cascade={"persist","remove"})
      */
     private $mailBox;
 
@@ -70,6 +70,12 @@ class Mail extends BaseEntity
      * @ORM\Column(name="attachements", type="json_array", nullable=true)
      */
     private $attachements;
+
+    /**
+     * @var MailFolder
+     *@ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailFolder")
+     */
+    private $folder;
 
     /**
      * Get id
@@ -247,5 +253,29 @@ class Mail extends BaseEntity
     public function getAttachements()
     {
         return $this->attachements;
+    }
+
+    /**
+     * Set folder
+     *
+     * @param \PFA\MaillingBundle\Entity\MailFolder $folder
+     *
+     * @return Mail
+     */
+    public function setFolder(\PFA\MaillingBundle\Entity\MailFolder $folder = null)
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+
+    /**
+     * Get folder
+     *
+     * @return \PFA\MaillingBundle\Entity\MailFolder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
     }
 }
