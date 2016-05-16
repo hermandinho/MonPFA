@@ -1,5 +1,7 @@
 {% extends "::base.html.twig" %}
-
+{% block title %}
+    Méssagerie
+{% endblock %}
 {% block additional_stylesheets %}
     {% stylesheets
         '@PFAMaillingBundle/Resources/public/css/mailling_style.css'
@@ -12,7 +14,7 @@
 
     <div class="row">
         <!-- mail_filders -->
-        <div class="col s3" id="mail_filders">
+        <div class="col s3" id="mail_folders">
             <ul class="collection with-header">
                 <li class="collection-header"><h4>First Names</h4></li>
                 <li class="collection-item">

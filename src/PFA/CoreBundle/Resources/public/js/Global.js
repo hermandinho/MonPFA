@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var DefaultButton = React.createClass({
+/*var DefaultButton = React.createClass({
     displayName: "button",
     displayClass: "",
 
@@ -191,4 +191,5 @@ var FloatingButtonAction = React.createClass({
     }
 });
 
-ReactDOM.render(React.createElement(FloatingButtonWithActions, { actions: [{title: 'XXL', icon: 'add', color: 'blue'}, {title: 'PFFF', icon: 'cloud', color: 'yellow'}] }), document.getElementById("textZone"));
+ReactDOM.render(React.createElement(FloatingButtonWithActions, { actions: [{title: 'XXL', icon: 'add', color: 'blue'}, {title: 'PFFF', icon: 'cloud', color: 'yellow'}] }), document.getElementById("textZone"));*/
+

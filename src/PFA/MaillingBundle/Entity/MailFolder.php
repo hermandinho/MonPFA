@@ -3,6 +3,7 @@
 namespace PFA\MaillingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PFA\MainBundle\Entity\User;
 
 /**
  * MailFolder
@@ -34,6 +35,12 @@ class MailFolder
      * @ORM\Column(name="icon", type="string", length=255)
      */
     private $icon;
+
+    /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User")
+     */
+    private $owner;
 
 
     /**
@@ -93,5 +100,28 @@ class MailFolder
     {
         return $this->icon;
     }
-}
 
+    /**
+     * Set owner
+     *
+     * @param \PFA\MainBundle\Entity\User $owner
+     *
+     * @return MailFolder
+     */
+    public function setOwner(\PFA\MainBundle\Entity\User $owner = null)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return \PFA\MainBundle\Entity\User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+}

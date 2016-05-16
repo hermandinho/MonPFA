@@ -56,8 +56,7 @@ class User extends BaseUser
      *
      */
     private $projects;
-
-
+    
 
     /**
      * User constructor.
