@@ -13,7 +13,7 @@ use PFA\MainBundle\Entity\User;
  * @ORM\Table(name="mail")
  * @ORM\Entity(repositoryClass="PFA\MaillingBundle\Repository\MailRepository")
  */
-class Mail extends BaseEntity
+class Mail
 {
     /**
      * @var int

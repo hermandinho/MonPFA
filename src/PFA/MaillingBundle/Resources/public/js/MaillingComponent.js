@@ -18,6 +18,11 @@ var MaillingComponent = (function () {
         render: function () {
             var props = this.props;
             var unread = "";
+            if(props.selectedFolder){
+                var isSelected = (props.folder.id == props.selectedFolder.id) ? " active " : " not-active ";
+                //console.log(props.selectedFolder, props.folder, isSelected);
+            }
+
             if(parseInt(props.unReadMails) > 0){
                 unread = React.createElement(
                     "span",
@@ -31,7 +36,7 @@ var MaillingComponent = (function () {
                 React.createElement(
                     "li",
                     {
-                        className: "collection-item",
+                        className: "collection-item " + isSelected,
                         onClick: props.handleFolderRowClick.bind(null, props.folder)
                     },
                     props.folder.name,
@@ -46,7 +51,9 @@ var MaillingComponent = (function () {
         displayClass: "MaillingComponent",
         getInitialState: function () {
             return {
-                data: [],
+                data: {
+                    mailbox:[]
+                },
                 selectedFolder: ""
             };
         },
@@ -54,11 +61,11 @@ var MaillingComponent = (function () {
         render: function () {
             var data = this.props.data || this.state.data;
             var $this = this;
-            var folders = data.map(function (item, i) {
+            /*var folders = data.folders.map(function (item, i) {
                 return item.folder;
-            });
-            var buildFolders = folders.map(function (item, i) {
-                var unreadMails = data.filter(function (elt,j) {
+            });*/
+            var buildFolders = data.folders.map(function (item, i) {
+                var unreadMails = data.mailbox.filter(function (elt,j) {
                     return item.name == elt.folder.name && elt.is_read == false;
                 }).length;
 
@@ -69,11 +76,13 @@ var MaillingComponent = (function () {
                             folder: item,
                             key: "folder_" + i,
                             unReadMails: unreadMails,
-                            handleFolderRowClick: $this.props.handleFolderRowClick
+                            handleFolderRowClick: $this.props.handleFolderRowClick,
+                            selectedFolder: $this.props.selectedFolder
                         }
                     )
                 )
             });
+
             return(
                 React.createElement(
                     "div",
@@ -92,7 +101,22 @@ var MaillingComponent = (function () {
                                 className: "collection-header"
                             },
                             React.createElement(
-                                "h4",{},"First Names"
+                                "h4",
+                                {
+
+                                },
+                                "First Names",
+                                React.createElement(
+                                    Button,
+                                    {
+                                        color: 'blue',
+                                        btnType: "btn-floating",
+                                        title: "Ajouter un dossier",
+                                        icon: "add",
+                                        id: "add_folder",
+                                        onClick: this.props.handleNewFolderClick
+                                    }
+                                )
                             )
                         ),
                         buildFolders
@@ -112,6 +136,7 @@ var MaillingComponent = (function () {
 
         render: function () {
             var emails = this.props.data;
+            var $this = this;
             var displayMails = emails.map(function (email, i) {
                 var className = "collection-item avatar ";
                 className += email.is_read ? " read " : " unread ";
@@ -120,7 +145,8 @@ var MaillingComponent = (function () {
                     "li",
                     {
                         className: className,
-                        key: "mailList_" + i
+                        key: "mailList_" + i,
+                        onClick: $this.props.handleMailViewClick.bind(null, email)
                     },
                     React.createElement(
                         "i",
@@ -158,7 +184,7 @@ var MaillingComponent = (function () {
                     "div",
                     {
                         className: "col s3",
-                        id: "mail_filders_content"
+                        id: "mail_folders_content"
                     },
                     React.createElement(
                         "ul",
@@ -166,6 +192,47 @@ var MaillingComponent = (function () {
                             className: "collection"
                         },
                         displayMails
+                    )
+                )
+            )
+        }
+    });
+
+    var MailViewer = React.createClass({
+        displayName: "MailViewer",
+        getInitialState: function () {
+            return({
+
+            });
+        },
+
+        render: function () {
+            return(
+                React.createElement(
+                    "div",
+                    {
+                        className: "col s6",
+                        id: "mail_display"
+                    },
+                    React.createElement(
+                        "div",
+                        {
+                            className: "z-depth-1 action_bar grey right-align"
+                        },
+                        "ACTIONS HERE"
+                    ),
+                    React.createElement(
+                        "div",
+                        {
+                            className: "valign-wrapper z-depth-1"
+                        },
+                        React.createElement(
+                            "div",
+                            {
+                                className: "valign center-align"
+                            },
+                            "MY MAIL CONTENT"
+                        )
                     )
                 )
             )
@@ -184,22 +251,38 @@ var MaillingComponent = (function () {
             })
         },
         componentDidMount: function () {
-          this.setState({ mailBoxData: this.props.data });
+            var defaultFolder = [];
+            this.props.data.folders[0] ? defaultFolder.push(this.props.data.folders[0]) : null;
+            var selectedFolderContent = [];
+            if(defaultFolder.length > 0){
+                selectedFolderContent = this.props.data.mailbox.filter(function (item) {
+                    return item.folder.id == defaultFolder[0].id;
+                });
+            }
+            this.setState({ mailBoxData: this.props.data, selectedFolder: defaultFolder[0], selectedFolderContent: selectedFolderContent });
         },
 
-        handleFolderRowClick: function (folder) {
-            var selectedFolderContent = this.state.mailBoxData.mailbox.emails.filter(function (item) {
+        handleFolderRowClick: function (folder, e) {
+            var selectedFolderContent = this.state.mailBoxData.mailbox.filter(function (item) {
                 return item.folder.id == folder.id;
             });
 
           this.setState({selectedFolder: folder, selectedFolderContent: selectedFolderContent});
         },
 
+        handleNewFolderClick: function (e) {
+          console.log("Going to create Folder !!! ");
+        },
+
+        handleMailViewClick: function (mail, e) {
+            console.log("View ", mail.subject);
+        },
+
         render: function () {
             var props = this.props;
             var state = this.state;
             var data = props.data;
-            var emailList = data.hasOwnProperty('mailbox') ? data.mailbox : state.emails;
+            //var emailList = data.hasOwnProperty('mailbox') ? data.mailbox : state.emails;
             //console.log("*** ", data);
             return(
                 React.createElement(
@@ -210,16 +293,24 @@ var MaillingComponent = (function () {
                     React.createElement(
                         FolderList,
                         {
-                            data: emailList.emails,
-                            folders: data.folders,
-                            handleFolderRowClick: this.handleFolderRowClick
+                            data: data,
+                            handleFolderRowClick: this.handleFolderRowClick,
+                            selectedFolder: this.state.selectedFolder,
+                            handleNewFolderClick: this.handleNewFolderClick
                         }
                     ),
                     React.createElement(
                         EmailsList,
                         {
                             data: this.state.selectedFolderContent,
-                            handleFolderRowClick: this.handleFolderRowClick
+                            handleFolderRowClick: this.handleFolderRowClick,
+                            handleMailViewClick: this.handleMailViewClick
+                        }
+                    ),
+                    React.createElement(
+                        MailViewer,
+                        {
+
                         }
                     )
                 )

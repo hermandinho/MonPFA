@@ -1,3 +1,12 @@
 .action_bar{
     padding: 1%;
 }
+
+li.collection-item:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+button#add_folder {
+    float: right;
+}

@@ -1,6 +1,7 @@
 <?php
 
 namespace PFA\MaillingBundle\Repository;
+use PFA\MaillingBundle\Entity\MailBox;
 
 /**
  * MailBoxRepository
@@ -10,4 +11,18 @@ namespace PFA\MaillingBundle\Repository;
  */
 class MailBoxRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param MailBox $mailBox
+     * @return array
+     */
+    public function getMailBoxData(MailBox $mailBox)
+    {
+        $query = $this->createQueryBuilder("m")
+                ->where("m.owner = :boxOwner")
+                ->setParameter("boxOwner", $mailBox->getOwner())
+                ->andWhere("m.emails")
+                ->getQuery();
+        echo $query->getSQL();
+        return $query->getArrayResult();
+    }
 }

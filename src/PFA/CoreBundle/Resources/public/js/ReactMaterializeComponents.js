@@ -36,6 +36,7 @@ var Button = React.createClass({
         var state = this.state;
         var className = "waves-effect waves-light ";
         var color = props.color ? props.color : state.color;
+        var id = props.id ? props.id : null;
 
         var icon = props.icon ? props.icon : state.icon;
         var btnType = props.btnType ? props.btnType : state.btnType;
@@ -77,7 +78,8 @@ var Button = React.createClass({
                     onClick: handleClick,
                     "data-position": dataPosition,
                     "data-delay": dataDelay,
-                    "data-tooltip": dataTooltip
+                    "data-tooltip": dataTooltip,
+                    id: id
                 },
                 Icon,
                 " " + text

@@ -1,26 +1,24 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Herman
+ * User: El-PC
  * Date: 16/05/2016
- * Time: 14:47
+ * Time: 23:58
  */
 
 namespace PFA\MaillingBundle\Managers;
 
 
 use Doctrine\ORM\EntityManager;
-use PFA\MaillingBundle\Repository\MailFolderRepository;
-use PFA\MainBundle\Entity\User;
+use PFA\MaillingBundle\Entity\MailBox;
 
-class MailFolderManager
+class MailBoxManager
 {
 
     /**
      * @var EntityManager
      */
     private $em;
-
 
     /**
      * MailFolderManager constructor.
@@ -32,12 +30,8 @@ class MailFolderManager
         $this->em = $entityManager;
     }
 
-    /**
-     * @param User $user
-     * @return MailFolderRepository
-     */
-    public function getUserFolders(User $user)
+    public function getMailBoxData(MailBox $mailBox)
     {
-        return $this->em->getRepository("PFAMaillingBundle:MailFolder")->getUserFolders($user);
+        return $this->em->getRepository("PFAMaillingBundle:Mail")->getMailBoxData($mailBox);
     }
 }

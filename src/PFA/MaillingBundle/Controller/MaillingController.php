@@ -26,7 +26,8 @@ class MaillingController extends MainController
     public function getMailData(Request $request)
     {
         $response = new Response();
-        $serializedData = $this->getSerializer()->serialize($this->getThisUser()->getMailBox(), "json");
+        $mailBoxData = $this->get("pfa_mailling.managers.mail_box_manager")->getMailBoxData($this->getThisUser()->getMailBox());
+        $serializedData = $this->getSerializer()->serialize($mailBoxData, "json");
         $folders = $this->get("pfa_mailling.managers.mail_folder_manager")->getUserFolders($this->getThisUser());
 
         //die(dump($folders));

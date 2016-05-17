@@ -7,3 +7,7 @@ services:
         class: PFA\MaillingBundle\Managers\MailFolderManager
         arguments:
             entityManager: '@doctrine.orm.entity_manager'
+
+    pfa_mailling.managers.mail_box_manager:
+          class: PFA\MaillingBundle\Managers\MailBoxManager
+          arguments: ['@doctrine.orm.entity_manager']
