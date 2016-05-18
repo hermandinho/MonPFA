@@ -231,6 +231,68 @@ var FloatingAction = React.createClass({
     }
 });
 
+var Loader = React.createClass({
+    displayName: "Loader",
+    getInitialState: function(){
+        return({
+
+        });
+    },
+    render: function () {
+        return(
+            React.createElement(
+                "div",
+                {
+                    className: "preloader-wrapper big active"
+                },
+                React.createElement(
+                    "div",
+                    {
+                        className: "spinner-layer spinner-blue"
+                    },
+                    React.createElement(
+                        "div",
+                        {
+                            className: "circle-clipper left"
+                        },
+                        React.createElement(
+                            "div",
+                            {
+                                className: "circle"
+                            }
+                        )
+                    ),
+                    React.createElement(
+                        "div",
+                        {
+                            className: "gap-patch"
+                        },
+                        React.createElement(
+                            "div",
+                            {
+                                className: "circle"
+                            }
+                        )
+                    ),
+                    React.createElement(
+                        "div",
+                        {
+                            className: "circle-clipper right"
+                        },
+                        React.createElement(
+                            "div",
+                            {
+                                className: "circle"
+                            }
+                        )
+                    )
+                )
+            )
+        )
+    }
+});
+
+
 /*ReactDOM.render(React.createElement(Button,{ color: "red",btnType: "btn-flat",title:'Hello boss', iconSide: "right", isEnabled: false, icon: "send", text: "GO", onClick: function () {
     console.log("Hello");
 } }), document.getElementById("textZone"));

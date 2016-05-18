@@ -85,6 +85,13 @@ class Mail
     private $folder;
 
     /**
+     * @var Mail
+     *
+     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", orphanRemoval=true)
+     */
+    private $parent = null;
+
+    /**
      * Get id
      *
      * @return int
@@ -308,5 +315,29 @@ class Mail
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \PFA\MaillingBundle\Entity\Mail $parent
+     *
+     * @return Mail
+     */
+    public function setParent(\PFA\MaillingBundle\Entity\Mail $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \PFA\MaillingBundle\Entity\Mail
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

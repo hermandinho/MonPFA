@@ -255,7 +255,7 @@ var MaillingComponent = (function () {
                 props = this.props;
 
             if(props.email == null){
-                mailContent = React.createElement(
+                /*mailContent = React.createElement(
                     "div",
                     {
                         className: " valign-wrapper "
@@ -267,6 +267,9 @@ var MaillingComponent = (function () {
                         },
                         "Aucun mail sélectionner "
                     )
+                )*/
+                mailContent = React.createElement(
+                    Loader, null
                 )
             }else {
                 mailContent = React.createElement(
