@@ -17,11 +17,13 @@ class MailRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->createQueryBuilder("m")
                 ->where("m.mailBox = :mailBox")
                 ->setParameter("mailBox", $mailBox)
-                ->orWhere("m.sender = :sender")
                 ->setParameter("sender", $mailBox->getOwner())
                 ->orWhere("m.receiver = :reciever")
+                ->andWhere("m.parent IS NULL")
+                ->andWhere("m.sender = :sender")
                 ->setParameter("reciever", $mailBox->getOwner())
                 ;
+        //echo $query->getQuery()->getSQL().PHP_EOL;
         return $query->getQuery()->getResult();
     }
     
