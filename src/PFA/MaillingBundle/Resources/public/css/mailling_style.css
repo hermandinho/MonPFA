@@ -10,3 +10,12 @@ li.collection-item:hover {
 button#add_folder {
     float: right;
 }
+
+li.collection-item.avatar.unread {
+    font-weight: bolder;
+    background-color: lightblue;
+}
+
+.mail_view_placeholder{
+    color: lightgrey;
+}

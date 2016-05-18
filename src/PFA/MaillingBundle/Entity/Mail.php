@@ -46,6 +46,13 @@ class Mail
     private $isRead;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
+    /**
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User",cascade={"persist","remove"})
      * @ORM\JoinColumn(name="sender", referencedColumnName="id", unique=false)
@@ -277,5 +284,29 @@ class Mail
     public function getFolder()
     {
         return $this->folder;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Mail
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

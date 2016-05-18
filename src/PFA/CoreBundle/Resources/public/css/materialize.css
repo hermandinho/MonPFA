@@ -4261,7 +4261,7 @@ nav .input-field label.active {
   }
 }
 
-@font-face {
+/*@font-face {
   font-family: "Roboto";
   src: local(Roboto Thin), url("font/roboto/ Roboto-Thin.eot");
   src: url("bundles/pfacore/font/roboto/Roboto-Thin.eot?#iefix") format("embedded-opentype"), url("bundles/pfacore/font/roboto/Roboto-Thin.woff2") format("woff2"), url("bundles/pfacore/font/roboto/Roboto-Thin.woff") format("woff"), url("bundles/pfacore/font/roboto/Roboto-Thin.ttf") format("truetype");
@@ -4294,7 +4294,7 @@ nav .input-field label.active {
   src: url("bundles/pfacore/font/roboto/Roboto-Bold.eot");
   src: url("bundles/pfacore/font/roboto/Roboto-Bold.eot?#iefix") format("embedded-opentype"), url("bundles/pfacore/font/roboto/Roboto-Bold.woff2") format("woff2"), url("bundles/pfacore/font/roboto/Roboto-Bold.woff") format("woff"), url("bundles/pfacore/font/roboto/Roboto-Bold.ttf") format("truetype");
   font-weight: 700;
-}
+} */
 
 a {
   text-decoration: none;

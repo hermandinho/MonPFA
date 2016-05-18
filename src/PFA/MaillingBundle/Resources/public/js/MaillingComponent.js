@@ -198,6 +198,50 @@ var MaillingComponent = (function () {
         }
     });
 
+    var MailViewActions = React.createClass({
+        displayNam: "MailViewActions",
+        getInitialState: function () {
+            return({
+
+            })
+        },
+
+        render: function () {
+            return(
+                React.createElement(
+                    "span",
+                    null,
+                    React.createElement(
+                        "span",
+                        {},
+                        React.createElement(
+                            Button,
+                            {
+                                icon: 'delete',
+                                btnType: 'btn-floating',
+                                title: "Supprimer",
+                                color: 'red',
+                                isEnabled: false
+                            }
+                        )
+                    ),
+                    React.createElement(
+                        "span",
+                        {},
+                        React.createElement(
+                            Button,
+                            {
+                                icon: 'label',
+                                btnType: 'btn-floating',
+                                title: "CCC"
+                            }
+                        )
+                    )
+                )
+            )
+        }
+    });
+
     var MailViewer = React.createClass({
         displayName: "MailViewer",
         getInitialState: function () {
@@ -207,6 +251,102 @@ var MaillingComponent = (function () {
         },
 
         render: function () {
+            var mailContent,
+                props = this.props;
+
+            if(props.email == null){
+                mailContent = React.createElement(
+                    "div",
+                    {
+                        className: " valign-wrapper "
+                    },
+                    React.createElement(
+                        "h3",
+                        {
+                            className: "valign mail_view_placeholder"
+                        },
+                        "Aucun mail sélectionner "
+                    )
+                )
+            }else {
+                mailContent = React.createElement(
+                    "div",
+                    {
+                        className: ""
+                    },
+                    React.createElement(
+                        "div",
+                        {
+                            className: 'row'
+                        },
+                        React.createElement(
+                            "div",
+                            {
+                                className: "col s5 _push-s5 left-align"
+                            },
+                            React.createElement(
+                                "div",
+                                {
+                                    className: "card-panel grey lighten-5 z-depth-1"
+                                },
+                                React.createElement(
+                                    "div",
+                                    {
+                                        className: "row valign-wrapper "
+                                    },
+                                    React.createElement(
+                                      "div",
+                                        {
+                                            className: "col s4 m2"
+                                        },
+                                        React.createElement(
+                                            "i", //TODO ADD IMAGE HERE
+                                            {
+                                                className: "material-icons circle _green"
+                                            },
+                                            "folder"
+                                        )
+                                    ),
+                                    React.createElement(
+                                        "div",
+                                        {
+                                            className: "col s8 m10"
+                                        },
+                                        React.createElement(
+                                            "p",
+                                            {},
+                                            props.email.sender.username
+                                        ),
+                                        React.createElement(
+                                            "p",
+                                            {},
+                                            moment(props.email.sender.date).format("YYYY-MM-DD")
+                                        )
+                                    )
+
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            "div",
+                            {
+                                className: "col s5 _pull-s7"
+                            },
+                            React.createElement(
+                                "span",
+                                {},
+                               React.createElement(
+                                   "h4",
+                                   {},
+                                   props.email.subject
+                               )
+                            )
+                        )
+                    )
+
+                )
+            }
+
             return(
                 React.createElement(
                     "div",
@@ -219,19 +359,22 @@ var MaillingComponent = (function () {
                         {
                             className: "z-depth-1 action_bar grey right-align"
                         },
-                        "ACTIONS HERE"
+                        React.createElement(
+                            MailViewActions,
+                            {}
+                        )
                     ),
                     React.createElement(
                         "div",
                         {
-                            className: "valign-wrapper z-depth-1"
+                            className: "_valign-wrapper z-depth-1"
                         },
                         React.createElement(
                             "div",
                             {
                                 className: "valign center-align"
                             },
-                            "MY MAIL CONTENT"
+                            mailContent
                         )
                     )
                 )
@@ -247,7 +390,8 @@ var MaillingComponent = (function () {
                 emails: [],
                 mailBoxData: [],
                 selectedFolder: null,
-                selectedFolderContent: []
+                selectedFolderContent: [],
+                currentViewMail: null
             })
         },
         componentDidMount: function () {
@@ -275,7 +419,8 @@ var MaillingComponent = (function () {
         },
 
         handleMailViewClick: function (mail, e) {
-            console.log("View ", mail.subject);
+            this.setState({currentViewMail: mail});
+            //console.log("View ", mail.subject);
         },
 
         render: function () {
@@ -310,7 +455,7 @@ var MaillingComponent = (function () {
                     React.createElement(
                         MailViewer,
                         {
-
+                            email: this.state.currentViewMail
                         }
                     )
                 )
