@@ -87,7 +87,7 @@ class Mail
     /**
      * @var Mail
      *
-     * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", cascade={"persist", "remove"})
      */
     private $parent = null;
 

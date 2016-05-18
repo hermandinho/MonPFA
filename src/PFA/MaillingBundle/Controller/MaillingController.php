@@ -3,6 +3,7 @@
 namespace PFA\MaillingBundle\Controller;
 
 use PFA\CoreBundle\Controller\MainController;
+use PFA\MaillingBundle\Entity\Mail;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,31 @@ class MaillingController extends MainController
             "folders" => $folders,
             "mailbox" => json_decode($serializedData)
         ];
+        $response->setContent(json_encode($data));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @internal param Mail $mail
+     * @Route("/get_mail_children/{id}", name="get_mail_children")
+     */
+    public function getMailChildren(Request $request, $id)
+    {
+        $mail = $this->getDoctrine()->getManager()->getRepository("PFAMaillingBundle:Mail")->find($id);
+        $serializedMail = $this->getSerializer()->serialize($mail, "json");
+        $manager = $this->get("pfa_mailling.managers.mail_manager")->getMailChildren($mail);
+        $serializedData = $this->getSerializer()->serialize($manager, "json");
+        $response = new Response();
+
+        $data = [
+            "mail" => json_decode($serializedMail),
+            "children" => json_decode($serializedData)
+        ];
+
         $response->setContent(json_encode($data));
         $response->headers->set('Content-Type', 'application/json');
         return $response;

@@ -7,7 +7,13 @@
 {% block additional_javascripts %}
     {% javascripts
         "@PFAMaillingBundle/Resources/public/js/MaillingComponent.js"
+        "@PFAMaillingBundle/Resources/public/js/maillingScripts.js"
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script>
+        $('.collapsible').collapsible({
+            accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+    </script>
 {% endblock %}
