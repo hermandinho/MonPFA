@@ -87,7 +87,7 @@ var MaillingComponent = (function () {
                 React.createElement(
                     "div",
                     {
-                        className: 'col s12 m3',
+                        className: 'col s12 m2',
                         id: "mail_folders"
                     },
                     React.createElement(
@@ -183,7 +183,7 @@ var MaillingComponent = (function () {
                 React.createElement(
                     "div",
                     {
-                        className: "col s12 m3",
+                        className: "col s12 m2",
                         id: "mail_folders_content"
                     },
                     React.createElement(
@@ -390,7 +390,7 @@ var MaillingComponent = (function () {
                 React.createElement(
                     "div",
                     {
-                        className: "col s12 m6",
+                        className: "col s12 m8",
                         id: "mail_display"
                     },
                     React.createElement(
@@ -454,9 +454,9 @@ var MaillingComponent = (function () {
                             "email"
                         ),
                         React.createElement(
-                            "span",
+                            "h5",
                             {
-                                className: "mail_child_header"
+                                className: "mail_child_header left"
                             },
                             this.props.data.subject
                         ),
