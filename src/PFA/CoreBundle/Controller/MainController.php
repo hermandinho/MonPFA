@@ -30,4 +30,9 @@ class MainController extends Controller
     protected function getSerializer(){
         return $this->get('jms_serializer');
     }
+
+    protected function getEM()
+    {
+        return $this->getDoctrine()->getManager();
+    }
 }

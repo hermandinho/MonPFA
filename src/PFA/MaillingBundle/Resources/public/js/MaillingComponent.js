@@ -6,6 +6,95 @@
 
 var MaillingComponent = (function () {
 
+    var Modal = ReactBootstrap.Modal;
+
+    var AddFolderModal = React.createClass({
+        displayName: "AddFolderModal",
+        getInitialState: function(){
+            return({});
+        },
+        render: function () {
+            return(
+                React.createElement(
+                    Modal,
+                    {
+                        show: this.props.showModal,
+                        onHide: this.props.closeModal,
+                        onEntered: function () {
+                            $('form').parsley();
+                            Ladda.bind( 'button[type=submit]' );
+                        }
+                    },
+                    React.createElement(
+                        Modal.Header,
+                        { closeButton: true },
+                        React.createElement(
+                            Modal.Title,
+                            null,
+                            "Créer un Dossier"
+                        )
+                    ),
+                    React.createElement(
+                        Modal.Body,
+                        null,
+                        React.createElement(
+                            "div",
+                            {
+                                className: "row"
+                            },
+                            React.createElement(
+                                "form",
+                                { className: "col s12" },
+                                React.createElement(
+                                    "div",
+                                    { className: "row" },
+                                    React.createElement(
+                                        "div",
+                                        { className: "input-field col s6" },
+                                        React.createElement(
+                                            "i",
+                                            { className: "material-icons prefix circle" },
+                                            "folder"
+                                        ),
+                                        React.createElement(
+                                            "input",
+                                            {
+                                                id: "folder_name",
+                                                type: "text",
+                                                className: "validate",
+                                                required: true,
+                                                'data-parsley-length': '[4,10]',
+                                                onKeyUp: this.props.saveNewFolderName
+                                            }
+                                        ),
+                                        React.createElement(
+                                            "label",
+                                            { htmlFor: "folder_name" },
+                                            "Nom du dossier"
+                                        )
+                                    )
+                                ),
+                                React.createElement(
+                                    Button,
+                                    { onClick: this.props.saveAndCloseModal, type: "submit" }
+                                )
+                            )
+                        )
+                    ),
+                    React.createElement(
+                        Modal.Footer,
+                        null,
+                        React.createElement(
+                            Button,
+                            { onClick: this.props.closeModal, text: "Fermer", color: 'red' },
+                            "Close"
+                        )
+                    )
+                )
+            )
+        }
+    });
+
     var FolderRow = React.createClass({
         displayName: "FolderRow",
         displayClass: "FolderRow",
@@ -503,7 +592,9 @@ var MaillingComponent = (function () {
                 currentViewMail: null,
                 mailViewLoader: React.createElement(Loader, null ),
                 stillLoadingMail: false,
-                defaultMailListMessage: null
+                defaultMailListMessage: null,
+                addFolderModalVisible: false,
+                savedNewFolderName: null
             })
         },
         componentDidMount: function () {
@@ -542,6 +633,29 @@ var MaillingComponent = (function () {
 
         handleNewFolderClick: function (e) {
           console.log("Going to create Folder !!! ");
+            this.setState({addFolderModalVisible: true});
+        },
+         hideAddFolderModal: function () {
+             this.setState({addFolderModalVisible: false});
+         },
+        saveAndCloseAddFolderModal: function (e) {
+            e.preventDefault();
+            if(this.state.savedNewFolderName != null){
+                var $this = this;
+                $.post(
+                    "add_folder",
+                    {
+                        name: $this.state.savedNewFolderName
+                    },
+                    function(data){
+                        console.log(data);
+                        $this.setState({addFolderModalVisible: false});
+                    }
+                )
+            }
+        },
+        handleSaveNewFolderName: function (e) {
+            this.setState({savedNewFolderName: e.target.value});
         },
 
         handleMailViewClick: function (mail, e) {
@@ -595,11 +709,21 @@ var MaillingComponent = (function () {
                             showLoader: this.state.stillLoadingMail,
                             mailViewLoader: this.state.mailViewLoader
                         }
+                    ),
+                    React.createElement(
+                        AddFolderModal,
+                        {
+                            showModal: this.state.addFolderModalVisible,
+                            closeModal: this.hideAddFolderModal,
+                            saveAndCloseModal: this.saveAndCloseAddFolderModal,
+                            saveNewFolderName: this.handleSaveNewFolderName
+                        }
                     )
                 )
             )
         }
     });
+
     return MaillingComponent;
 })();
 

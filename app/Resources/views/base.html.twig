@@ -9,6 +9,7 @@
         {% block stylesheets %}
             <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             {% stylesheets
+                '@PFACoreBundle/Resources/public/css/bootstrap.css'
                 '@PFACoreBundle/Resources/public/css/materialize.css'
                 '@PFACoreBundle/Resources/public/css/pace.css'
                 '@PFACoreBundle/Resources/public/css/ladda.min.css'
@@ -82,8 +83,11 @@
             '@PFACoreBundle/Resources/public/js/ladda.min.js'
             '@PFACoreBundle/Resources/public/js/react-dom.js'
             '@PFACoreBundle/Resources/public/js/materialize.min.js'
+            '@PFACoreBundle/Resources/public/js/react-bootstrap.js'
             '@PFACoreBundle/Resources/public/js/ReactMaterializeComponents.js'
             '@PFACoreBundle/Resources/public/js/pace.js'
+            '@PFACoreBundle/Resources/public/js/parsley/parsley.min.js'
+            '@PFACoreBundle/Resources/public/js/parsley/fr.js'
             %}
                 <script src="{{ asset_url }}"></script>
             {% endjavascripts %}

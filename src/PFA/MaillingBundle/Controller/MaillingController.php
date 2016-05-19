@@ -4,6 +4,8 @@ namespace PFA\MaillingBundle\Controller;
 
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MaillingBundle\Entity\Mail;
+use PFA\MaillingBundle\Entity\MailFolder;
+use PFA\MaillingBundle\Form\MailFolderType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,5 +66,16 @@ class MaillingController extends MainController
         $response->setContent(json_encode($data));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/add_folder", name="add_mail_folder")
+     * @return Response
+     */
+    public function addMailFolderAction(Request $request)
+    {
+        return new Response("Hello ". $request->request->get('name'));
+
     }
 }
