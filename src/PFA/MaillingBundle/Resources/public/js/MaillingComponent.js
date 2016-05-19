@@ -137,47 +137,52 @@ var MaillingComponent = (function () {
         render: function () {
             var emails = this.props.data;
             var $this = this;
-            var displayMails = emails.map(function (email, i) {
-                var className = "collection-item avatar ";
-                className += email.is_read ? " read " : " unread ";
+            var displayMails = null;
+            if(this.props.defaultMailListMessage === null){
+                 displayMails = emails.map(function (email, i) {
+                    var className = "collection-item avatar ";
+                    className += email.is_read ? " read " : " unread ";
 
-                return React.createElement(
-                    "li",
-                    {
-                        className: className,
-                        key: "mailList_" + i,
-                        onClick: $this.props.handleMailViewClick.bind(null, email)
-                    },
-                    React.createElement(
-                        "i",
+                    return React.createElement(
+                        "li",
                         {
-                            className: "material-icons circle green"
+                            className: className,
+                            key: "mailList_" + i,
+                            onClick: $this.props.handleMailViewClick.bind(null, email)
                         },
+                        React.createElement(
+                            "i",
+                            {
+                                className: "material-icons circle green"
+                            },
 
-                        "folder"
-                    ),
-                    React.createElement(
-                        "span",
-                        {
-                            title: "MAIL TITLE GOES HERE :)"
-                        }
-                    ),
-                    React.createElement(
-                        "p",
-                        {
-                            className: " truncate "
-                        },
-                        email.subject
-                    ),
-                    React.createElement(
-                        "p",
-                        {
-                            className: " truncate "
-                        },
-                        email.body
+                            "folder"
+                        ),
+                        React.createElement(
+                            "span",
+                            {
+                                title: "MAIL TITLE GOES HERE :)"
+                            }
+                        ),
+                        React.createElement(
+                            "p",
+                            {
+                                className: " truncate "
+                            },
+                            email.subject
+                        ),
+                        React.createElement(
+                            "p",
+                            {
+                                className: " truncate "
+                            },
+                            email.body
+                        )
                     )
-                )
-            });
+                });
+            } else {
+                displayMails = this.props.defaultMailListMessage;
+            }
 
             return(
                 React.createElement(
@@ -497,7 +502,8 @@ var MaillingComponent = (function () {
                 selectedFolderContent: [],
                 currentViewMail: null,
                 mailViewLoader: React.createElement(Loader, null ),
-                stillLoadingMail: false
+                stillLoadingMail: false,
+                defaultMailListMessage: null
             })
         },
         componentDidMount: function () {
@@ -516,8 +522,22 @@ var MaillingComponent = (function () {
             var selectedFolderContent = this.state.mailBoxData.mailbox.filter(function (item) {
                 return item.folder.id == folder.id;
             });
+            var defaultMailListMessage = null;
+            if(selectedFolderContent.length == 0){
+                 defaultMailListMessage = React.createElement(
+                     "li",
+                     {
+                         className: "collection-item "
+                     },
+                     React.createElement(
+                         "h5",
+                         null,
+                         "Dossier vide"
+                     )
+                 )
+            }
 
-          this.setState({selectedFolder: folder, selectedFolderContent: selectedFolderContent});
+          this.setState({selectedFolder: folder, selectedFolderContent: selectedFolderContent, defaultMailListMessage: defaultMailListMessage});
         },
 
         handleNewFolderClick: function (e) {
@@ -564,7 +584,8 @@ var MaillingComponent = (function () {
                         {
                             data: this.state.selectedFolderContent,
                             handleFolderRowClick: this.handleFolderRowClick,
-                            handleMailViewClick: this.handleMailViewClick
+                            handleMailViewClick: this.handleMailViewClick,
+                            defaultMailListMessage: this.state.defaultMailListMessage
                         }
                     ),
                     React.createElement(
