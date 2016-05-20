@@ -36,6 +36,14 @@ class MailFolder
      */
     private $icon;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="can_be_removed", type="boolean" )
+     */
+    private $canBeRemoved;
+
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User")

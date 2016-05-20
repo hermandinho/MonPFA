@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\User;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/xxl")
      */
     public function indexAction()
     {

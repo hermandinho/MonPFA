@@ -6,6 +6,7 @@ use PFA\CoreBundle\Controller\MainController;
 use PFA\MaillingBundle\Entity\Mail;
 use PFA\MaillingBundle\Entity\MailFolder;
 use PFA\MaillingBundle\Form\MailFolderType;
+use PFA\MaillingBundle\Form\MailType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,10 +33,11 @@ class MaillingController extends MainController
         $mailBoxData = $this->get("pfa_mailling.managers.mail_box_manager")->getMailBoxData($this->getThisUser()->getMailBox());
         $serializedData = $this->getSerializer()->serialize($mailBoxData, "json");
         $folders = $this->get("pfa_mailling.managers.mail_folder_manager")->getUserFolders($this->getThisUser());
+        $serializedFolders = $this->getSerializer()->serialize($folders, "json");
 
         //die(dump($folders));
         $data = [
-            "folders" => $folders,
+            "folders" => json_decode($serializedFolders),
             "mailbox" => json_decode($serializedData)
         ];
         $response->setContent(json_encode($data));
@@ -75,7 +77,46 @@ class MaillingController extends MainController
      */
     public function addMailFolderAction(Request $request)
     {
-        return new Response("Hello ". $request->request->get('name'));
+        $myMailFolders = $this->get("pfa_mailling.managers.mail_folder_manager")->getUserFolders($this->getThisUser());
+        $name = $request->request->get('name');
+        $response = new Response();
+        $found = false;
 
+        /** @var MailFolder $myMailFolder */
+        foreach ($myMailFolders as $key => $myMailFolder) {
+            if(strtolower($myMailFolder->getName()) == strtolower($name)){
+                $found = true;
+            }
+        }
+
+        if($found){
+            $response->setContent(json_encode(["status" => false, "message" => "Ce dossier existe déja."]));
+        }else{
+            $addFolder = new MailFolder();
+            $addFolder->setName(ucwords($name))
+                ->setIcon("folder")
+                ->setOwner($this->getThisUser());
+            $em = $this->getEM();
+            $em->persist($addFolder);
+            $em->flush();
+
+            $response->setContent(json_encode(["status" => true, "message" => "Dossier ajouté avec success !!!"]));
+        }
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/new_mail", name="send_new_mail")
+     * @param Request $request
+     * @return Response
+     */
+    public function sendMailAction(Request $request)
+    {
+        $form = $this->createForm(new MailType());
+        $form->handleRequest($request);
+
+        return $this->render("PFAMaillingBundle:partials:add_mail.html.twig", ["form" => $form->createView()]);
     }
 }

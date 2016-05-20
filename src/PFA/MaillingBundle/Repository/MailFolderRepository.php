@@ -17,6 +17,6 @@ class MailFolderRepository extends \Doctrine\ORM\EntityRepository
                 ->where("f.owner = :owner")
                 ->setParameter("owner", $user)
                 ->getQuery();
-        return $query->getArrayResult();
+        return $query->getResult();
     }
 }

@@ -6,14 +6,20 @@
 
 var MaillingComponent = (function () {
 
-    var Modal = ReactBootstrap.Modal;
+    var Modal = ReactBootstrap.Modal,
+        Menu = ReactBootstrap.Menu,
+        DropdownButton = ReactBootstrap.DropdownButton,
+        MenuItem = ReactBootstrap.MenuItem;
 
     var AddFolderModal = React.createClass({
         displayName: "AddFolderModal",
         getInitialState: function(){
-            return({});
+            return({
+                laddaInstance: null
+            });
         },
         render: function () {
+            $this = this;
             return(
                 React.createElement(
                     Modal,
@@ -22,7 +28,9 @@ var MaillingComponent = (function () {
                         onHide: this.props.closeModal,
                         onEntered: function () {
                             $('form').parsley();
-                            Ladda.bind( 'button[type=submit]' );
+                            var l = Ladda.create(document.querySelector("#btn-add-folder"));
+                            $this.props.handleLaddaInstance(l);
+                            //Ladda.bind( 'button[type=submit]' );
                         }
                     },
                     React.createElement(
@@ -43,8 +51,15 @@ var MaillingComponent = (function () {
                                 className: "row"
                             },
                             React.createElement(
+                                "div",
+                                {
+                                    className: "card-panel red lighten-2 modal_ajax_error " + this.props.customMessageVisible
+                                },
+                                this.props.customMessage
+                            ),
+                            React.createElement(
                                 "form",
-                                { className: "col s12" },
+                                { className: "col s12", id: "addFolderForm" },
                                 React.createElement(
                                     "div",
                                     { className: "row" },
@@ -63,7 +78,7 @@ var MaillingComponent = (function () {
                                                 type: "text",
                                                 className: "validate",
                                                 required: true,
-                                                'data-parsley-length': '[4,10]',
+                                                'data-parsley-length': '[4,15]',
                                                 onKeyUp: this.props.saveNewFolderName
                                             }
                                         ),
@@ -76,9 +91,73 @@ var MaillingComponent = (function () {
                                 ),
                                 React.createElement(
                                     Button,
-                                    { onClick: this.props.saveAndCloseModal, type: "submit" }
+                                    { onClick: this.props.saveAndCloseModal, type: "submit", id: "btn-add-folder" }
                                 )
                             )
+                        )
+                    ),
+                    React.createElement(
+                        Modal.Footer,
+                        null,
+                        React.createElement(
+                            Button,
+                            { onClick: this.props.closeModal, text: "Fermer", color: 'red' },
+                            "Close"
+                        )
+                    )
+                )
+            )
+        }
+    });
+
+    var SendMailModal = React.createClass({
+        displayName: "SendMailModal",
+        getInitialState: function(){
+            return({
+                laddaInstance: null
+            });
+        },
+        render: function () {
+            $this = this;
+            return(
+                React.createElement(
+                    Modal,
+                    {
+                        show: this.props.modalVisible,
+                        onHide: this.props.closeModal,
+                        onEntered: function () {
+                            //$('form').parsley();
+                            //var l = Ladda.create(document.querySelector("#btn-add-folder"));
+                            //$this.props.handleLaddaInstance(l);
+                            //Ladda.bind( 'button[type=submit]' );
+                        }
+                    },
+                    React.createElement(
+                        Modal.Header,
+                        { closeButton: true },
+                        React.createElement(
+                            Modal.Title,
+                            null,
+                            "Composer un Mail"
+                        )
+                    ),
+                    React.createElement(
+                        Modal.Body,
+                        null,
+                        React.createElement(
+                            "div",
+                            {
+                                className: "row",
+                                dangerouslySetInnerHTML: {__html: this.props.mailForm }
+                            }/*,
+                            React.createElement(
+                                "div",
+                                {
+                                    className: "card-panel red lighten-2 modal_ajax_error " + this.props.customMessageVisible
+                                },
+                                this.props.customMessage
+                            )*/
+
                         )
                     ),
                     React.createElement(
@@ -126,10 +205,28 @@ var MaillingComponent = (function () {
                     "li",
                     {
                         className: "collection-item " + isSelected,
-                        onClick: props.handleFolderRowClick.bind(null, props.folder)
+                        onClick: props.handleFolderRowClick.bind(null, props.folder),
+                        onContextMenu: function(e){
+                            //e.preventDefault();
+                        }
                     },
                     props.folder.name,
-                    unread
+                    unread/*,
+                    React.createElement(
+                        DropdownButton,
+                        {
+                            className: "",
+                            title: "XX",
+                            id: props.folder.id
+                        },
+                        React.createElement(
+                            MenuItem,
+                            {
+                                eventKey: 1
+                            },
+                            "OUFFF"
+                        )
+                    )*/
                 )
             )
         }
@@ -586,7 +683,7 @@ var MaillingComponent = (function () {
         getInitialState: function () {
             return({
                 emails: [],
-                mailBoxData: [],
+                mailBoxData: this.props.data || [],
                 selectedFolder: null,
                 selectedFolderContent: [],
                 currentViewMail: null,
@@ -594,8 +691,16 @@ var MaillingComponent = (function () {
                 stillLoadingMail: false,
                 defaultMailListMessage: null,
                 addFolderModalVisible: false,
-                savedNewFolderName: null
+                savedNewFolderName: null,
+                addMailBtnLaddaInstance: null,
+                addFolderAjaxMessage: null,
+                addFolderAjaxMessageVisible: 'hide',
+                sendMailModalVisible: false,
+                mailForm: null
             })
+        },
+        setAddMailBtnLaddaInstance: function (instance) {
+            this.setState({addMailBtnLaddaInstance: instance});
         },
         componentDidMount: function () {
             var defaultFolder = [];
@@ -640,16 +745,42 @@ var MaillingComponent = (function () {
          },
         saveAndCloseAddFolderModal: function (e) {
             e.preventDefault();
+            $("#addFolderForm").parsley().validate();
             if(this.state.savedNewFolderName != null){
-                var $this = this;
+                var $this = this,
+                    laddaBtn = this.state.addMailBtnLaddaInstance;
+                if(laddaBtn != null){
+                    laddaBtn.start();
+                }
+
                 $.post(
                     "add_folder",
                     {
                         name: $this.state.savedNewFolderName
                     },
                     function(data){
-                        console.log(data);
-                        $this.setState({addFolderModalVisible: false});
+                        if(data.status){
+                            $.ajax({
+                                type: "GET",
+                                cache: false,
+                                url: MAILLING_HOME_ROUTE,
+                                dataType: "json",
+                                success: function (data) {
+                                    $this.resetAll(data);
+                                    $this.setState({addFolderModalVisible: false});
+                                },
+                                error: function (e, err) {
+                                    console.log(err);
+                                }
+                            });
+
+                        } else {
+                            if(laddaBtn != null){
+                                laddaBtn.stop();
+                                $this.setState({addFolderAjaxMessageVisible: '', addFolderAjaxMessage: data.message});
+                            }
+                        }
+                        
                     }
                 )
             }
@@ -671,11 +802,34 @@ var MaillingComponent = (function () {
             //this.setState({currentViewMail: mail});
             //console.log("View ", mail.subject);
         },
-
+        resetAll: function (data) {
+            var defaultFolder = [];
+            data.folders[0] ? defaultFolder.push(data.folders[0]) : null;
+            var selectedFolderContent = [];
+            if(defaultFolder.length > 0){
+                selectedFolderContent = data.mailbox.filter(function (item) {
+                    return item.folder.id == defaultFolder[0].id;
+                });
+            }
+            this.setState({ mailBoxData: data, selectedFolder: defaultFolder[0], selectedFolderContent: selectedFolderContent });
+        },
+        openSendMailModal: function () {
+            var $this = this;
+            $.get(
+                "new_mail",
+                {},
+                function (form) {
+                    console.log(form);
+                    $this.setState({ sendMailModalVisible: true, mailForm: form });
+                }
+            );
+        },
+        hideSendMailModal: function () {
+            this.setState({ sendMailModalVisible: false,mailForm: null });
+        },
         render: function () {
-            var props = this.props;
+            var mailboxData = this.state.mailBoxData;
             var state = this.state;
-            var data = props.data;
             //var emailList = data.hasOwnProperty('mailbox') ? data.mailbox : state.emails;
             //console.log("*** ", data);
             return(
@@ -687,19 +841,19 @@ var MaillingComponent = (function () {
                     React.createElement(
                         FolderList,
                         {
-                            data: data,
+                            data: mailboxData,
                             handleFolderRowClick: this.handleFolderRowClick,
-                            selectedFolder: this.state.selectedFolder,
+                            selectedFolder: state.selectedFolder,
                             handleNewFolderClick: this.handleNewFolderClick
                         }
                     ),
                     React.createElement(
                         EmailsList,
                         {
-                            data: this.state.selectedFolderContent,
+                            data: state.selectedFolderContent,
                             handleFolderRowClick: this.handleFolderRowClick,
                             handleMailViewClick: this.handleMailViewClick,
-                            defaultMailListMessage: this.state.defaultMailListMessage
+                            defaultMailListMessage: state.defaultMailListMessage
                         }
                     ),
                     React.createElement(
@@ -716,7 +870,28 @@ var MaillingComponent = (function () {
                             showModal: this.state.addFolderModalVisible,
                             closeModal: this.hideAddFolderModal,
                             saveAndCloseModal: this.saveAndCloseAddFolderModal,
-                            saveNewFolderName: this.handleSaveNewFolderName
+                            saveNewFolderName: this.handleSaveNewFolderName,
+                            handleLaddaInstance: this.setAddMailBtnLaddaInstance,
+                            customMessage: this.state.addFolderAjaxMessage,
+                            customMessageVisible: this.state.addFolderAjaxMessageVisible
+                        }
+                    ),
+                    React.createElement(
+                        SendMailModal,
+                        {
+                            mailForm: this.state.mailForm,
+                            modalVisible: this.state.sendMailModalVisible,
+                            closeModal: this.hideSendMailModal
+                        }
+                    ),
+                    React.createElement(
+                        FloatingButton,
+                        {
+                            btnType: "btn-floating",
+                            icon: "add",
+                            FABEvent: "click-to-toggle",
+                            title: "BTN",
+                            onClick: this.openSendMailModal
                         }
                     )
                 )

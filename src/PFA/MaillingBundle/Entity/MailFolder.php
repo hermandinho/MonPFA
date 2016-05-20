@@ -36,6 +36,14 @@ class MailFolder
      */
     private $icon;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="can_be_removed", type="boolean" )
+     */
+    private $canBeRemoved;
+
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User")
@@ -123,5 +131,29 @@ class MailFolder
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Set canBeRemoved
+     *
+     * @param boolean $canBeRemoved
+     *
+     * @return MailFolder
+     */
+    public function setCanBeRemoved($canBeRemoved)
+    {
+        $this->canBeRemoved = $canBeRemoved;
+
+        return $this;
+    }
+
+    /**
+     * Get canBeRemoved
+     *
+     * @return boolean
+     */
+    public function getCanBeRemoved()
+    {
+        return $this->canBeRemoved;
     }
 }
