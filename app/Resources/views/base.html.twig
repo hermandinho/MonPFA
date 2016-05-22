@@ -13,6 +13,7 @@
                 '@PFACoreBundle/Resources/public/css/materialize.css'
                 '@PFACoreBundle/Resources/public/css/pace.css'
                 '@PFACoreBundle/Resources/public/css/ladda.min.css'
+                '@PFACoreBundle/Resources/public/css/datetimepicker.css'
                 filter='cssrewrite'
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
@@ -34,8 +35,8 @@
                                 <a href="#!" class="brand-logo">Logo</a>
                                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                                 <ul class="right hide-on-med-and-down">
-                                    <li class="active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
-                                    <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
+                                    <li class="_active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
+                                    <li><a href="{{ path("agenda_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
                                     <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Messages"><i class="material-icons medium">message</i> </a></li>
                                     <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
                                     <li><a href="javascript:;" class="dropdown-button" data-activates='dropdown1'><i class="material-icons">more_vert</i></a></li>
@@ -88,10 +89,13 @@
             '@PFACoreBundle/Resources/public/js/pace.js'
             '@PFACoreBundle/Resources/public/js/parsley/parsley.min.js'
             '@PFACoreBundle/Resources/public/js/parsley/fr.js'
+            '@PFACoreBundle/Resources/public/js/tether.js'
+            '@PFACoreBundle/Resources/public/js/bootstrap.js'
+            '@PFACoreBundle/Resources/public/js/datetimepicker.js'
             %}
                 <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
-
+            <script src="{{ asset("bundles/ivoryckeditor/ckeditor.js") }}"></script>
             {{ ws_client() }}
 
             <script>

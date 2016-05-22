@@ -2,12 +2,13 @@
 
 namespace PFA\MainBundle\Controller;
 
+use PFA\CoreBundle\Controller\MainController;
 use PFA\MainBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\User\User;
 
-class DefaultController extends Controller
+class GroupWareController extends MainController
 {
     /**
      * @Route("/xxl")

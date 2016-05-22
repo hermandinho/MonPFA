@@ -19,3 +19,8 @@ li.collection-item.avatar.unread {
 .mail_view_placeholder{
     color: lightgrey;
 }
+
+.cke_dialog
+{
+    z-index: 10055 !important;
+}

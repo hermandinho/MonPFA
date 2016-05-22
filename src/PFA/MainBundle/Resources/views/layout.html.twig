@@ -1,1 +1,19 @@
 {% extends "::base.html.twig" %}
+
+{% block additional_stylesheets %}
+    {% stylesheets
+    '@PFACoreBundle/Resources/public/css/calendar/fullcalendar.css'
+    filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block additional_javascripts %}
+    {% javascripts
+        "@PFACoreBundle/Resources/public/js/calendar/fullcalendar.js"
+        "@PFAMainBundle/Resources/public/js/AgendaController.js"
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

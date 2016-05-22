@@ -36,7 +36,13 @@ class MailFolder
      */
     private $icon;
 
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255)
+     */
+    private $code;
+    
     /**
      * @var string
      *
@@ -155,5 +161,29 @@ class MailFolder
     public function getCanBeRemoved()
     {
         return $this->canBeRemoved;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return MailFolder
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 }

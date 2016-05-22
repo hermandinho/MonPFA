@@ -45,7 +45,7 @@ class CalenderEvents
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end", type="date")
+     * @ORM\Column(name="end", type="date", nullable=true)
      */
     private $end;
 
@@ -64,12 +64,32 @@ class CalenderEvents
     private $priority;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="all_day", type="boolean")
+     */
+    private $allDay;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=255, nullable=true)
+     */
+    private $color;
+
+    /**
      * @var Calender
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\Calender", inversedBy="events" ,cascade={"persist","remove"})
      */
     private $calender;
-
 
     /**
      * Get id
@@ -247,5 +267,77 @@ class CalenderEvents
     public function getCalender()
     {
         return $this->calender;
+    }
+
+    /**
+     * Set allDay
+     *
+     * @param boolean $allDay
+     *
+     * @return CalenderEvents
+     */
+    public function setAllDay($allDay)
+    {
+        $this->allDay = $allDay;
+
+        return $this;
+    }
+
+    /**
+     * Get allDay
+     *
+     * @return boolean
+     */
+    public function getAllDay()
+    {
+        return $this->allDay;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return CalenderEvents
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     *
+     * @return CalenderEvents
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
     }
 }

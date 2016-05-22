@@ -33,6 +33,13 @@ class User extends BaseUser
     private $mailBox;
 
     /**
+     * @var MailBox
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", mappedBy="owner", orphanRemoval=true)
+     */
+    private $calendar;
+    
+
+    /**
      * @var ForumInteractions
      * 
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\ForumInteractions", mappedBy="owner")
@@ -42,7 +49,7 @@ class User extends BaseUser
     /**
      * @var Calender
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", mappedBy="owner", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $calender;
 
@@ -56,7 +63,6 @@ class User extends BaseUser
      *
      */
     private $projects;
-    
 
     /**
      * User constructor.
@@ -182,5 +188,29 @@ class User extends BaseUser
     public function getProjects()
     {
         return $this->projects;
+    }
+
+    /**
+     * Set calendar
+     *
+     * @param \PFA\MainBundle\Entity\Calender $calendar
+     *
+     * @return User
+     */
+    public function setCalendar(\PFA\MainBundle\Entity\Calender $calendar = null)
+    {
+        $this->calendar = $calendar;
+
+        return $this;
+    }
+
+    /**
+     * Get calendar
+     *
+     * @return \PFA\MainBundle\Entity\Calender
+     */
+    public function getCalendar()
+    {
+        return $this->calendar;
     }
 }

@@ -17,9 +17,11 @@ class MaillingController extends MainController
     /**
      * @Route("/", name="mailbox_home")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return $this->render('PFAMaillingBundle:Default:index.html.twig');
+        $form = $this->createForm(new MailType());
+        $form->handleRequest($request);
+        return $this->render('PFAMaillingBundle:Default:index.html.twig',["form" => $form->createView()]);
     }
 
     /**
@@ -95,6 +97,8 @@ class MaillingController extends MainController
             $addFolder = new MailFolder();
             $addFolder->setName(ucwords($name))
                 ->setIcon("folder")
+                ->setCode(strtoupper(str_replace(" ", "_", $name)))
+                ->setCanBeRemoved(true)
                 ->setOwner($this->getThisUser());
             $em = $this->getEM();
             $em->persist($addFolder);

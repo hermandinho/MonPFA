@@ -11,6 +11,8 @@ var MaillingComponent = (function () {
         DropdownButton = ReactBootstrap.DropdownButton,
         MenuItem = ReactBootstrap.MenuItem;
 
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
     var AddFolderModal = React.createClass({
         displayName: "AddFolderModal",
         getInitialState: function(){
@@ -29,7 +31,7 @@ var MaillingComponent = (function () {
                         onEntered: function () {
                             $('form').parsley();
                             var l = Ladda.create(document.querySelector("#btn-add-folder"));
-                            $this.props.handleLaddaInstance(l);
+                            $this.props.handleLaddaInstance.bind(null,l);
                             //Ladda.bind( 'button[type=submit]' );
                         }
                     },
@@ -126,6 +128,9 @@ var MaillingComponent = (function () {
                         show: this.props.modalVisible,
                         onHide: this.props.closeModal,
                         onEntered: function () {
+                            //if (CKEDITOR.instances["mail_body"]) { delete CKEDITOR.instances["mail_body"]; }
+
+                            //CKEDITOR.replace("mail_body", {"toolbar":[["Cut","Copy","Paste","PasteText","PasteFromWord","-","Undo","Redo"],["Bold","Italic","Underline","Strike","Subscript","Superscript","-","RemoveFormat"]],"filebrowserUploadUrl":"\/MonPFA\/web\/app_dev.php\/mailbox\/"});
                             //$('form').parsley();
                             //var l = Ladda.create(document.querySelector("#btn-add-folder"));
                             //$this.props.handleLaddaInstance(l);
@@ -147,9 +152,11 @@ var MaillingComponent = (function () {
                         React.createElement(
                             "div",
                             {
-                                className: "row",
+                                className: "",
                                 dangerouslySetInnerHTML: {__html: this.props.mailForm }
-                            }/*,
+                            }
+
+                            /*,
                             React.createElement(
                                 "div",
                                 {
@@ -819,7 +826,7 @@ var MaillingComponent = (function () {
                 "new_mail",
                 {},
                 function (form) {
-                    console.log(form);
+                    //console.log(form);
                     $this.setState({ sendMailModalVisible: true, mailForm: form });
                 }
             );
@@ -893,7 +900,20 @@ var MaillingComponent = (function () {
                             title: "BTN",
                             onClick: this.openSendMailModal
                         }
-                    )
+                    )/*,
+                    React.createElement(
+                        Select,
+                        {
+                            options: [
+                                { value: 'one', label: 'One' },
+                                { value: 'two', label: 'Two' }
+                            ],
+                            value: "two",
+                            onChange: function () {
+                                
+                            }
+                        }
+                    ) */
                 )
             )
         }

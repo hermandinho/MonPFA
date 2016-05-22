@@ -2,9 +2,23 @@
 
 {% block content %}
     <div id="mail_Layout"></div>
+    <a class="btn-floating btn-large waves-effect waves-light red" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
+
+    <div class="row">
+        <div id="myModal" class="modal col offset-ml m12">
+            <div class="modal-content">
+                <span>Modal Header</span>
+                {{ form(form) }}
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additional_javascripts %}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {% javascripts
         "@PFAMaillingBundle/Resources/public/js/MaillingComponent.js"
         "@PFAMaillingBundle/Resources/public/js/maillingScripts.js"

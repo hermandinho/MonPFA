@@ -1,0 +1,52 @@
+{% extends "PFAMainBundle::layout.html.twig" %}
+
+{% block content %}
+    <div id="calendar"></div>
+    <!-- Modal Trigger -->
+    <!--<a class="modal-trigger waves-effect waves-light btn" href="#modal1">Modal</a> -->
+
+    <!-- Modal Structure -->
+    <div class="modal fade col-md-10_ col-m-offset-2" id="addEventModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title">Ajouter un Evénement</h5>
+                </div>
+                <div class="modal-body">
+                    {% set includeName = include %}
+                    {% include "PFAMainBundle:Angenda:" ~ includeName ~ ".html.twig" with {"form": form} %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary ladda-button" data-dismiss="modal">Fermer</button>
+                    <!--<button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Modal Structure -->
+    <div class="modal fade col-md-10_ col-m-offset-2" id="editEventModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title">Modifié un Evénement</h5>
+                </div>
+                <div class="modal-body editModalBody">
+                    {% set includeName = include %}
+                    {% include "PFAMainBundle:Angenda:" ~ includeName ~ ".html.twig" with {"form": form} %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary ladda-button" data-dismiss="modal">Fermer</button>
+                    <!--<button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
