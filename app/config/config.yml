@@ -119,3 +119,12 @@ ivory_ck_editor:
             #uiColor:                "#000000"
             filebrowserUploadRoute: "mailbox_home"
             #extraPlugins:           "wordcount"
+
+#Easy Admin
+easy_admin:
+    site_name: "EPI PFA 2016"
+    entities:
+          Utilisateurs: PFA\MainBundle\Entity\User
+          Messagerie: PFA\MaillingBundle\Entity\Mail
+          Forum: PFA\CoreBundle\Entity\Forum
+          Projets: PFA\CoreBundle\Entity\Project
