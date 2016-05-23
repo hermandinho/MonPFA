@@ -2,6 +2,7 @@
 
 namespace PFA\MaillingBundle\Controller;
 
+use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MaillingBundle\Entity\Mail;
 use PFA\MaillingBundle\Entity\MailFolder;
@@ -122,5 +123,23 @@ class MaillingController extends MainController
         $form->handleRequest($request);
 
         return $this->render("PFAMaillingBundle:partials:add_mail.html.twig", ["form" => $form->createView()]);
+    }
+
+
+    /**
+     * @Route("/users/list/json", name="get_user_list_json")
+     * @param Request $request
+     * @return Response
+     */
+    public function getJsonUserListAction(Request $request)
+    {
+        $users = $this->get("pfa_core.managers.user_manager")->getUserList();
+        $serializerContextRecall = SerializationContext::create()->setGroups(array('autocomplete'));
+        $serializedData = $this->getSerializer()->serialize($users, "json",$serializerContextRecall);
+
+        $response = new Response();
+        $response->setContent(($serializedData));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 }

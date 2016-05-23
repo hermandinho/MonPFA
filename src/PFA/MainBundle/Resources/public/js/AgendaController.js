@@ -143,6 +143,7 @@ $(document).ready(function () {
 
             $(this).attr('data-toggle','tooltip');
             $(this).attr('title',event.title);
+            $(this).css({cursor: "pointer"});
         },
         eventMouseout: function (event, jsEvent, view) {
             $(this).tooltip("remove");

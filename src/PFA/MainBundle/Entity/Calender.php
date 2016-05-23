@@ -25,7 +25,7 @@ class Calender extends BaseEntity
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="calendar")
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="calender")
      */
     private $owner;
 

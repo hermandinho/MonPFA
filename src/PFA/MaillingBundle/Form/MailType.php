@@ -26,7 +26,11 @@ class MailType extends AbstractType
                 ]
             ])
             ->add('subject', TextType::class)
-            ->add('body', CKEditorType::class)
+            ->add('body', CKEditorType::class, array(
+                "attr" => [
+                    "class" => "materialize-textarea characterCounter"
+                ]
+            ))
             //->add('isRead')
             //->add('date', 'datetime')
             //->add('attachements')

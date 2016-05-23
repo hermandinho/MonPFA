@@ -135,6 +135,41 @@ var MaillingComponent = (function () {
                             //var l = Ladda.create(document.querySelector("#btn-add-folder"));
                             //$this.props.handleLaddaInstance(l);
                             //Ladda.bind( 'button[type=submit]' );
+                            $('select').material_select(); // render selects
+
+                            $('input.characterCounter, textarea.characterCounter').characterCounter();// initialise characterCounter
+
+                            Materialize.updateTextFields();
+
+                            var UserList = new Bloodhound({
+                                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                prefetch: {
+                                    url: "users/list/json",
+                                    local: function (user) {
+                                        console.log(user);
+                                        return {id: user.id, nom:user.nom };
+                                    }
+                                }
+                            });
+
+                            UserList.initialize();
+                            //console.log(UserList);
+                            var elt = $('input.selectUsers');
+                            elt.materialtags({
+                                itemValue: 'id',
+                                itemText: 'nom',
+                                typeaheadjs: {
+                                    name: 'usersList',
+                                    //displayKey: 'text',
+                                    source: UserList.ttAdapter()
+                                }
+                            });
+                            /*elt.materialtags('add', { "id": 1 , "nom": "Amsterdam" , "continent": "Europe" });
+                            elt.materialtags('add', { "id": 4 , "nom": "Washington" , "continent": "America" });
+                            elt.materialtags('add', { "value": 7 , "text": "Sydney" , "continent": "Australia" });
+                            elt.materialtags('add', { "value": 10, "text": "Beijing" , "continent": "Asia" });
+                            elt.materialtags('add', { "value": 13, "text": "Cairo" , "continent": "Africa" });*/
                         }
                     },
                     React.createElement(

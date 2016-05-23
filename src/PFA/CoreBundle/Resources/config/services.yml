@@ -2,3 +2,7 @@ services:
 #    pfa_core.example:
 #        class: PFA\CoreBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]
+
+    pfa_core.managers.user_manager:
+        class: PFA\CoreBundle\Managers\UserManager
+        arguments: ['@doctrine.orm.entity_manager']

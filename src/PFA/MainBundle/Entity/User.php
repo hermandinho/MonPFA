@@ -6,8 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use FOS\UserBundle\Model\User as BaseUser;
+use JMS\Serializer\Annotation as Serializer;
 use PFA\CoreBundle\Entity\ForumInteractions;
 use PFA\MaillingBundle\Entity\MailBox;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * User
@@ -19,7 +21,7 @@ class User extends BaseUser
 {
     /**
      * @var int
-     *
+     * @Groups({"autocomplete"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,17 +29,24 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var string
+     * @Groups({"autocomplete"})
+     * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+     */
+    private $nom;
+
+    /**
+     * @var string
+     *  @Groups({"autocomplete"})
+     * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
+     */
+    private $prenom;
+
+    /**
      * @var MailBox
      * @ORM\OneToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", mappedBy="owner", orphanRemoval=true)
      */
     private $mailBox;
-
-    /**
-     * @var MailBox
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", mappedBy="owner", orphanRemoval=true)
-     */
-    private $calendar;
-    
 
     /**
      * @var ForumInteractions
@@ -191,26 +200,50 @@ class User extends BaseUser
     }
 
     /**
-     * Set calendar
+     * Set nom
      *
-     * @param \PFA\MainBundle\Entity\Calender $calendar
+     * @param string $nom
      *
      * @return User
      */
-    public function setCalendar(\PFA\MainBundle\Entity\Calender $calendar = null)
+    public function setNom($nom)
     {
-        $this->calendar = $calendar;
+        $this->nom = $nom;
 
         return $this;
     }
 
     /**
-     * Get calendar
+     * Get nom
      *
-     * @return \PFA\MainBundle\Entity\Calender
+     * @return string
      */
-    public function getCalendar()
+    public function getNom()
     {
-        return $this->calendar;
+        return $this->nom;
+    }
+
+    /**
+     * Set prenom
+     *
+     * @param string $prenom
+     *
+     * @return User
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * Get prenom
+     *
+     * @return string
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
     }
 }
