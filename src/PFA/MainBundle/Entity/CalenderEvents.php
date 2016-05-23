@@ -87,7 +87,7 @@ class CalenderEvents
     /**
      * @var Calender
      *
-     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\Calender", inversedBy="events" ,cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\Calender", inversedBy="events")
      */
     private $calender;
 

@@ -1,4 +1,25 @@
-{{ form(form) }}
+{{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 editEventForm"} }) }}
+    <div class="row">
+        <div class="input-field col s12">
+            {{ form_widget(form.receiver, {"attr":{}}) }}
+            {{ form_label(form.receiver) }}
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                {{ form_widget(form.subject, {"attr":{}}) }}
+                {{ form_label(form.subject) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                {{ form_widget(form.body, {"attr":{}}) }}
+                {{ form_label(form.body) }}
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
 <script>
     alert("OK");
 </script>

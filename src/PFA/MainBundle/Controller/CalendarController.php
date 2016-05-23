@@ -12,6 +12,7 @@ namespace PFA\MainBundle\Controller;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MainBundle\Entity\CalenderEvents;
 use PFA\MainBundle\Form\CalenderEventsType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -83,5 +84,23 @@ class CalendarController extends MainController
 
             return $this->render("PFAMainBundle:Angenda:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
         }
+    }
+
+    /**
+     * @Route("/agenda/events/{id}/remove", name="agenda_remove_event")
+     * @Method(methods={"POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeEventAction(Request $request, $id)
+    {
+        $em = $this->getEM();
+        $calendarEvent = $em->getRepository("PFAMainBundle:CalenderEvents")->find($id);
+
+        $em->remove($calendarEvent);
+        $em->flush();
+
+        return new JsonResponse(['status' => true]);
+
     }
 }

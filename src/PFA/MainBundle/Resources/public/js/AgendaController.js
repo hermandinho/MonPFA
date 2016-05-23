@@ -22,8 +22,6 @@ $(document).ready(function () {
     $('input.characterCounter, textarea.characterCounter').characterCounter();// initialise characterCounter
 
     Materialize.updateTextFields();
-    //$('.tooltipped').tooltip({delay: 50});
-
 
     $(".addEventForm").submit(function (e) {
         e.preventDefault();
@@ -53,7 +51,7 @@ $(document).ready(function () {
         e.preventDefault();
         var laddaInstance = Ladda.create(document.querySelector( '#edit_event_btn'));
         laddaInstance.start();
-
+        $("#edit_event_btn").text("Enregistrement en cours ...");
         var formData = new FormData(document.querySelector(".editEventForm"));
 
         $.ajax({
@@ -71,6 +69,22 @@ $(document).ready(function () {
                 }
             }
         })
+    });
+
+    $("#remove_event_btn").click(function (e) {
+        e.preventDefault();
+        var laddaInstance = Ladda.create(document.querySelector( '#remove_event_btn'));
+        laddaInstance.start();
+        $(this).text("Suppression en cours ...").attr("disabled", true);
+        $.post(
+            "agenda/events/" + EventId + "/remove",
+            {},
+            function (data) {
+                laddaInstance.stop();
+                $("#editEventModal").modal("hide");
+                $('#calendar').fullCalendar( 'refetchEvents' );
+            }
+        )
     });
 
     var handleCalendarDayClick = function (date, jsEvent, view) {
@@ -118,12 +132,21 @@ $(document).ready(function () {
             handleCalendarDayClick(date, jsEvent, view);
         },
         eventMouseover: function (event, jsEvent, view) {
-            $(this).attr('data-tooltip', event.title);
-            $(this).addClass('tooltipped');
+            /*$(this).attr('data-tooltip', event.title);
+            if(!$(this).hasClass("tooltipped")){
+                $(this).addClass('tooltipped');
+            }
             $(this).attr('data-position', "bottom");
             $(this).attr('data-delay', 50);
-            $(this).css({cursor: "pointer"});
+            $(this).css({cursor: "pointer"}); */
             //console.log($(this));
+
+            $(this).attr('data-toggle','tooltip');
+            $(this).attr('title',event.title);
+        },
+        eventMouseout: function (event, jsEvent, view) {
+            $(this).tooltip("remove");
+            $(this).removeClass("tooltipped");
         },
         eventClick: function (event, jsEvent, view) {
             $.get(
@@ -136,22 +159,19 @@ $(document).ready(function () {
             )
 
         },
+        eventAfterAllRender: function (view) {
+            $('.tooltipped').tooltip('remove');
+            $('.tooltipped').tooltip({delay: 50});
+        },
 
-        customButtons: {
+        /*customButtons: {
             myCustomButton: {
                 text: 'ajouter',
                 click: function() {
-                    $("#addEventModal").modal(/*{
-                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                        opacity: .5, // Opacity of modal background
-                        in_duration: 300, // Transition in duration
-                        out_duration: 200, // Transition out duration
-                        ready: function() { alert('Ready'); }, // Callback for Modal open
-                        complete: function() { alert('Closed'); } // Callback for Modal close
-                    }*/);
+                    $("#addEventModal").modal();
                 }
             }
-        },
+        },*/
         header: {
             left: 'myCustomButton',
             center: 'title',
