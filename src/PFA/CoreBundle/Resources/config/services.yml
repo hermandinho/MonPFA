@@ -6,3 +6,9 @@ services:
     pfa_core.managers.user_manager:
         class: PFA\CoreBundle\Managers\UserManager
         arguments: ['@doctrine.orm.entity_manager']
+
+    pfa_core.listeners.pfamain_listener:
+        class: PFA\CoreBundle\Listeners\PFAMainListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: onFlush }

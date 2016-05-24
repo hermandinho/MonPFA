@@ -128,41 +128,35 @@ var MaillingComponent = (function () {
                         show: this.props.modalVisible,
                         onHide: this.props.closeModal,
                         onEntered: function () {
-                            //if (CKEDITOR.instances["mail_body"]) { delete CKEDITOR.instances["mail_body"]; }
-
-                            //CKEDITOR.replace("mail_body", {"toolbar":[["Cut","Copy","Paste","PasteText","PasteFromWord","-","Undo","Redo"],["Bold","Italic","Underline","Strike","Subscript","Superscript","-","RemoveFormat"]],"filebrowserUploadUrl":"\/MonPFA\/web\/app_dev.php\/mailbox\/"});
-                            //$('form').parsley();
-                            //var l = Ladda.create(document.querySelector("#btn-add-folder"));
-                            //$this.props.handleLaddaInstance(l);
-                            //Ladda.bind( 'button[type=submit]' );
                             $('select').material_select(); // render selects
 
                             $('input.characterCounter, textarea.characterCounter').characterCounter();// initialise characterCounter
 
                             Materialize.updateTextFields();
 
-                            var UserList = new Bloodhound({
-                                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                            var AutocompleteUserList = new Bloodhound({
+                                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                                 prefetch: {
-                                    url: "users/list/json",
-                                    local: function (user) {
-                                        console.log(user);
-                                        return {id: user.id, nom:user.nom };
+                                    url: 'users/list/json',
+                                    filter: function(users) {
+                                        return users.map(function(item){
+                                            return { name: item.nom+" "+item.prenom, id: item.id};
+                                        });
                                     }
                                 }
                             });
 
-                            UserList.initialize();
-                            //console.log(UserList);
-                            var elt = $('input.selectUsers');
-                            elt.materialtags({
+                            AutocompleteUserList.initialize();
+
+                            $('input.selectUsers').materialtags({
                                 itemValue: 'id',
-                                itemText: 'nom',
+                                itemText: "name",
                                 typeaheadjs: {
-                                    name: 'usersList',
-                                    //displayKey: 'text',
-                                    source: UserList.ttAdapter()
+                                    name: 'AutocompleteUserList',
+                                    displayKey: 'name',
+                                    //valueKey: 'name',
+                                    source: AutocompleteUserList.ttAdapter()
                                 }
                             });
                             /*elt.materialtags('add', { "id": 1 , "nom": "Amsterdam" , "continent": "Europe" });

@@ -18,13 +18,13 @@ class MailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('receiver', EntityType::class, [
+            /*->add('receiver', EntityType::class, [
                 "class" => "PFAMainBundle:User",
                 "choice_label" => "username",
                 "attr" => [
                     "multiple" => true
                 ]
-            ])
+            ]) */
             ->add('subject', TextType::class)
             ->add('body', CKEditorType::class, array(
                 "attr" => [

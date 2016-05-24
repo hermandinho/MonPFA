@@ -18,36 +18,6 @@
 {% endblock %}
 
 {% block additional_javascripts %}
-    <label>
-        <input type="text" value="" data-role="materialtags" class="selectUsers"/>
-    </label>
-
-    <script>
-        var citynames = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {
-                url: 'users/list/json',
-                local: function(list) {
-                    return $.map(list, function(cityname) {
-                        alert(1)
-                        return { name: cityname };
-                    });
-                }
-            }
-        });
-
-        citynames.initialize();
-
-        $('input.selectUsers').materialtags({
-            typeaheadjs: {
-                name: 'citynames',
-                displayKey: 'name',
-                valueKey: 'name',
-                source: citynames.ttAdapter()
-            }
-        });
-    </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {% javascripts
         "@PFAMaillingBundle/Resources/public/js/MaillingComponent.js"

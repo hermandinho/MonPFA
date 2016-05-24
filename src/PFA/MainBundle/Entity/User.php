@@ -37,7 +37,7 @@ class User extends BaseUser
 
     /**
      * @var string
-     *  @Groups({"autocomplete"})
+     * @Groups({"autocomplete"})
      * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
      */
     private $prenom;
