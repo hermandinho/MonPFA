@@ -11,7 +11,7 @@ use PFA\CoreBundle\Entity\ShareZone;
  * @ORM\Table(name="documents")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\DocumentsRepository")
  */
-class Documents extends BaseEntity
+class Documents
 {
     /**
      * @var int

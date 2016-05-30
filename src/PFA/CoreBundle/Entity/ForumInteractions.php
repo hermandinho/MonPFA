@@ -12,7 +12,7 @@ use PFA\MainBundle\Entity\User;
  * @ORM\Table(name="forum_interactions")
  * @ORM\Entity(repositoryClass="PFA\CoreBundle\Repository\ForumInteractionsRepository")
  */
-class ForumInteractions extends BaseEntity
+class ForumInteractions
 {
     /**
      * @var int

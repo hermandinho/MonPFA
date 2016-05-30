@@ -9,7 +9,7 @@ $(document).ready(function () {
         format: 'yyyy/mm/dd',
         formatSubmit: 'yyyy/mm/dd',
         closeOnSelect: true,
-        min: new Date(),
+        //min: new Date(),
         onSet: function (ele) {
             if(ele.select){
                 this.close();

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="chat_room")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\ChatRoomRepository")
  */
-class ChatRoom extends BaseEntity
+class ChatRoom
 {
     /**
      * @var int

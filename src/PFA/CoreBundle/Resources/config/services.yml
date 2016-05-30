@@ -7,8 +7,17 @@ services:
         class: PFA\CoreBundle\Managers\UserManager
         arguments: ['@doctrine.orm.entity_manager']
 
+    pfa_core.managers.pfamanager:
+        class: PFA\CoreBundle\Managers\PFAManager
+        arguments: ["@security.token_storage"]
+
     pfa_core.listeners.pfamain_listener:
         class: PFA\CoreBundle\Listeners\PFAMainListener
+        arguments: ["@pfa_core.managers.pfamanager"]
         tags:
-            - { name: doctrine.event_listener, event: prePersist }
+            #- { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: onFlush }
+
+    pfa_core.services.project_manager:
+        class: PFA\CoreBundle\Services\ProjectManager
+        arguments: ['@doctrine.orm.entity_manager']

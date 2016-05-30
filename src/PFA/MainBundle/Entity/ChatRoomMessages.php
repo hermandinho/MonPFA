@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="chat_room_messages")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\ChatRoomMessagesRepository")
  */
-class ChatRoomMessages extends BaseEntity
+class ChatRoomMessages
 {
     /**
      * @var int

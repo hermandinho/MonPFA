@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="message_attachments")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\MessageAttachmentsRepository")
  */
-class MessageAttachments extends BaseEntity
+class MessageAttachments
 {
     /**
      * @var int

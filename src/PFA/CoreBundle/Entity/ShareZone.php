@@ -12,7 +12,7 @@ use PFA\MainBundle\Entity\BaseEntity;
  * @ORM\Table(name="share_zone")
  * @ORM\Entity(repositoryClass="PFA\CoreBundle\Repository\ShareZoneRepository")
  */
-class ShareZone extends BaseEntity
+class ShareZone
 {
     /**
      * @var int

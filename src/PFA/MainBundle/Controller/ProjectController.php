@@ -3,6 +3,7 @@
 namespace PFA\MainBundle\Controller;
 
 use PFA\CoreBundle\Controller\MainController;
+use PFA\CoreBundle\Form\ProjectType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,6 +25,25 @@ class ProjectController extends MainController
      */
     public function indexAction(Request $request)
     {
-        return $this->render('PFAMainBundle:Project:project-list.html.twig');
+        $projectList = $this->get("pfa_core.services.project_manager")->getUserProjects($this->getThisUser());
+        $serializedData = $this->getSerializer()->serialize($projectList, "json");
+        return $this->render('PFAMainBundle:Project:project-list.html.twig', ["projects" => $projectList]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/project/add", name="project_add")
+     */
+    public function addProject(Request $request)
+    {
+        $form = $this->createForm(new ProjectType());
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            die(dump($request->request->all()));
+        }
+
+        return $this->render("PFAMainBundle:Projects:add_projetcs.html.twig", ['form' => $form->createView()]);
     }
 }

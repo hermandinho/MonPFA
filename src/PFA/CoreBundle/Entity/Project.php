@@ -14,7 +14,7 @@ use PFA\MainBundle\Entity\ChatRoom;
  * @ORM\Table(name="project")
  * @ORM\Entity(repositoryClass="PFA\CoreBundle\Repository\ProjectRepository")
  */
-class Project extends BaseEntity
+class Project
 {
     /**
      * @var int
@@ -38,6 +38,19 @@ class Project extends BaseEntity
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
 
     /**
      * @var string
@@ -69,10 +82,11 @@ class Project extends BaseEntity
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\User")
+     * 
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="projects")
      *
      */
-    //private $members;
+    private $owner;
 
     /**
      * @var Calender
@@ -233,5 +247,101 @@ class Project extends BaseEntity
     public function getChatRoom()
     {
         return $this->chatRoom;
+    }
+
+    /**
+     * Set owner
+     *
+     * @param \PFA\MainBundle\Entity\User $owner
+     *
+     * @return Project
+     */
+    public function setOwner(\PFA\MainBundle\Entity\User $owner = null)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return \PFA\MainBundle\Entity\User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Set calender
+     *
+     * @param \PFA\MainBundle\Entity\Calender $calender
+     *
+     * @return Project
+     */
+    public function setCalender(\PFA\MainBundle\Entity\Calender $calender = null)
+    {
+        $this->calender = $calender;
+
+        return $this;
+    }
+
+    /**
+     * Get calender
+     *
+     * @return \PFA\MainBundle\Entity\Calender
+     */
+    public function getCalender()
+    {
+        return $this->calender;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Project
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Project
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

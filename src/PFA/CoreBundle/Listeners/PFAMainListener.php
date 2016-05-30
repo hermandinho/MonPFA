@@ -10,23 +10,97 @@ namespace PFA\CoreBundle\Listeners;
 
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use PFA\CoreBundle\Managers\PFAManager;
+use PFA\MaillingBundle\Entity\MailFolder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PFAMainListener implements EventSubscriberInterface
 {
+    /**
+     * @var array
+     */
+    private $persistedEntities = [];
 
     /**
-     * @param LifecycleEventArgs $args
-     * @ORM\PrePersist()
+     * @var array
      */
-    public function prePersist(LifecycleEventArgs $args)
+    private $persistedMailFolders = [];
+
+    /**
+     * @var PFAManager
+     */
+    private $pfaManager;
+
+    /**
+     * @var array
+     */
+    private $observedEntities = [];
+
+    /**
+     * PFAMainListener constructor.
+     * @param PFAManager $pfaManager
+     */
+    public function __construct(PFAManager $pfaManager)
     {
-        //die(dump($args->getEntity()));
+        $this->pfaManager = $pfaManager;
+        $this->observedEntities = [
+            "User",
+            "Project"
+        ];
     }
 
-    public function onFlush()
+    /**
+     * @param OnFlushEventArgs $eventArgs
+     */
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+
+        foreach ($uow->getScheduledEntityInsertions() as $entity) {
+            $nameSpace = get_class($entity);
+            $explod = explode("\\", $nameSpace);
+            $className = end($explod);
+
+            if(in_array($className, $this->observedEntities)){
+                $this->pfaManager->addEntityForInsertion($entity);
+            }
+        }
+
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+            $nameSpace = get_class($entity);
+            $explod = explode("\\", $nameSpace);
+            $className = end($explod);
+            if(in_array($className, $this->observedEntities)){
+                $this->pfaManager->addEntityForUpdate($entity, $uow->getEntityChangeSet($entity));
+            }
+        }
+
+        $this->pfaManager->build();
+
+        foreach ($this->pfaManager->getBuildEntities() as $entity) {
+            if($entity instanceof MailFolder) {
+                if(!in_array($entity->getName(), $this->persistedMailFolders)){
+                    $em->persist($entity);
+                    $this->persistedMailFolders[] = $entity->getName();
+                }
+
+            }else {
+                if(!in_array(get_class($entity), $this->persistedEntities) && !$entity instanceof MailFolder){
+                    $em->persist($entity);
+                    $this->persistedEntities[] = get_class($entity);
+                }
+            }
+            //dump(($entity) instanceof MailFolder);
+        }
+        //die();
+        
+        //die(dump($this->pfaManager->getBuildEntities(), $this->observedEntities ));
+
+        $uow->computeChangeSets();
+        $this->pfaManager->clearBuilts();
     }
 
     /**
@@ -49,7 +123,7 @@ class PFAMainListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array("prePersist","onFlush");
+        return array("onFlush");
     }
 
 }

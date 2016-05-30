@@ -71,6 +71,13 @@ class User extends BaseUser
      * )
      *
      */
+    //private $projects;
+
+    /**
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\Project", mappedBy="owner", orphanRemoval=true)
+     */
     private $projects;
 
     /**
@@ -166,40 +173,6 @@ class User extends BaseUser
     }
 
     /**
-     * Add project
-     *
-     * @param \PFA\CoreBundle\Entity\Project $project
-     *
-     * @return User
-     */
-    public function addProject(\PFA\CoreBundle\Entity\Project $project)
-    {
-        $this->projects[] = $project;
-
-        return $this;
-    }
-
-    /**
-     * Remove project
-     *
-     * @param \PFA\CoreBundle\Entity\Project $project
-     */
-    public function removeProject(\PFA\CoreBundle\Entity\Project $project)
-    {
-        $this->projects->removeElement($project);
-    }
-
-    /**
-     * Get projects
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProjects()
-    {
-        return $this->projects;
-    }
-
-    /**
      * Set nom
      *
      * @param string $nom
@@ -245,5 +218,39 @@ class User extends BaseUser
     public function getPrenom()
     {
         return $this->prenom;
+    }
+
+    /**
+     * Add project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     *
+     * @return User
+     */
+    public function addProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects[] = $project;
+
+        return $this;
+    }
+
+    /**
+     * Remove project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     */
+    public function removeProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects->removeElement($project);
+    }
+
+    /**
+     * Get projects
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjects()
+    {
+        return $this->projects;
     }
 }

@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="calender")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\CalenderRepository")
  */
-class Calender extends BaseEntity
+class Calender
 {
     /**
      * @var int

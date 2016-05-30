@@ -5,5 +5,52 @@
 {% endblock %}
 
 {% block content %}
-    Hello
+
+    {% if projects|length == 0 %}
+        <div class="row">
+            <div class="col s12 m5">
+                <div class="card-panel teal">
+          <span class="white-text">
+              <h1>Vous n'avez aucun projet.</h1>
+          </span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large red" id="addProjectBtn">
+            <i class="large material-icons">add</i>
+        </a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade col-md-10_ col-m-offset-2" id="addProjectModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title">Ajouter Un Project</h5>
+                </div>
+                <div class="modal-body" id="add-project-form-container">
+                    {# set includeName = include #}
+                    {# include "PFAMainBundle:Projects:add_projetcs.html.twig" with {"form": form} #}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary ladda-button" data-dismiss="modal">Fermer</button>
+                    <!--<button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+
+{% block additional_javascripts %}
+    {% javascripts
+        '@PFAMainBundle/Resources/public/ProjectController.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
