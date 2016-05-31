@@ -61,8 +61,8 @@ class PFAMainListener implements EventSubscriberInterface
 
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             $nameSpace = get_class($entity);
-            $explod = explode("\\", $nameSpace);
-            $className = end($explod);
+            $exploded = explode("\\", $nameSpace);
+            $className = end($exploded);
 
             if(in_array($className, $this->observedEntities)){
                 $this->pfaManager->addEntityForInsertion($entity);
@@ -80,13 +80,13 @@ class PFAMainListener implements EventSubscriberInterface
 
         $this->pfaManager->build();
 
+        //die(dump($this->pfaManager->getBuildEntities()));
         foreach ($this->pfaManager->getBuildEntities() as $entity) {
             if($entity instanceof MailFolder) {
                 if(!in_array($entity->getName(), $this->persistedMailFolders)){
                     $em->persist($entity);
                     $this->persistedMailFolders[] = $entity->getName();
                 }
-
             }else {
                 if(!in_array(get_class($entity), $this->persistedEntities) && !$entity instanceof MailFolder){
                     $em->persist($entity);
@@ -98,7 +98,6 @@ class PFAMainListener implements EventSubscriberInterface
         //die();
         
         //die(dump($this->pfaManager->getBuildEntities(), $this->observedEntities ));
-
         $uow->computeChangeSets();
         $this->pfaManager->clearBuilts();
     }

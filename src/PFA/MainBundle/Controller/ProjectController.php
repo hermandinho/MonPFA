@@ -7,6 +7,7 @@ use PFA\CoreBundle\Form\ProjectType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -37,11 +38,17 @@ class ProjectController extends MainController
      */
     public function addProject(Request $request)
     {
+        $em = $this->getEM();
         $form = $this->createForm(new ProjectType());
         $form->handleRequest($request);
+        //die(dump($request->query->all(), $form->isSubmitted()));
+        if($form->isSubmitted() && $form->isValid()){
+            $project = $form->getData();
+            $em->persist($project);
 
-        if($form->isSubmitted()){
-            die(dump($request->request->all()));
+            $em->flush();
+
+            return new JsonResponse(['status' => true]);
         }
 
         return $this->render("PFAMainBundle:Projects:add_projetcs.html.twig", ['form' => $form->createView()]);

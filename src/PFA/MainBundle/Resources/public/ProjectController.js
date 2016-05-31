@@ -17,26 +17,22 @@ $(document).ready(function () {
     $("body").on("submit","form[name='project']",function (e) {
         e.preventDefault();
         var laddaInstance = Ladda.create(document.querySelector('#btn-save-project'));
-        //laddaInstance.start();
-
-        //var formData = new FormData(document.querySelector('.addProjectForm'));
-        var formData = new FormData();
-        formData = $(this).serializeArray();
-        console.log(formData);
+        laddaInstance.start();
+        //console.log($(this).attr("method"), $(this).attr("action"));
         //return;
-
         $.ajax({
             url: "project/add", 
-            data: formData,
+            data: new FormData(this),
             cache: false,
             processData: false,
             contentType: false,
             type: 'POST',
             success: function (data) {
-                //console.log(data);
+                console.log(data);
                 if(data.status){
                     laddaInstance.stop();
-                    $("#addProjectModal").modal("hide");
+                    window.location.reload();
+                    //$("#addProjectModal").modal("hide");
                 }
             },
             error: function (er, err) {

@@ -92,30 +92,31 @@ class PFAManager
      */
     private function handleUserListener(User $user, $changeSets = [])
     {
-        $calendar = new Calender();
-        $calendar->setOwner($user);
-        $this->addBuiltAction($calendar);
+        if($user->getId() == null){
+            $calendar = new Calender();
+            $calendar->setOwner($user);
+            $this->addBuiltAction($calendar);
 
-        $mailBox = new MailBox();
-        $mailBox->setOwner($user);
-        $this->addBuiltAction($mailBox);
+            $mailBox = new MailBox();
+            $mailBox->setOwner($user);
+            $this->addBuiltAction($mailBox);
 
-        $mailFolder1 = new MailFolder();
-        $mailFolder1->setOwner($user)
-                    ->setCanBeRemoved(false)
-                    ->setName("Boite de Reception")
-                    ->setCode("BOITE_RECEPTION")
-                    ->setIcon("recieved");
-        $this->addBuiltAction($mailFolder1);
+            $mailFolder1 = new MailFolder();
+            $mailFolder1->setOwner($user)
+                ->setCanBeRemoved(false)
+                ->setName("Boite de Reception")
+                ->setCode("BOITE_RECEPTION")
+                ->setIcon("recieved");
+            $this->addBuiltAction($mailFolder1);
 
-        $mailFolder2 = new MailFolder();
-        $mailFolder2->setOwner($user)
-            ->setCanBeRemoved(false)
-            ->setName("Envoyé")
-            ->setCode("ENVOYE")
-            ->setIcon("sent");
-        $this->addBuiltAction($mailFolder2);
-
+            $mailFolder2 = new MailFolder();
+            $mailFolder2->setOwner($user)
+                ->setCanBeRemoved(false)
+                ->setName("Envoyé")
+                ->setCode("ENVOYE")
+                ->setIcon("sent");
+            $this->addBuiltAction($mailFolder2);
+        }
     }
 
     /**
@@ -124,28 +125,37 @@ class PFAManager
      */
     private function handleOnNewProject(Project $project, $changeSets = [])
     {
-        $calendar = new Calender();
-        //$calendar->setOwner($project->getOwner());
-        $this->addBuiltAction($calendar);
+        if($project->getId() == null){
+            $calendar = new Calender();
+            //$calendar->setOwner($project->getOwner());
+            $this->addBuiltAction($calendar);
 
-        $shareZone = new ShareZone();
-        //$shareZone->setProject($project);
-        $this->addBuiltAction($shareZone);
+            $shareZone = new ShareZone();
+            //$shareZone->setProject($project);
+            $this->addBuiltAction($shareZone);
 
-        $forum = new Forum();
-        //$forum->setProject($project);
-        $this->addBuiltAction($forum);
+            $forum = new Forum();
+            //$forum->setProject($project);
+            $this->addBuiltAction($forum);
 
-        $chatRoom = new ChatRoom();
-        $this->addBuiltAction($chatRoom);
+            $chatRoom = new ChatRoom();
+            $this->addBuiltAction($chatRoom);
 
-        $project->setForum($forum)
+            $tmp = $project;
+            $tmp->setForum($forum)
+                ->setName($project->getName())
+                ->setDescription($project->getDescription())
                 ->setRessources($shareZone)
                 ->setChatRoom($chatRoom)
                 ->setCalender($calendar)
                 ->setCreatedAt(new \DateTime())
                 ->setStatus("CREATED")
-                ->setOwner($this->token->getToken()->getUser());
+                ->setOwner($this->token->getToken()->getUser())
+                ->setCode(strtoupper(str_replace(" ", "-",$project->getName())));
+            //$project = $tmp;
+            $this->addBuiltAction($tmp);
+            //die(dump($tmp));
+        }
 
     }
 
