@@ -12,6 +12,7 @@ namespace PFA\CoreBundle\Listeners;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Managers\PFAManager;
 use PFA\MaillingBundle\Entity\MailFolder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -71,8 +72,8 @@ class PFAMainListener implements EventSubscriberInterface
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             $nameSpace = get_class($entity);
-            $explod = explode("\\", $nameSpace);
-            $className = end($explod);
+            $exploded = explode("\\", $nameSpace);
+            $className = end($exploded);
             if(in_array($className, $this->observedEntities)){
                 $this->pfaManager->addEntityForUpdate($entity, $uow->getEntityChangeSet($entity));
             }
@@ -82,24 +83,28 @@ class PFAMainListener implements EventSubscriberInterface
 
         //die(dump($this->pfaManager->getBuildEntities()));
         foreach ($this->pfaManager->getBuildEntities() as $entity) {
+            $meta = $em->getClassMetadata(get_class($entity));
             if($entity instanceof MailFolder) {
                 if(!in_array($entity->getName(), $this->persistedMailFolders)){
                     $em->persist($entity);
                     $this->persistedMailFolders[] = $entity->getName();
                 }
-            }else {
-                if(!in_array(get_class($entity), $this->persistedEntities) && !$entity instanceof MailFolder){
+            } elseif ($entity instanceof Project){
+                if(!in_array(get_class($entity), $this->persistedEntities)){
+                    $uow->recomputeSingleEntityChangeSet($meta, $entity);
+                }
+            }
+            else {
+                if(!in_array(get_class($entity), $this->persistedEntities)){
                     $em->persist($entity);
                     $this->persistedEntities[] = get_class($entity);
                 }
             }
-            //dump(($entity) instanceof MailFolder);
         }
-        //die();
-        
-        //die(dump($this->pfaManager->getBuildEntities(), $this->observedEntities ));
+
         $uow->computeChangeSets();
         $this->pfaManager->clearBuilts();
+        $this->persistedEntities = [];
     }
 
     /**

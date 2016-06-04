@@ -64,21 +64,16 @@ class User extends BaseUser
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="PFA\CoreBundle\Entity\Project")
-     * @ORM\JoinTable(name="project_members",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="project_id", referencedColumnName="id")}
-     * )
-     *
-     */
-    //private $projects;
-
-    /**
-     * @var ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\Project", mappedBy="owner", orphanRemoval=true)
      */
     private $projects;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ProjectMember", mappedBy="memeber")
+     */
+    private $projectsInvitedIn;
 
     /**
      * User constructor.
@@ -87,6 +82,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->projects = new ArrayCollection();
+        $this->projectsInvitedIn = new ArrayCollection();
     }
 
 
@@ -252,5 +248,39 @@ class User extends BaseUser
     public function getProjects()
     {
         return $this->projects;
+    }
+
+    /**
+     * Add projectsInvitedIn
+     *
+     * @param \PFA\CoreBundle\Entity\Project $projectsInvitedIn
+     *
+     * @return User
+     */
+    public function addProjectsInvitedIn(\PFA\CoreBundle\Entity\Project $projectsInvitedIn)
+    {
+        $this->projectsInvitedIn[] = $projectsInvitedIn;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectsInvitedIn
+     *
+     * @param \PFA\CoreBundle\Entity\Project $projectsInvitedIn
+     */
+    public function removeProjectsInvitedIn(\PFA\CoreBundle\Entity\Project $projectsInvitedIn)
+    {
+        $this->projectsInvitedIn->removeElement($projectsInvitedIn);
+    }
+
+    /**
+     * Get projectsInvitedIn
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectsInvitedIn()
+    {
+        return $this->projectsInvitedIn;
     }
 }

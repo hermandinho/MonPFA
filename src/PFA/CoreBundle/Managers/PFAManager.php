@@ -141,20 +141,17 @@ class PFAManager
             $chatRoom = new ChatRoom();
             $this->addBuiltAction($chatRoom);
 
-            $tmp = $project;
-            $tmp->setForum($forum)
-                ->setName($project->getName())
-                ->setDescription($project->getDescription())
-                ->setRessources($shareZone)
-                ->setChatRoom($chatRoom)
-                ->setCalender($calendar)
-                ->setCreatedAt(new \DateTime())
-                ->setStatus("CREATED")
-                ->setOwner($this->token->getToken()->getUser())
-                ->setCode(strtoupper(str_replace(" ", "-",$project->getName())));
-            //$project = $tmp;
-            $this->addBuiltAction($tmp);
-            //die(dump($tmp));
+            $project->setCreatedAt(new \DateTime());
+            $project->setOwner($this->token->getToken()->getUser());
+            $project->setCalender($calendar);
+            $project->setRessources($shareZone);
+            $project->setChatRoom($chatRoom);
+            $project->setStatus("ACTIF");
+            $project->setCode(uniqid("P_"));
+            $project->setForum($forum);
+
+            //die(dump($project));
+            $this->addBuiltAction($project);
         }
 
     }

@@ -4,9 +4,11 @@ namespace PFA\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use PFA\MainBundle\Entity\BaseEntity;
 use PFA\MainBundle\Entity\Calender;
 use PFA\MainBundle\Entity\ChatRoom;
+use PFA\MainBundle\Entity\User;
 
 /**
  * Project
@@ -82,6 +84,12 @@ class Project
 
     /**
      * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ProjectMember", mappedBy="project")
+     */
+    private $members;
+
+    /**
+     * @var User
      * 
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="projects")
      *
@@ -94,6 +102,12 @@ class Project
      * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $calender;
+
+
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -343,5 +357,39 @@ class Project
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Add member
+     *
+     * @param \PFA\MainBundle\Entity\User $member
+     *
+     * @return Project
+     */
+    public function addMember(\PFA\MainBundle\Entity\User $member)
+    {
+        $this->members[] = $member;
+
+        return $this;
+    }
+
+    /**
+     * Remove member
+     *
+     * @param \PFA\MainBundle\Entity\User $member
+     */
+    public function removeMember(\PFA\MainBundle\Entity\User $member)
+    {
+        $this->members->removeElement($member);
+    }
+
+    /**
+     * Get members
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMembers()
+    {
+        return $this->members;
     }
 }

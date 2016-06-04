@@ -1,7 +1,7 @@
 /**
  * Created by El-PC on 26/05/2016.
  */
-$(document).ready(function () {
+$(document).ready(function () {    
    $("#addProjectBtn").click(function (e) {
         $.get(
             "project/add",

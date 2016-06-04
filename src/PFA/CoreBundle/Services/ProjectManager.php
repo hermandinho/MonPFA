@@ -10,6 +10,7 @@ namespace PFA\CoreBundle\Services;
 
 
 use Doctrine\ORM\EntityManager;
+use PFA\CoreBundle\Entity\Project;
 use PFA\MainBundle\Entity\User;
 
 class ProjectManager
@@ -37,6 +38,14 @@ class ProjectManager
         $repository = $this->em->getRepository("PFACoreBundle:Project");
         $list = $repository->findBy(['owner' => $user]);
         return $list;
+    }
+
+    /**
+     * @param Project $project
+     * @return array
+     */
+    public function getProjetMembers(Project $project){
+        return $this->em->getRepository("PFACoreBundle:ProjectMember")->getProjectMembers($project);
     }
 
 }

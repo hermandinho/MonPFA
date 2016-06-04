@@ -1,0 +1,97 @@
+{% extends 'PFACoreBundle::layout.html.twig' %}
+
+{% block title %}
+    Paramètres
+{% endblock %}
+
+{% block page_title %}
+    <h3 class="center page-header">Paramétrage du projet {{ project.name }}</h3>
+{% endblock %}
+
+{% block content %}
+    <div class="row settings-update-status hide">
+        <div class="col m10 s12 l8 offset-l2 offset-m1 card-panel teal lighten-2 status-message"></div>
+    </div>
+    <div class="row">
+        <div class="col s12 m10 l8 offset-l2 offset-m1 z-depth-2" style="">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3"><a class="active" href="#project">Projet</a></li>
+                        <li class="tab col s3"><a class="" href="#members">Membres</a></li>
+                        <li class="tab col s3 disabled"><a href="#test3">Autre</a></li>
+                        <li class="tab col s3 disabled"><a href="#test4">Autre 2</a></li>
+                    </ul>
+                </div>
+                <!-- Project Tab Container -->
+                <div id="project" class="col s12">
+                    {{ form_start(projectForm, {"attr":{"class": "project-setting-form"}}) }}
+                    <div class="row">
+                        <div class="input-field col s12">
+                            {{ form_widget(projectForm.name, {"attr":{}}) }}
+                            {{ form_label(projectForm.name) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            {{ form_widget(projectForm.description, {"attr":{}}) }}
+                            {{ form_label(projectForm.description) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            {{ form_widget(projectForm.status, {"attr":{}}) }}
+                            {{ form_label(projectForm.status) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col m4 right">
+                            <input type="submit" value="Enregistrer" class="btn btn-primary ladda-button pull-right" id="btn-save-project-settings">
+                        </div>
+                    </div>
+                    {{ form_end(projectForm) }}
+                </div>
+                <!-- END Project Tab Container -->
+
+                <!-- Members Tab Container -->
+                <div id="members" class="col s12">
+                    {{ form_start(addMemberForm, {"attr":{"class": "project-setting-add-member-form"}}) }}
+                        <div class="row">
+                            <div class="input-field col s7">
+                                {{ form_widget(addMemberForm.member, {"attr":{}}) }}
+                                {{ form_label(addMemberForm.member) }}
+                            </div>
+
+                            <div class="input-field col s2 right">
+                                {{ form_widget(addMemberForm.addBtn, {"attr":{}}) }}
+                            </div>
+                        </div>
+                    {{ form_end(addMemberForm) }}
+
+                    <div class="divider"></div>
+
+
+
+                </div>
+                <!-- END Members Tab Container -->
+
+                <div id="test3" class="col s12">Test 3</div>
+                <div id="test4" class="col s12">Test 4</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additional_javascripts %}
+    <script>
+        var saveSettingPath = "{{ path("project_settings",{"id": project.id}) }}";
+    </script>
+    {% javascripts
+        '@PFAMainBundle/Resources/public/js/ProjectSettings.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
