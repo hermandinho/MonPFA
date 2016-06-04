@@ -6,8 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use FOS\UserBundle\Model\User as BaseUser;
+use JMS\Serializer\Annotation as Serializer;
 use PFA\CoreBundle\Entity\ForumInteractions;
 use PFA\MaillingBundle\Entity\MailBox;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * User
@@ -19,12 +21,32 @@ class User extends BaseUser
 {
     /**
      * @var int
-     *
+     * @Groups({"autocomplete"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var string
+     * @Groups({"autocomplete"})
+     * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+     */
+    protected $nom;
+
+    /**
+     * @var string
+     * @ORM\Column(name="genre", type="string", length=255, nullable=true)
+     */
+    protected $genre;
+
+    /**
+     * @var string
+     * @Groups({"autocomplete"})
+     * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
+     */
+    private $prenom;
 
     /**
      * @var MailBox
@@ -42,22 +64,22 @@ class User extends BaseUser
     /**
      * @var Calender
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", cascade={"persist","remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\Calender", mappedBy="owner", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $calender;
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="PFA\CoreBundle\Entity\Project")
-     * @ORM\JoinTable(name="project_members",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="project_id", referencedColumnName="id")}
-     * )
-     *
+     * 
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\Project", mappedBy="owner", orphanRemoval=true)
      */
     private $projects;
 
-
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ProjectMember", mappedBy="memeber")
+     */
+    private $projectsInvitedIn;
 
     /**
      * User constructor.
@@ -65,6 +87,8 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->projects = new ArrayCollection();
+        $this->projectsInvitedIn = new ArrayCollection();
     }
 
 
@@ -148,5 +172,121 @@ class User extends BaseUser
     public function getCalender()
     {
         return $this->calender;
+    }
+
+    /**
+     * Set nom
+     *
+     * @param string $nom
+     *
+     * @return User
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get nom
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * Set prenom
+     *
+     * @param string $prenom
+     *
+     * @return User
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * Get prenom
+     *
+     * @return string
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * Add project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     *
+     * @return User
+     */
+    public function addProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects[] = $project;
+
+        return $this;
+    }
+
+    /**
+     * Remove project
+     *
+     * @param \PFA\CoreBundle\Entity\Project $project
+     */
+    public function removeProject(\PFA\CoreBundle\Entity\Project $project)
+    {
+        $this->projects->removeElement($project);
+    }
+
+    /**
+     * Get projects
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjects()
+    {
+        return $this->projects;
+    }
+
+    /**
+     * Add projectsInvitedIn
+     *
+     * @param \PFA\CoreBundle\Entity\Project $projectsInvitedIn
+     *
+     * @return User
+     */
+    public function addProjectsInvitedIn(\PFA\CoreBundle\Entity\Project $projectsInvitedIn)
+    {
+        $this->projectsInvitedIn[] = $projectsInvitedIn;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectsInvitedIn
+     *
+     * @param \PFA\CoreBundle\Entity\Project $projectsInvitedIn
+     */
+    public function removeProjectsInvitedIn(\PFA\CoreBundle\Entity\Project $projectsInvitedIn)
+    {
+        $this->projectsInvitedIn->removeElement($projectsInvitedIn);
+    }
+
+    /**
+     * Get projectsInvitedIn
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectsInvitedIn()
+    {
+        return $this->projectsInvitedIn;
     }
 }

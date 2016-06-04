@@ -35,6 +35,12 @@ class ProjectMember
      */
     private $project;
 
+    /**
+     * @var string
+     * @ORM\Column(name="member_type", type="string", length=255, nullable=true)
+     */
+    private $memberType;
+
 
     /**
      * Get id
@@ -92,5 +98,29 @@ class ProjectMember
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * Set memberType
+     *
+     * @param string $memberType
+     *
+     * @return ProjectMember
+     */
+    public function setMemberType($memberType)
+    {
+        $this->memberType = $memberType;
+
+        return $this;
+    }
+
+    /**
+     * Get memberType
+     *
+     * @return string
+     */
+    public function getMemberType()
+    {
+        return $this->memberType;
     }
 }

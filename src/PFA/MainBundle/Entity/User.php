@@ -33,7 +33,19 @@ class User extends BaseUser
      * @Groups({"autocomplete"})
      * @ORM\Column(name="nom", type="string", length=255, nullable=true)
      */
-    private $nom;
+    protected $nom;
+
+    /**
+     * @var string
+     * @ORM\Column(name="genre", type="string", length=255, nullable=true)
+     */
+    protected $genre;
+
+    /**
+     * @var string
+     * @ORM\Column(name="tel", type="string", length=255, nullable=true)
+     */
+    protected $tel;
 
     /**
      * @var string
@@ -83,6 +95,8 @@ class User extends BaseUser
         parent::__construct();
         $this->projects = new ArrayCollection();
         $this->projectsInvitedIn = new ArrayCollection();
+        $this->setRoles(['ROLE_USER']);
+        $this->setEnabled(false);
     }
 
 
@@ -282,5 +296,53 @@ class User extends BaseUser
     public function getProjectsInvitedIn()
     {
         return $this->projectsInvitedIn;
+    }
+
+    /**
+     * Set genre
+     *
+     * @param string $genre
+     *
+     * @return User
+     */
+    public function setGenre($genre)
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * Get genre
+     *
+     * @return string
+     */
+    public function getGenre()
+    {
+        return $this->genre;
+    }
+
+    /**
+     * Set tel
+     *
+     * @param string $tel
+     *
+     * @return User
+     */
+    public function setTel($tel)
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * Get tel
+     *
+     * @return string
+     */
+    public function getTel()
+    {
+        return $this->tel;
     }
 }

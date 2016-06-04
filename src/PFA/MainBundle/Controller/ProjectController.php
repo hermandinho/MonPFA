@@ -7,6 +7,7 @@ use PFA\CoreBundle\Controller\MainController;
 use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Entity\ProjectMember;
 use PFA\CoreBundle\Form\ProjectType;
+use PFA\MainBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProjectController
@@ -33,7 +35,7 @@ class ProjectController extends MainController
     {
         $projectList = $this->get("pfa_core.services.project_manager")->getUserProjects($this->getThisUser());
         $serializedData = $this->getSerializer()->serialize($projectList, "json");
-        return $this->render('PFAMainBundle:Project:project-list.html.twig', ["projects" => $projectList]);
+        return $this->render('PFAMainBundle:Projects:project-list.html.twig', ["projects" => $projectList]);
     }
 
     /**
@@ -68,7 +70,12 @@ class ProjectController extends MainController
      */
     public function projectSpaceAction(Request $request, Project $id)
     {
-        return $this->render("PFAMainBundle:Projects:project_space.html.twig", ["project" => $id]);
+        $isProjectMember = $this->isProjectMember($this->getThisUser(), $id);
+        if($isProjectMember){
+            return $this->render("PFAMainBundle:Projects:project_space.html.twig", ["project" => $id]);
+        } else {
+            return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $id]);
+        }
     }
 
     /**
@@ -83,6 +90,10 @@ class ProjectController extends MainController
         $em = $this->getEM();
         $projectForm = $this->createForm(new ProjectType(), $id);
         $projectForm->handleRequest($request);
+
+        if($id->getOwner() != $this->getThisUser()){
+            return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $id]);
+        }
 
         $memberAddForm = $this->createFormBuilder()
             ->add("member", null,array(
@@ -123,11 +134,12 @@ class ProjectController extends MainController
                     $projectMember = new ProjectMember();
                     $projectMember->setProject($id);
                     $projectMember->setMemeber($member);
+                    $projectMember->setMemberType("INVITED");
                     $em->persist($projectMember);
                     $em->flush();
                     return new JsonResponse(["status" => true, "member" => $member]);
                 } else {
-                    return new JsonResponse(["status" => false ]);
+                    return new JsonResponse(["status" => false,"msg" => "Aucun membre avec cette email <".$data['member']."> trouvé." ]);
                 }
             }
         }
@@ -142,5 +154,39 @@ class ProjectController extends MainController
                 "projectMembers" => $projectMembers
             ]
         );
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @Route("projectMember/{id}/remove", name="remove_project_memeber")
+     */
+    public function deleteProjectMember(Request $request, ProjectMember $id)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getEM();
+        if($id){
+            $em->remove($id);
+            $em->flush();
+            return new JsonResponse(['status' => true]);
+        }
+        return new JsonResponse(['status' => false]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Project $project
+     * @return Response
+     *
+     * @Route("/{project}/members/list", name="get_project_members_list")
+     */
+    public function loadProjectMembersListAction(Request $request, Project $project)
+    {
+        if($project){
+            $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
+            return $this->render("PFAMainBundle:Projects:partials/member-list-mini.html.twig", ["members" => $projectMembers]);
+        }
+        return new Response("Projet Introuvable");
     }
 }

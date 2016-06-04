@@ -1,0 +1,46 @@
+{% extends 'PFACoreBundle::layout.html.twig' %}
+
+{% block additional_stylesheets %}
+    {% stylesheets
+    '@PFAMainBundle/Resources/public/css/chat-room.css'
+    filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block title %}
+    Chat
+{% endblock %}
+
+{% block page_title %}
+    <h3 class="center page-header">Salle de Discution {{ project.name|upper }}</h3>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row chat-zone">
+        <!-- Begin Chat Zone -->
+            <div class="col m8 offset-m1 z-depth-1 chat-messages-box">sss</div>
+        <!-- End Chat Zone -->
+
+        <!-- Begin User List -->
+        <div class="col m3 offset- z-depth-1 chat-members-list">
+            <ul class="collection">
+                {% for member in members %}
+                    <li class="collection-item avatar">
+                        <i class="material-icons circle">folder</i>
+                        <!--<img src="" alt="" class="circle"> -->
+                        <span class="title">{{ member.memeber.nom }}</span>
+                        <a href="#!" class="secondary-content"><i class="material-icons bg-gray">grade</i></a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+        <!-- End User List -->
+    </div>
+
+    <div class="row"></div>
+
+{% endblock %}

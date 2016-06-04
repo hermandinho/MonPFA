@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block page_title %}
-    <h2 class="center">Mes Projets</h2>
+    <h2 class="center page-header">Mes Projets</h2>
 {% endblock %}
 
 {% block content %}
@@ -23,10 +23,21 @@
     {% else %}
         <div class="row">
             {% for project in projects %}
+                {% set custom_action = "" %}
+                {% if project.owner.id != app.user.id %}
+                    {% set drop_id = "drop-"~project.id %}
+                    {% set custom_action = "<a class='dropdown-button btn red' " %}
+                    {% set custom_action = custom_action ~ "data-activates='" ~ drop_id ~  "' >"%}
+                    {% set custom_action = custom_action ~ "<i class='material-icons'>settings</i></a>" %}
+                    {% set custom_action = custom_action ~ "<ul id='"~drop_id~"' class='dropdown-content' ><li><a href='javascript:;' class='leave-project' data-id='"~ project.id ~"'>Quitter</a></li></ul>" %}
+                {% endif %}
                 <div class="col s12 m3">
                     <div class="card blue-grey darken-1">
+                        <span class="right">
+                            {{ custom_action|raw }}
+                        </span>
                         <div class="card-content white-text">
-                            <span class="card-title">{{ project.name }}</span>
+                            <span class="card-title truncate">{{ project.name }}</span>
                             <p class="truncate">
                                 {{ project.description }}
                             </p>

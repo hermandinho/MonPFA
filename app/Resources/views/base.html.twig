@@ -112,8 +112,8 @@
                 /************ ROUTES *****************/
                 var MAILLING_HOME_ROUTE = '{{ path("mail_box_data") }}';
 
-                /*var webSocket = WS.connect(_WS_URI);
-
+                var webSocket = WS.connect(_WS_URI);
+                 /*
                 webSocket.on("socket/connect", function (session) {
                     //session is an Autobahn JS WAMP session.
                     session.call("rpctest/test_func", {"term1": 2, "term2": 5}).then(

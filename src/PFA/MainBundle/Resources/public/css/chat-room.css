@@ -1,0 +1,12 @@
+.chat-messages-box{
+    height: 500px;
+    overflow: auto;
+
+}
+
+.chat-members-list{
+    /*position: fixed; */
+    border: 0px;
+    height: 500px;
+    margin-right: 0px;
+}

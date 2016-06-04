@@ -1,0 +1,16 @@
+{% if members|length > 0 %}
+    <ul class="collection col m12">
+        {% for member in members %}
+            <li class="collection-item avatar">
+                <img alt="IMG" class="circle">
+                <span class="title">{{ member.memeber.nom ~ member.memeber.prenom }}</span>
+                <p class="truncate">
+                    {{ member.memeber.email }}
+                </p>
+                <a href="javascript:;" data-path="{{ path("remove_project_memeber",{"id": member.id}) }}" class="secondary-content delete-member"><i class="material-icons">delete</i></a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>Aucun Memebre.</h3>
+{% endif %}

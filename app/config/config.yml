@@ -81,6 +81,9 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: PFA\MainBundle\Entity\User
+    registration:
+        form:
+            type: PFA\MainBundle\Form\UserType
 
 #GOS Websocket
 gos_web_socket:

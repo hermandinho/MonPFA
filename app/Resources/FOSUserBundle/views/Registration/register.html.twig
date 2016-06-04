@@ -1,0 +1,83 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Inscription
+{% endblock %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <h3 class="page-header center">Inscription</h3>
+    </div>
+    <div class="row">
+        {{ form_errors(form.plainPassword) }}
+        {{ form_errors(form) }}
+        {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register registrationForm col s6 well_ offset-m3'}}) }}
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form_widget(form.nom, {"attr":{}}) }}
+                    {{ form_label(form.nom) }}
+                </div>
+                <div class="input-field col s6">
+                    {{ form_widget(form.prenom, {"attr":{}}) }}
+                    {{ form_label(form.prenom) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form_widget(form.email, {"attr":{}}) }}
+                    {{ form_label(form.email) }}
+                </div>
+                <div class="input-field col s6">
+                    {{ form_widget(form.tel, {"attr":{}}) }}
+                    {{ form_label(form.tel) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form_widget(form.genre, {"attr":{}}) }}
+                    {{ form_label(form.genre) }}
+                </div>
+                <div class="input-field col s6">
+                    {{ form_widget(form.username, {"attr":{}}) }}
+                    {{ form_label(form.username) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ form_widget(form.plainPassword.first, {"attr":{}}) }}
+                    {{ form_label(form.plainPassword.first) }}
+                </div>
+                <div class="input-field col s6">
+                    {{ form_widget(form.plainPassword.second, {"attr":{}}) }}
+                    {{ form_label(form.plainPassword.second) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                </div>
+
+                <div class="input-field col s6">
+                    <button class="btn waves-effect waves-light" id="add_event_btn" type="submit" name="register">
+                        Incription
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block additional_javascripts %}
+    <script>
+        $('select').material_select(); // render selects
+        Materialize.updateTextFields();
+    </script>
+{% endblock %}

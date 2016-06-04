@@ -36,7 +36,7 @@ class ProjectManager
     public function getUserProjects(User $user)
     {
         $repository = $this->em->getRepository("PFACoreBundle:Project");
-        $list = $repository->findBy(['owner' => $user]);
+        $list = $repository->getUserProjects($user);
         return $list;
     }
 

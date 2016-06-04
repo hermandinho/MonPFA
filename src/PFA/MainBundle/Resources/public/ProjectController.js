@@ -39,5 +39,9 @@ $(document).ready(function () {
                 console.log(er, err)
             }
         })
-    })
+    });
+
+    $(".leave-project").click(function (e) {
+        alert("Quitter le projet "+ $(this).attr("data-id"));
+    });
 });

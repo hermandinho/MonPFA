@@ -12,6 +12,7 @@ namespace PFA\CoreBundle\Managers;
 use Doctrine\ORM\EntityManager;
 use PFA\CoreBundle\Entity\Forum;
 use PFA\CoreBundle\Entity\Project;
+use PFA\CoreBundle\Entity\ProjectMember;
 use PFA\CoreBundle\Entity\ShareZone;
 use PFA\MaillingBundle\Entity\MailBox;
 use PFA\MaillingBundle\Entity\MailFolder;
@@ -149,9 +150,13 @@ class PFAManager
             $project->setStatus("ACTIF");
             $project->setCode(uniqid("P_"));
             $project->setForum($forum);
-
-            //die(dump($project));
             $this->addBuiltAction($project);
+
+            $projectMember = new ProjectMember();
+            $projectMember->setMemeber($this->token->getToken()->getUser());
+            $projectMember->setProject($project);
+            $projectMember->setMemberType("OWNER");
+            $this->addBuiltAction($projectMember);
         }
 
     }

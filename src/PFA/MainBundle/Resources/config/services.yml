@@ -7,3 +7,8 @@ services:
         class: PFA\MainBundle\RPC\PFAMainRPC
         tags:
             - { name: gos_web_socket.rpc }
+
+    pfa_main.form.registration:
+        class: PFA\MainBundle\Form\UserType
+        tags:
+            - { name: form.type, alias: app_user_registration }

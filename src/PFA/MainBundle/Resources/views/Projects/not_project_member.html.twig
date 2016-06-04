@@ -1,0 +1,21 @@
+{% extends 'PFACoreBundle::layout.html.twig' %}
+
+{% block title %}
+    Access Interdit
+{% endblock %}
+
+{% block page_title %}
+    <h3 class="center page-header">Vous n'êtes pas autorisé à voir cette page </h3>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="card-panel red">
+            Veillez contacter <strong>{{ project.owner.nom ~ " " ~ project.owner.prenom }}</strong>
+            &laquo;<i>{{ project.owner.email }}</i>&raquo;
+            si vous souhaité être membre du projet <strong>&laquo;{{ project.name }}&raquo;</strong>
+        </div>
+    </div>
+{% endblock %}
+
+

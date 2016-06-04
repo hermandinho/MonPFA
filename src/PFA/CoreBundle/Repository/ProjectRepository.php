@@ -1,6 +1,7 @@
 <?php
 
 namespace PFA\CoreBundle\Repository;
+use PFA\MainBundle\Entity\User;
 
 /**
  * ProjectRepository
@@ -10,4 +11,14 @@ namespace PFA\CoreBundle\Repository;
  */
 class ProjectRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getUserProjects(User $user)
+    {
+        $q = $this->createQueryBuilder("p")
+            ->join("p.members","members")
+            ->join("members.memeber", "u")
+            ->where("u = :u")
+            ->setParameter("u", $user);
+        
+        return $q->getQuery()->getResult();
+    }
 }
