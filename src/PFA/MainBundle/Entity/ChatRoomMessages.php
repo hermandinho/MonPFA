@@ -37,7 +37,7 @@ class ChatRoomMessages
 
     /**
      * @var ChatRoom
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"})
      */
     private $chatRoom;
 
@@ -50,14 +50,14 @@ class ChatRoomMessages
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", orphanRemoval=true,cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="sender", referencedColumnName="id")
      */
     private $sender;
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User",orphanRemoval=true, cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
      */
     private $receiver;

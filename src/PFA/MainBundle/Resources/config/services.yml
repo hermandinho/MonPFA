@@ -5,6 +5,7 @@ services:
 
     pfa.main_rpc.service:
         class: PFA\MainBundle\RPC\PFAMainRPC
+        arguments: ['@doctrine.orm.entity_manager', '@security.token_storage', '@gos_web_socket.websocket.client_manipulator']
         tags:
             - { name: gos_web_socket.rpc }
 
@@ -12,3 +13,9 @@ services:
         class: PFA\MainBundle\Form\UserType
         tags:
             - { name: form.type, alias: app_user_registration }
+
+    pfa_main.topics.chat_room_topic:
+        class: PFA\MainBundle\Topics\ChatRoomTopic
+        arguments: ['@gos_web_socket.websocket.client_manipulator', '@gos_web_socket.client_storage', '@doctrine.orm.entity_manager']
+        tags:
+          - { name: gos_web_socket.topic }

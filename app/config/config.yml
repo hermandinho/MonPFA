@@ -26,7 +26,8 @@ framework:
     trusted_proxies: ~
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-        handler_id:  session.handler.native_file
+        #handler_id:  session.handler.native_file
+        handler_id:  session.handler.pdo
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
         #cookie_lifetime: 3600
     fragments:       ~
@@ -93,6 +94,9 @@ gos_web_socket:
         router:
             resources:
                 - '@PFAMainBundle/Resources/config/pubsub/routing.yml'
+    client:
+        firewall: main
+        session_handler: '@session.handler.pdo'
 
 
 #CK Editor

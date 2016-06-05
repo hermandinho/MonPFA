@@ -1,4 +1,5 @@
 {% extends 'PFACoreBundle::layout.html.twig' %}
+{% import "@PFAMain/macros/functions.html.twig" as macro %}
 
 {% block additional_stylesheets %}
     {% stylesheets
@@ -14,14 +15,25 @@
 {% endblock %}
 
 {% block page_title %}
-    <h3 class="center page-header">Salle de Discution {{ project.name|upper }}</h3>
+    <h5 class="center page-header">Salle de Discution {{ project.name|upper }}</h5>
 {% endblock %}
 
 {% block content %}
 
     <div class="row chat-zone">
         <!-- Begin Chat Zone -->
-            <div class="col m8 offset-m1 z-depth-1 chat-messages-box">sss</div>
+            <div class="col m8 offset-m1 z-depth-1 chat-messages-box">
+
+                {{ macro.rightChatBubble(app.user, "Hello") }}
+
+                {{ macro.leftChatBubble(app.user, "Hi") }}
+
+                {{ macro.leftChatBubble(app.user, "How Are U?") }}
+
+                {{ macro.rightChatBubble(app.user, "Cool and U") }}
+
+
+            </div>
         <!-- End Chat Zone -->
 
         <!-- Begin User List -->
@@ -41,6 +53,29 @@
         <!-- End User List -->
     </div>
 
-    <div class="row"></div>
+    <div class="row" id="chat-message-box">
+        <div class="input-field col s6 offset-m1">
+            <input type="text" class="form-control" id="message" placeholder="Votre message" autocomplete="off">
+        </div>
 
+        <div class="input-field col s1">
+            <button class="btn-floating" title="Envoyer" id="send-message">
+                <i class="material-icons">send</i>
+            </button>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block additional_javascripts %}
+    <script>
+        var projectId = {{ project.id }};
+        var chatMessagePath = "{{ path("send_chat_message",{"project": project.id}) }}";
+
+    </script>
+    {% javascripts
+    '@PFAMainBundle/Resources/public/js/ChatController.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

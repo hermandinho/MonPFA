@@ -9,6 +9,7 @@
         {% block stylesheets %}
             <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             {% stylesheets
+                '@PFAMainBundle/Resources/public/css/speech-bubble.css'
                 '@PFACoreBundle/Resources/public/css/bootstrap.css'
                 '@PFACoreBundle/Resources/public/css/materialize.css'
                 '@PFACoreBundle/Resources/public/css/pace.css'
@@ -113,7 +114,7 @@
                 var MAILLING_HOME_ROUTE = '{{ path("mail_box_data") }}';
 
                 var webSocket = WS.connect(_WS_URI);
-                 /*
+                /*
                 webSocket.on("socket/connect", function (session) {
                     //session is an Autobahn JS WAMP session.
                     session.call("rpctest/test_func", {"term1": 2, "term2": 5}).then(
@@ -128,7 +129,7 @@
                     );
 
                     console.log("Successfully Connected!");
-                });
+                }); */
 
                 webSocket.on("socket/disconnect", function (error) {
                     //error provides us with some insight into the disconnection: error.reason and error.code
@@ -137,7 +138,7 @@
                 });
                 $(document).ready(function () {
                     $(".button-collapse").sideNav();
-                })*/
+                })
             </script>
 
         {% endblock %}

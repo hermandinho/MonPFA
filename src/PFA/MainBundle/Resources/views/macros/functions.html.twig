@@ -1,0 +1,15 @@
+{% macro rightChatBubble(user,message) %}
+    <div class="row">
+        <div class="col m12">
+            <p class="triangle-right right">{{ user.username }} {{ message }}</p>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro leftChatBubble(user,message) %}
+    <div class="row">
+        <div class="col m12">
+            <p class="triangle-right left">{{ user.username }} {{ message }}</p>
+        </div>
+    </div>
+{% endmacro %}

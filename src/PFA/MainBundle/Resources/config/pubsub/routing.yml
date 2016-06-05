@@ -5,3 +5,11 @@ pfa_rpc_main_test:
     requirements:
         method:
             pattern: "[a-z_]+" #accept all valid regex, don't put delimiters !
+
+pfa_chatroom_topic:
+  channel: project/{id}/chat
+  handler:
+    callback: 'pfa.chatroom.topic'
+  requirements:
+    id:
+      pattern: "\d+"
