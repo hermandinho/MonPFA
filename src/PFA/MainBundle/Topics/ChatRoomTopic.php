@@ -62,26 +62,10 @@ class ChatRoomTopic implements TopicInterface
     public function onSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
     {
         $user = $this->clientManipulator->getClient($connection);
-        $subsribedUsers = [];
-
-        /** @var ConnectionInterface $client */
-        foreach ($topic as $client) {
-            if(!in_array($user, $this->userList->toArray())){
-                $this->userList->add($user->getUsername());
-            }
-        }
-
-        /** @var ConnectionInterface $client */
-        /*foreach ($topic as $client) {
-            $c =  $this->clientManipulator->getClient($client);
-
-            $subsribedUsers[] = $this->em->getRepository("PFAMainBundle:User")->findOneBy(['username' => "admin"]);
-        } */
-        //$connection->event($topic->getId(), ['msg' => 'lol '.$user]);
         $topic->broadcast([
             'msg' => $connection->resourceId . " has joined " . $topic->getId()." : ".$user,
             "users" => count($topic),
-            "subscribed" => ($this->userList->toArray())
+            "type" => "subscribed"
         ]);
     }
 
@@ -107,7 +91,7 @@ class ChatRoomTopic implements TopicInterface
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible)
     {
-        // TODO: Implement onPublish() method.
+        $topic->broadcast(["msg" => $event, "type" => "message"]);
     }
 
     /**

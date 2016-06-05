@@ -1,15 +1,38 @@
-{% macro rightChatBubble(user,message) %}
+
+{% macro rightChatBubble(user,message, date, id) %}
     <div class="row">
-        <div class="col m12">
-            <p class="triangle-right right">{{ user.username }} {{ message }}</p>
+        <div class="col m12 chat-message-row">
+            <p class="triangle-right right">{{ message }}</p>
+
+            {% set timeBlockId = "message-time-"~id %}
+            <span class="message-time-right right" id="{{ timeBlockId }}">
+                <script type="text/javascript">
+                    GLOBAL_JS.DATE_TO_RENDER_IN_MOMENT.push({date: '{{ date }}', blockId: '{{ timeBlockId }}' });
+                </script>
+            </span>
         </div>
     </div>
 {% endmacro %}
 
-{% macro leftChatBubble(user,message) %}
-    <div class="row">
-        <div class="col m12">
-            <p class="triangle-right left">{{ user.username }} {{ message }}</p>
+{% macro leftChatBubble(user,message, date, id) %}
+    <div class='media'>
+        <div class='media-left media-middle'>
+            <a href='javascript:;'>
+                <i class="material-icons circle left chat-message-icon">folder</i>
+                <!--<img class='media-object' data-src='...' alt='Generic placeholder image'> -->
+            </a>
+            <span class='chat-user-name left'>{{ user.nom }}</span>
+
+            {% set timeBlockId = "message-time-"~id %}
+            <span class="message-time-left left" id="{{ timeBlockId }}">
+                    <script type="text/javascript">
+                        GLOBAL_JS.DATE_TO_RENDER_IN_MOMENT.push({date: '{{ date }}', blockId: '{{ timeBlockId }}' });
+                    </script>
+                </span>
+        </div>
+        <div class='media-body'>
+            <!--<h4 class='media-heading'>Middle aligned media</h4> -->
+            <p class="triangle-right left">{{ message }}</p>
         </div>
     </div>
 {% endmacro %}

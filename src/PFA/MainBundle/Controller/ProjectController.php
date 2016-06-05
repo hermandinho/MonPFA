@@ -90,7 +90,7 @@ class ProjectController extends MainController
         $em = $this->getEM();
         $projectForm = $this->createForm(new ProjectType(), $id);
         $projectForm->handleRequest($request);
-
+        
         if($id->getOwner() != $this->getThisUser()){
             return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $id]);
         }

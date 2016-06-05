@@ -21,18 +21,34 @@
 {% block content %}
 
     <div class="row chat-zone">
+        <script>
+            var GLOBAL_JS = {
+                //Dates in twig messages macros form moment proccessing
+                DATE_TO_RENDER_IN_MOMENT: []
+            };
+        </script>
         <!-- Begin Chat Zone -->
             <div class="col m8 offset-m1 z-depth-1 chat-messages-box">
-
-                {{ macro.rightChatBubble(app.user, "Hello") }}
-
-                {{ macro.leftChatBubble(app.user, "Hi") }}
-
-                {{ macro.leftChatBubble(app.user, "How Are U?") }}
-
-                {{ macro.rightChatBubble(app.user, "Cool and U") }}
-
-
+                <div class='media'>
+                    <div class='media-left media-middle'>
+                        <a href='javascript:;'>
+                            <!--<img class='media-object' data-src='...' alt='Generic placeholder image'> -->
+                        </a>
+                    </div>
+                    <div class='media-body'>
+                        <!--<h4 class='media-heading'>Middle aligned media</h4> -->
+                        <p></p>
+                        <p></p>
+                    </div>
+                </div>
+                {% for message in chatMessages %}
+                    {# dump(message) #}
+                    {% if message.sender.id == app.user.id %}
+                        {{ macro.rightChatBubble(message.sender,message.content, message.date, message.id) }}
+                    {% else %}
+                        {{ macro.leftChatBubble(message.sender,message.content, message.date, message.id) }}
+                    {% endif %}
+                {% endfor %}
             </div>
         <!-- End Chat Zone -->
 
@@ -68,9 +84,13 @@
 {% endblock %}
 
 {% block additional_javascripts %}
+
     <script>
         var projectId = {{ project.id }};
         var chatMessagePath = "{{ path("send_chat_message",{"project": project.id}) }}";
+        var subscribePath = "project/" + projectId + "/chat";
+        var userId = {{ app.user.id }};
+
 
     </script>
     {% javascripts

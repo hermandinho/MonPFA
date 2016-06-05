@@ -14,3 +14,44 @@
 .chat-message-box{
     margin-top: -20px;
 }
+
+.message-time-right{
+    margin-top: 60px;
+    /* float: right; */
+    margin-right: -100px;
+    color: gray;
+    font-size: 14px;
+    font-style: italic;
+    cursor: pointer;
+}
+
+._message-time-left{
+    margin-top: 60px;
+    /* float: right; */
+    margin-left: -100px;
+    color: gray;
+    font-size: 14px;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.chat-zone{
+    background-color: #8E6;
+}
+
+.chat-message-row{
+    /* height: 100px; */
+    margin-bottom: -30px;
+}
+
+.chat-message-icon{
+    margin-top: 35px;
+}
+
+._chat-user-name{
+    margin-top: -25px;
+    margin-left: -40px;
+    position: absolute;
+    font-family: cursive;
+    font-style: italic;
+}

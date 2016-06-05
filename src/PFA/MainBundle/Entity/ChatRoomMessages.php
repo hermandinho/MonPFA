@@ -3,6 +3,7 @@
 namespace PFA\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * ChatRoomMessages
@@ -18,12 +19,14 @@ class ChatRoomMessages
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"chat_message"})
      */
     protected $id;
 
     /**
      * @var string
-     *
+     * @Groups({"chat_message"})
      * @ORM\Column(name="content", type="text")
      */
     private $content;
@@ -32,6 +35,7 @@ class ChatRoomMessages
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     * @Groups({"chat_message"})
      */
     private $date;
 
@@ -45,6 +49,7 @@ class ChatRoomMessages
      * @var bool
      *
      * @ORM\Column(name="is_read", type="boolean", nullable=true)
+     * @Groups({"chat_message"})
      */
     private $isRead;
 
@@ -52,6 +57,8 @@ class ChatRoomMessages
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="sender", referencedColumnName="id")
+     *
+     * @Groups({"chat_message"})
      */
     private $sender;
 
@@ -59,6 +66,8 @@ class ChatRoomMessages
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
+     *
+     * @Groups({"chat_message"})
      */
     private $receiver;
 

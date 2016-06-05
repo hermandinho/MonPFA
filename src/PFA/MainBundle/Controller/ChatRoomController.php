@@ -3,6 +3,7 @@
 namespace PFA\MainBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\CoreBundle\Entity\Project;
 use PFA\MainBundle\Entity\ChatRoomMessages;
@@ -41,8 +42,17 @@ class ChatRoomController extends MainController
 
         if($isProjectMember){
             $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
+            
+            $chatMessages = $project->getChatRoom()->getChatRoomMessages();
+            $serializerContext = SerializationContext::create()->setGroups(array('chat_message'));
+            $serializedMessages = $this->getSerializer()->serialize($chatMessages,"json", $serializerContext);
+            //die(dump($serializedMessages));
 
-            return $this->render('PFAMainBundle:ChatRoom:index.html.twig', array("project" => $project, "members" => $projectMembers));
+            return $this->render('PFAMainBundle:ChatRoom:index.html.twig', array(
+                "project" => $project,
+                "members" => $projectMembers,
+                "chatMessages" => json_decode($serializedMessages)
+            ));
         } else {
             return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $project]);
         }
@@ -66,11 +76,12 @@ class ChatRoomController extends MainController
                 ->setDate(new \DateTime())
                 ->setContent($request->request->get("message"))
                 ->setSender($this->getThisUser());
-        //$em->persist($message);
-        //$em->flush();
+        $em->persist($message);
+        $em->flush();
 
-        $pusher = $this->get("gos_web_socket.zmq.pusher")->push(["message" => "XXL"],"pfa_chatroom_topic",['id' => $project->getId()]);
+        $serializerContext = SerializationContext::create()->setGroups(array('chat_message'));
+        $serilized = $this->getSerializer()->serialize($message, "json", $serializerContext);
 
-        return new JsonResponse(['status' => true]);
+        return new JsonResponse(['status' => true, "message" => $serilized]);
     }
 }

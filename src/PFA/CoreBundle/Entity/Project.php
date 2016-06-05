@@ -5,6 +5,7 @@ namespace PFA\CoreBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
+use JMS\Serializer\Annotation\Groups;
 use PFA\MainBundle\Entity\BaseEntity;
 use PFA\MainBundle\Entity\Calender;
 use PFA\MainBundle\Entity\ChatRoom;
@@ -24,6 +25,7 @@ class Project
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"chat_message"})
      */
     protected $id;
 
@@ -79,6 +81,7 @@ class Project
      * @var ChatRoom
      * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\ChatRoom", cascade={"persist","remove"}, orphanRemoval=true)
      *
+     * @Groups({"chat_message"})
      */
     private $chatRoom;
 
