@@ -25,19 +25,41 @@ function handleSockets(socket) {
 
         var path = "project/" + projectId + "/chat";
         session.subscribe(path, function(uri, payload){
-            console.log("Received message", payload.msg);
+            //console.log("Received message", payload.msg);
             if (payload.type == "message"){
-                //$(".chat-messages-box").append("<div class='row'>NEW MESSAGE ARRIVED</div>");
-                appendNewMessage(payload.msg.msg);
+                var data = $.parseJSON(payload.msg.msg);
+                var html = "<div class='bubble you'>" + data.content + "</div>";
+                $('.chat[data-chat=person0]').append(html);
+                $('.active-chat').scrollTop(1E10);
             }
+        });
 
+        window.CHAT_MEMBERS.map(function (id) {
+            var path = "";
+            if(userId < id){
+                path = "project/" + projectId + "/private_chat/" + userId + "/" + id;
+            }else{
+                path = "project/" + projectId + "/private_chat/" + id + "/" + userId;
+            }
+           session.subscribe(path, function (uri, payload) {
+               if(payload.msg.hasOwnProperty("msg")){
+                   //var data = $.parseJSON(payload.msg);
+                   var data = payload.msg;
+                   var message = $.parseJSON(payload.msg.msg);
+                   //console.log(" >> " , data , data.chatBboxIndex);
+                   var html = "<div class='bubble you'>" + message.content + "</div>";
+                   $('.chat[data-chat=person'+ data.chatBboxIndex +']').append(html);
+                   $('.active-chat').scrollTop(1E10);
+                   //console.log($('.chat[data-chat=person'+ data.chatBboxIndex +']'));
+               }
+           });
         });
 
         console.log("Successfully Connected to Chat Room!");
     });
 }
 
-function appendNewMessage(data) {
+/*function appendNewMessage(data) {
     var html = "";
     data = $.parseJSON(data);
     console.log(data);
@@ -62,18 +84,32 @@ function appendNewMessage(data) {
     }
 
     $(".chat-messages-box").append(html);
-}
+} */
 
 function sendMessage(message) {
+    var html = "<div class='bubble me'>" + message + "</div>";
+    $('.chat[data-chat=person0]').append(html);
+    $('.active-chat').scrollTop(1E10);
+
     $.post(
         ""+chatMessagePath+"",
         {
-            message: message
+            message: message,
+            reciever: window.ACTIVE_CHAT_ID
         },
         function (data) {
             if(data.status){
-                //console.log(data);
-                window.SOCKET_SESSION.publish(subscribePath, {"msg": data.message});
+                if(window.ACTIVE_CHAT_ID == -1){
+                    window.SOCKET_SESSION.publish(subscribePath, {"msg": data.message, "isPrivate": false});
+                }else{
+                    var path = "";
+                    if(userId < window.ACTIVE_CHAT_ID){
+                        path = "project/" + projectId + "/private_chat/" + userId + "/" + window.ACTIVE_CHAT_ID;
+                    }else{
+                        path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
+                    }
+                    window.SOCKET_SESSION.publish(path, {"msg": data.message, "isPrivate": true, "chatBboxIndex": window.ACTIVE_CHAT_INDEX });
+                }
             }
         }
     );
@@ -82,19 +118,45 @@ function sendMessage(message) {
 }
 
 $(document).ready(function () {
+    $("html").css("overflow", "hidden");
     handleSockets(webSocket);
     resetChatField();
+
+    $('.chat[data-chat=person0]').addClass('active-chat');
+    $('.person[data-chat=person0]').addClass('active');
+    $('.active-chat').scrollTop(1E10);
+    $('.left .person').mousedown(function(){
+
+        window.ACTIVE_CHAT_ID = $(this).attr("data-id");
+        window.ACTIVE_CHAT_INDEX = $(this).attr("data-chat-index");
+
+        if ($(this).hasClass('.active')) {
+            $('.active-chat').scrollTop(1E10);
+            return false;
+        } else {
+            var findChat = $(this).attr('data-chat');
+            var personName = $(this).find('.name').text();
+            $('.right .top .name').html(personName);
+            $('.chat').removeClass('active-chat');
+            $('.left .person').removeClass('active');
+            $(this).addClass('active');
+            $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+            $('.active-chat').scrollTop(1E10);
+        }
+    });
+
+
 
     $("#message").keyup(function (e) {
         var message = $.trim($(this).val());
         if(message.length > 0){
-            $("#send-message").prop("disabled", false);
+            //$("#send-message").prop("disabled", false);
 
             if(e.keyCode == 13){
                 sendMessage(message);
             }
         }else{
-            $("#send-message").prop("disabled", true);
+            //$("#send-message").prop("disabled", true);
         }
     });
 
@@ -103,11 +165,6 @@ $(document).ready(function () {
         if(message.length > 0){
             sendMessage(message);
         }
-    });
-
-    GLOBAL_JS.DATE_TO_RENDER_IN_MOMENT.map(function (item) {
-        var time = moment(item.date).fromNow();
-        $("#"+item.blockId).html(time);
     });
 });
 

@@ -19,42 +19,100 @@
 {% endblock %}
 
 {% block content %}
-
-    <div class="row chat-zone">
-        <!-- Begin Chat Zone -->
-        <div class="col m8 offset-m1 z-depth-1 chat-messages-box">
-
-        </div>
-        <!-- End Chat Zone -->
-
-        <!-- Begin User List -->
-        <div class="col m3 offset- z-depth-1 chat-members-list">
-            <ul class="collection">
-                {% for member in members %}
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle">folder</i>
-                        <!--<img src="" alt="" class="circle"> -->
-                        <span class="title">{{ member.memeber.nom }}</span>
-                        <a href="#!" class="secondary-content"><i class="material-icons bg-gray">grade</i></a>
+    <script>
+        window.CHAT_MEMBERS = [];
+        window.ACTIVE_CHAT_ID = -1;
+        window.ACTIVE_CHAT_INDEX = 0;
+    </script>
+    <div class="wrapper">
+        <div class="container">
+            <div class="left">
+                <!--<div class="top">
+                    <input type="text" />
+                    <a href="javascript:;" class="search"></a>
+                </div>-->
+                {% set lastMessage = {content: "Aucun Message"} %}
+                {% set hasDate = false %}
+                {% if groupChatMessages|length > 0 %}
+                    {% set lastMessage = groupChatMessages|last %}
+                    {% set hasDate = false %}
+                {% endif %}
+                <ul class="people">
+                    <li class="person" data-id="-1" data-chat-index="0" data-chat="person0">
+                        <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
+                        <span class="name">Group</span>
+                        {% if hasDate %}
+                            <span class="time">{{ lastMessage.date|date("D d/m/Y") }}</span>
+                        {% endif %}
+                        <span class="preview truncate">{{ lastMessage.content }}</span>
                     </li>
-                {% endfor %}
 
-            </ul>
+                    {% set index = 1 %}
+                    {% for member in members %}
+                        {% if member.memeber.id != app.user.id %}
+                            <script>
+                                window.CHAT_MEMBERS.push({{ member.memeber.id }});
+                            </script>
+                            <li class="person" data-id="{{ member.memeber.id }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
+                                <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
+                                <span class="name">{{ member.memeber.nom }} {{ member.memeber.prenom }}</span>
+                                <span class="time">1:44 PM</span>
+                                <span class="preview">I've forgotten how it felt before</span>
+                            </li>
+
+                            {% set index = index + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <!--<li class="person" data-chat="person3">
+                        <img src="http://s3.postimg.org/h9q4sm433/img3.jpg" alt="" />
+                        <span class="name">Louis CK</span>
+                        <span class="time">2:09 PM</span>
+                        <span class="preview">But we’re probably gonna need a new carpet.</span>
+                    </li> -->
+                </ul>
+            </div>
+
+            <div class="right">
+                <div class="top"><span>Discution Avec: <span class="name">Group</span></span></div>
+
+                <div class="chat" data-chat="person0">
+                    {% set chatDates = [] %}
+                    {% for message in groupChatMessages %}
+
+                        {% if message.date|date("d/m/Y") not in chatDates %}
+                            {% set chatDates = chatDates|merge([message.date|date("d/m/Y")]) %}
+
+                            <div class="conversation-start">
+                                <span>{{ message.date|date("d M Y") }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if message.sender.id == app.user.id %}
+                            <div class="bubble me">
+                                {{ message.content }}
+                            </div>
+                        {% else %}
+                            <div class="bubble you">
+                                {{ message.content }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="chat" data-chat="person1">
+                </div>
+
+                <div class="write">
+                    <a href="javascript:;" class="write-link attach"></a>
+                    <input type="text" placeholder="Votre message !!! " id="message" />
+                    <!--<a href="javascript:;" class="write-link smiley"></a>
+                    <a href="javascript:;" class="write-link send"></a> -->
+                </div>
+            </div>
         </div>
-        <!-- End User List -->
     </div>
 
-    <div class="row" id="chat-message-box">
-        <div class="input-field col s6 offset-m1">
-            <input type="text" class="form-control" id="message" placeholder="Votre message" autocomplete="off">
-        </div>
-
-        <div class="input-field col s1">
-            <button class="btn-floating" title="Envoyer" id="send-message">
-                <i class="material-icons">send</i>
-            </button>
-        </div>
-    </div>
 
 {% endblock %}
 
@@ -62,6 +120,8 @@
     <script>
         var projectId = {{ project.id }};
         var chatMessagePath = "{{ path("send_chat_message",{"project": project.id}) }}";
+        var subscribePath = "project/" + projectId + "/chat";
+        var userId = {{ app.user.id }};
 
     </script>
     {% javascripts

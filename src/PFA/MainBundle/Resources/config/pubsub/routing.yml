@@ -13,3 +13,15 @@ pfa_chatroom_topic:
   requirements:
     id:
       pattern: "\d+"
+
+pfa_private_chat_topic:
+  channel: project/{id}/private_chat/{user_1}/{user_2}
+  handler:
+    callback: 'pfa.chatroom.topic'
+  requirements:
+    id:
+      pattern: "\d+"
+    user_1:
+      pattern: "\d+"
+    user_2:
+      pattern: "\d+"

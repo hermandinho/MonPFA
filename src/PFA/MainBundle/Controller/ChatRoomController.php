@@ -44,18 +44,25 @@ class ChatRoomController extends MainController
             $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
             
             $chatMessages = $project->getChatRoom()->getChatRoomMessages();
+
+            $data = [];
+
+            /** @var ChatRoomMessages $chatMessage */
+            foreach ($chatMessages as $chatMessage) {
+                if ($chatMessage->getReceiver() == null){
+                    array_push($data, $chatMessage);
+                }
+            }
+
+
             $serializerContext = SerializationContext::create()->setGroups(array('chat_message'));
-            $serializedMessages = $this->getSerializer()->serialize($chatMessages,"json", $serializerContext);
-            //die(dump($serializedMessages));
+            $serializedMessages = $this->getSerializer()->serialize($data,"json", $serializerContext);
 
-
-            return $this->render('PFAMainBundle:ChatRoom:index.html.twig', array(
+            return $this->render('PFAMainBundle:ChatRoom:index2.html.twig', array(
                 "project" => $project,
                 "members" => $projectMembers,
-                "chatMessages" => json_decode($serializedMessages)
+                "groupChatMessages" => json_decode($serializedMessages)
             ));
-
-            return $this->render('PFAMainBundle:ChatRoom:index2.html.twig', array("project" => $project, "members" => $projectMembers));
 
         } else {
             return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $project]);
@@ -80,6 +87,12 @@ class ChatRoomController extends MainController
                 ->setDate(new \DateTime())
                 ->setContent($request->request->get("message"))
                 ->setSender($this->getThisUser());
+
+        if($request->request->has("reciever") && $request->request->get("reciever") != -1){
+            $reciever = $em->getRepository("PFAMainBundle:User")->find($request->request->get("reciever"));
+            $message->setReceiver($reciever);
+        }
+
         $em->persist($message);
         $em->flush();
 
