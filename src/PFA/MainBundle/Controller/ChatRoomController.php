@@ -42,7 +42,7 @@ class ChatRoomController extends MainController
         if($isProjectMember){
             $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
 
-            return $this->render('PFAMainBundle:ChatRoom:index.html.twig', array("project" => $project, "members" => $projectMembers));
+            return $this->render('PFAMainBundle:ChatRoom:index2.html.twig', array("project" => $project, "members" => $projectMembers));
         } else {
             return $this->render("PFAMainBundle:Projects:not_project_member.html.twig", ["project" => $project]);
         }
