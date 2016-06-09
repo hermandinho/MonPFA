@@ -40,7 +40,7 @@
                                     <li class="_active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
                                     <li><a href="{{ path("agenda_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
                                     <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Messages"><i class="material-icons medium">message</i> </a></li>
-                                    <li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
+                                    <li><a href="{{ path('project_list_home_page') }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
                                     <li><a href="javascript:;" class="dropdown-button" data-activates='dropdown1'><i class="material-icons">more_vert</i></a></li>
                                 </ul>
 
@@ -111,10 +111,13 @@
             <script>
                 var _WS_URI = "ws://{{ gos_web_socket_server_host }}:{{ gos_web_socket_server_port }}";
                 moment.locale("fr");
+
                 /************ ROUTES *****************/
                 var MAILLING_HOME_ROUTE = '{{ path("mail_box_data") }}';
 
                 var webSocket = WS.connect(_WS_URI);
+
+                window.PFA_WEB_SOCKET = webSocket;
                 /*
                 webSocket.on("socket/connect", function (session) {
                     //session is an Autobahn JS WAMP session.

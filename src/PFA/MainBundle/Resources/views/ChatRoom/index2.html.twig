@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block page_title %}
-    <h5 class="center page-header">Salle de Discution {{ project.name|upper }}</h5>
+    <h5 class="center page-header">Espace de Discution {{ project.name|upper }}</h5>
 {% endblock %}
 
 {% block content %}
@@ -54,11 +54,17 @@
                             <script>
                                 window.CHAT_MEMBERS.push({{ member.memeber.id }});
                             </script>
-                            <li class="person" data-id="{{ member.memeber.id }}"  data-fetched="0" data-username="{{ member.memeber.username }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
+                            {% set dataUser = "" %}
+                            {% if app.user.id < member.memeber.id %}
+                                {% set dataUser = app.user.username ~ "-" ~ member.memeber.username %}
+                            {% else %}
+                                {% set dataUser = member.memeber.username ~ "-" ~ app.user.username %}
+                            {% endif %}
+                            <li class="person" data-chat-person="{{ dataUser }}" data-id="{{ member.memeber.id }}"  data-fetched="0" data-username="{{ member.memeber.username }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
                                 <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
                                 <span class="name">{{ member.memeber.nom }} {{ member.memeber.prenom }}</span>
                                 <span class="time">1:44 PM</span>
-                                <span class="preview">I've forgotten how it felt before</span>
+                                <span class="preview truncate truncate" data-last-message="{{ dataUser }}"></span>
                             </li>
 
                             {% set index = index + 1 %}
