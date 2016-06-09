@@ -6,9 +6,10 @@ function resetChatField() {
     $("#send-message").prop("disabled", true);
 }
 
-//window.SOCKET_SESSION = null;
+window.SOCKET_SESSION = null;
 
 function handleSockets(socket) {
+
     socket.on("socket/connect", function (session) {
         window.SOCKET_SESSION = session;
         //session is an Autobahn JS WAMP session.
@@ -27,8 +28,10 @@ function handleSockets(socket) {
         session.subscribe(path, function(uri, payload){
             //console.log("Received message", payload.msg);
             if (payload.type == "message"){
-                var data = $.parseJSON(payload.msg.msg);
-                var html = "<div class='bubble you'>" + data.content + "</div>";
+                //var data = $.parseJSON(payload.msg.msg);
+                var message = payload.msg.msg;
+                //console.log("SEND ", payload.msg);
+                var html = "<div class='bubble you'>" + message + "</div>";
                 $('.chat[data-chat=person0]').append(html);
                 $('.active-chat').scrollTop(1E10);
             }
@@ -44,12 +47,14 @@ function handleSockets(socket) {
            session.subscribe(path, function (uri, payload) {
                if(payload.msg.hasOwnProperty("msg")){
                    //var data = $.parseJSON(payload.msg);
-                   var data = payload.msg;
-                   var message = $.parseJSON(payload.msg.msg);
-                   //console.log(" >> " , data , data.chatBboxIndex);
-                   var html = "<div class='bubble you'>" + message.content + "</div>";
-                   $('.chat[data-chat=person'+ data.chatBboxIndex +']').append(html);
+                   //console.log("New Message " , payload);
+                   var message = payload.msg.msg;
+                   var chatBox = payload.msg.chatBboxIndex;
+
+                   var html = "<div class='bubble you'>" + message + "</div>";
+                   $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
                    $('.active-chat').scrollTop(1E10);
+                   //console.log("Append " + message + " TO " + chatBox + " FROM : ");
                    //console.log($('.chat[data-chat=person'+ data.chatBboxIndex +']'));
                }
            });
@@ -87,8 +92,26 @@ function handleSockets(socket) {
 } */
 
 function sendMessage(message) {
+    //var html = "<div class='bubble me'>" + message + "</div>";
+    //$('.chat[data-chat=person0]').append(html);
     var html = "<div class='bubble me'>" + message + "</div>";
-    $('.chat[data-chat=person0]').append(html);
+
+    if(window.ACTIVE_CHAT_ID == -1){
+        window.SOCKET_SESSION.publish(subscribePath, {"msg": message, "isPrivate": false});
+    }else{
+        var path = "",
+            chatBox = window.ACTIVE_CHAT_USERNAME;
+        if(userId < window.ACTIVE_CHAT_ID){
+            path = "project/" + projectId + "/private_chat/" + userId + "/" + window.ACTIVE_CHAT_ID;
+            chatBox = userName + "-" + window.ACTIVE_CHAT_USERNAME;
+        }else{
+            chatBox = window.ACTIVE_CHAT_USERNAME + "-" + userName;
+            path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
+        }
+        window.SOCKET_SESSION.publish(path, {"msg": message, "date": moment().toDate(), "isPrivate": true, "chatBboxIndex": chatBox });
+    }
+
+    $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
     $('.active-chat').scrollTop(1E10);
 
     $.post(
@@ -99,7 +122,7 @@ function sendMessage(message) {
         },
         function (data) {
             if(data.status){
-                if(window.ACTIVE_CHAT_ID == -1){
+                /*if(window.ACTIVE_CHAT_ID == -1){
                     window.SOCKET_SESSION.publish(subscribePath, {"msg": data.message, "isPrivate": false});
                 }else{
                     var path = "";
@@ -109,7 +132,7 @@ function sendMessage(message) {
                         path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
                     }
                     window.SOCKET_SESSION.publish(path, {"msg": data.message, "isPrivate": true, "chatBboxIndex": window.ACTIVE_CHAT_INDEX });
-                }
+                }*/
             }
         }
     );
@@ -118,17 +141,41 @@ function sendMessage(message) {
 }
 
 $(document).ready(function () {
-    $("html").css("overflow", "hidden");
+    //$("html").css("overflow", "hidden");
     handleSockets(webSocket);
     resetChatField();
 
     $('.chat[data-chat=person0]').addClass('active-chat');
     $('.person[data-chat=person0]').addClass('active');
     $('.active-chat').scrollTop(1E10);
-    $('.left .person').mousedown(function(){
 
+    $('.left .person').mousedown(function(){
         window.ACTIVE_CHAT_ID = $(this).attr("data-id");
         window.ACTIVE_CHAT_INDEX = $(this).attr("data-chat-index");
+        window.ACTIVE_CHAT_USERNAME = $(this).attr("data-username");
+        var chatHistoryFetched = $(this).attr('data-fetched');
+//alert(chatHistoryFetched);
+        if(chatHistoryFetched == 0){
+            $.get(
+                ""+privateChatPath.replace("XXX",window.ACTIVE_CHAT_ID) + "",
+                {},
+                function (data) {
+                    $(this).attr("data-fetched", 1);
+                    $(".chat[data-subscribed-pattern*='"+userName+"']").attr("data-fetched", 1);
+                    var html = "";
+                    data.map(function(item){
+                        if(item.sender.id == userId){
+                            html += "<div class='bubble me'>"+item.content+"</div>";
+                        }else{
+                            html += "<div class='bubble you'>"+item.content+"</div>";
+                        }
+                    });
+                    $(".chat[data-subscribed-pattern*='"+userName+"']").html(html);
+                    $('.active-chat').scrollTop(1E10);
+                }
+            );
+        }
+
 
         if ($(this).hasClass('.active')) {
             $('.active-chat').scrollTop(1E10);

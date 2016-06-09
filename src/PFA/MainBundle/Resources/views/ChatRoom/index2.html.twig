@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block page_title %}
-    {# <h5 class="center page-header">Salle de Discution {{ project.name|upper }}</h5> #}
+    <h5 class="center page-header">Salle de Discution {{ project.name|upper }}</h5>
 {% endblock %}
 
 {% block content %}
@@ -23,6 +23,7 @@
         window.CHAT_MEMBERS = [];
         window.ACTIVE_CHAT_ID = -1;
         window.ACTIVE_CHAT_INDEX = 0;
+        window.ACTIVE_CHAT_USERNAME = "group";
     </script>
     <div class="wrapper">
         <div class="container">
@@ -38,7 +39,7 @@
                     {% set hasDate = false %}
                 {% endif %}
                 <ul class="people">
-                    <li class="person" data-id="-1" data-chat-index="0" data-chat="person0">
+                    <li class="person" data-id="-1" data-chat-index="0" data-username="group" data-chat="person0">
                         <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
                         <span class="name">Group</span>
                         {% if hasDate %}
@@ -53,7 +54,7 @@
                             <script>
                                 window.CHAT_MEMBERS.push({{ member.memeber.id }});
                             </script>
-                            <li class="person" data-id="{{ member.memeber.id }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
+                            <li class="person" data-id="{{ member.memeber.id }}"  data-fetched="0" data-username="{{ member.memeber.username }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
                                 <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
                                 <span class="name">{{ member.memeber.nom }} {{ member.memeber.prenom }}</span>
                                 <span class="time">1:44 PM</span>
@@ -100,8 +101,19 @@
                     {% endfor %}
                 </div>
 
-                <div class="chat" data-chat="person1">
-                </div>
+
+                {% for member in members %}
+                    {% if member.memeber.id != app.user.id %}
+                        {% set dataUser = "" %}
+                        {% if app.user.id < member.memeber.id %}
+                            {% set dataUser = app.user.username ~ "-" ~ member.memeber.username %}
+                        {% else %}
+                            {% set dataUser = member.memeber.username ~ "-" ~ app.user.username %}
+                        {% endif %}
+                        <div class="chat" data-chat="person{{ loop.index }}" data-subscribed-pattern="{{ dataUser }}" data-box-id="{{ member.memeber.id }}">
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
                 <div class="write">
                     <a href="javascript:;" class="write-link attach"></a>
@@ -112,8 +124,6 @@
             </div>
         </div>
     </div>
-
-
 {% endblock %}
 
 {% block additional_javascripts %}
@@ -122,6 +132,8 @@
         var chatMessagePath = "{{ path("send_chat_message",{"project": project.id}) }}";
         var subscribePath = "project/" + projectId + "/chat";
         var userId = {{ app.user.id }};
+        var userName = "{{ app.user.username }}";
+        var privateChatPath = "{{ path('get_private_meaages', {"project": project.id, "user": "XXX"}) }}";
 
     </script>
     {% javascripts

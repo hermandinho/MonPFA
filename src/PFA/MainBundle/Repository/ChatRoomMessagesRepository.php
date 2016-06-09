@@ -1,6 +1,8 @@
 <?php
 
 namespace PFA\MainBundle\Repository;
+use PFA\CoreBundle\Entity\Project;
+use PFA\MainBundle\Entity\User;
 
 /**
  * ChatRoomMessagesRepository
@@ -10,4 +12,26 @@ namespace PFA\MainBundle\Repository;
  */
 class ChatRoomMessagesRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param User $user1
+     * @param User $user2
+     * @param Project $project
+     * @return array
+     */
+    public function getUserChatHistory(User $user1, User $user2, Project $project)
+    {
+        $query = $this->createQueryBuilder("c")
+                ->where("c.sender = :sender AND c.receiver = :receiver")
+                ->setParameter("sender", $user1)
+                ->setParameter("receiver", $user2)
+                ->orWhere("c.sender = :sender2 AND c.receiver = :receiver2")
+                ->setParameter("sender2", $user2)
+                ->setParameter("receiver2", $user1)
+                ->andWhere("c.chatRoom = :chatroom")
+                ->setParameter("chatroom", $project->getChatRoom())
+                ->getQuery();
+        
+        return $query->getResult();
+
+    }
 }
