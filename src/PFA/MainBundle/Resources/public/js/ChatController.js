@@ -46,20 +46,24 @@ function handleSockets(socket) {
             }
            session.subscribe(path, function (uri, payload) {
                if(payload.msg.hasOwnProperty("msg")){
-                   var message = payload.msg.msg;
-                   var chatBox = payload.msg.chatBboxIndex;
+                   console.log(payload.msg.reciever);
+                   if(userId == payload.msg.reciever ) {
+                       var message = payload.msg.msg;
+                       var chatBox = payload.msg.chatBboxIndex;
 
-                   var html = "<div class='bubble you'>" + message + "</div>";
-                   $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
-                   $('.active-chat').scrollTop(1E10);
+                       var html = "<div class='bubble you'>" + message + "</div>";
+                       $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
+                       $('.active-chat').scrollTop(1E10);
 
-                   var personId = $(".chat[data-subscribed-pattern='" + chatBox + "']").attr("data-box-id");
-                   //alert(personId+ "" +window.ACTIVE_CHAT_ID+""+chatBox);
-                   if(window.ACTIVE_CHAT_ID != personId){
-                       $(".person[data-id='"+personId+"']").addClass("new_message");
+                       var personId = $(".chat[data-subscribed-pattern='" + chatBox + "']").attr("data-box-id");
+                       //alert(personId+ "" +window.ACTIVE_CHAT_ID+""+chatBox);
+                       if(window.ACTIVE_CHAT_ID != personId){
+                           $(".person[data-id='"+personId+"']").addClass("new_message");
+                       }
+
+                       $(".preview[data-last-message='" + chatBox + "']").html(message);
                    }
 
-                   $(".preview[data-last-message='" + chatBox + "']").html(message);
                }
            });
         });
@@ -114,7 +118,7 @@ function sendMessage(message) {
             chatBox = window.ACTIVE_CHAT_USERNAME + "-" + userName;
             path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
         }
-        window.SOCKET_SESSION.publish(path, {"msg": message, "date": moment().toDate(), "isPrivate": true, "chatBboxIndex": chatBox });
+        window.SOCKET_SESSION.publish(path, {"msg": message, "date": moment().toDate(), "isPrivate": true, "chatBboxIndex": chatBox, "reciever":  window.ACTIVE_CHAT_ID });
 
         $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
         $('.active-chat').scrollTop(1E10);
