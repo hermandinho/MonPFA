@@ -122,10 +122,10 @@ function sendMessage(message) {
 
     console.log(".person[data-chat-person='"+chatBox+"']");
     if(!$(".person[data-chat-person='"+chatBox+"']").hasClass('active')) {
-        $(".person[data-id='"+window.ACTIVE_CHAT_ID+"']").addClass("new_message");
+        $(".person[data-chat-person='"+chatBox+"']").addClass("new_message");
     }
-    //$(".person[data-id='"+window.ACTIVE_CHAT_ID+"'] .preview").html(message);
-
+    $(".person[data-chat-person='"+chatBox+"'] .preview").html(message);
+    //$(".person[data-chat-person='"+chatBox+"']").addClass("new_message");
     $.post(
         ""+chatMessagePath+"",
         {

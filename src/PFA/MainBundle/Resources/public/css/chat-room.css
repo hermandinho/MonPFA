@@ -235,6 +235,7 @@ body {
     -o-transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);
     -webkit-transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);
     transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);
+    word-break: break-all;
 }
 .container .right .chat.active-chat .bubble:nth-of-type(1) {
     -moz-animation-duration: 0.15s;
@@ -546,5 +547,5 @@ body {
 }
 
 .new_message {
-    background-color: darkblue;
+    background-color: darkblue !important;
 }
