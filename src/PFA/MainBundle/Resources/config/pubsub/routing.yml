@@ -17,7 +17,8 @@ pfa_chatroom_topic:
 pfa_private_chat_topic:
   channel: project/{id}/private_chat/{user_1}/{user_2}
   handler:
-    callback: 'pfa.chatroom.topic'
+    callback: 'pfa.private_chat.topic'
+    #callback: 'pfa.chatroom.topic'
   requirements:
     id:
       pattern: "\d+"
@@ -25,3 +26,15 @@ pfa_private_chat_topic:
       pattern: "\d+"
     user_2:
       pattern: "\d+"
+
+pfa_private_chat_topicv2:
+  channel: project/{id}/private_chat/{user1}/{user2}
+  handler:
+    callback: 'pfa.private_chat.topic'
+  requirements:
+    id:
+      pattern: "\d+"
+    user1:
+      pattern: "[a-zA-Z0-9]+"
+    user2:
+      pattern: "[a-zA-Z0-9]+"

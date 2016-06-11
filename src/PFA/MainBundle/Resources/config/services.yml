@@ -19,3 +19,9 @@ services:
         arguments: ['@gos_web_socket.websocket.client_manipulator', '@gos_web_socket.client_storage', '@doctrine.orm.entity_manager']
         tags:
           - { name: gos_web_socket.topic }
+
+    pfa_main.topics.private_chat_topic:
+        class: PFA\MainBundle\Topics\PrivateChatTopic
+        arguments: ['@gos_web_socket.websocket.client_manipulator', '@gos_web_socket.client_storage', '@doctrine.orm.entity_manager']
+        tags:
+            - { name: gos_web_socket.topic }

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block title %}
-    Chat
+    Chat -- {{ app.user.username }}
 {% endblock %}
 
 {% block page_title %}
@@ -124,8 +124,8 @@
                 <div class="write">
                     <a href="javascript:;" class="write-link attach"></a>
                     <input type="text" placeholder="Votre message !!! " id="message" />
-                    <!--<a href="javascript:;" class="write-link smiley"></a>
-                    <a href="javascript:;" class="write-link send"></a> -->
+                    <!--<a href="javascript:;" class="write-link smiley"></a> -->
+                    <a href="javascript:;" class="write-link send"></a>
                 </div>
             </div>
         </div>

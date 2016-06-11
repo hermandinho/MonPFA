@@ -44,7 +44,9 @@ function handleSockets(socket) {
             }else{
                 path = "project/" + projectId + "/private_chat/" + id + "/" + userId;
             }
+            console.log(path);
            session.subscribe(path, function (uri, payload) {
+               //console.log(payload.msg);
                if(payload.msg.hasOwnProperty("msg")){
                    var message = payload.msg.msg;
                    var chatBox = payload.msg.chatBboxIndex;
@@ -120,7 +122,6 @@ function sendMessage(message) {
         $('.active-chat').scrollTop(1E10);
     }
 
-    console.log(".person[data-chat-person='"+chatBox+"']");
     if(!$(".person[data-chat-person='"+chatBox+"']").hasClass('active')) {
         $(".person[data-chat-person='"+chatBox+"']").addClass("new_message");
     }

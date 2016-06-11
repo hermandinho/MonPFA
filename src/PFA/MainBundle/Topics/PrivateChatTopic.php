@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: El-PC
- * Date: 04/06/2016
- * Time: 23:28
+ * Date: 11/06/2016
+ * Time: 16:34
  */
 
 namespace PFA\MainBundle\Topics;
@@ -18,9 +18,8 @@ use Gos\Bundle\WebSocketBundle\Topic\TopicInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
 
-class ChatRoomTopic implements TopicInterface
+class PrivateChatTopic implements TopicInterface
 {
-
     /**
      * @var ClientManipulatorInterface
      */
@@ -63,7 +62,7 @@ class ChatRoomTopic implements TopicInterface
     {
         $user = $this->clientManipulator->getClient($connection);
         $topic->broadcast([
-            'msg' => $connection->resourceId . " has joined " . $topic->getId()." : ".$user,
+            'msg' => $user . "(#" . $connection->resourceId . ") has joined " . $topic->getId(),
             "users" => count($topic),
             "type" => "subscribed"
         ]);
@@ -77,8 +76,11 @@ class ChatRoomTopic implements TopicInterface
     public function onUnSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
     {
         $user = $this->clientManipulator->getClient($connection);
-
-        $topic->broadcast(['msg' => $connection->resourceId . " has un subscribed from " . $topic->getId()." : ".$user, "users" => count($topic)]);
+        $topic->broadcast([
+            'msg' => $user . "(#" . $connection->resourceId . ") has unsubscribed from  " . $topic->getId(),
+            "users" => count($topic),
+            "type" => "subscribed"
+        ]);
     }
 
     /**
@@ -91,7 +93,6 @@ class ChatRoomTopic implements TopicInterface
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible)
     {
-        echo $topic->getId(). PHP_EOL;
         $topic->broadcast(["msg" => $event, "type" => "message"], [$connection->WAMP->sessionId]);
     }
 
@@ -100,6 +101,6 @@ class ChatRoomTopic implements TopicInterface
      */
     public function getName()
     {
-       return "pfa.chatroom.topic";
+        return "pfa.private_chat.topic";
     }
 }
