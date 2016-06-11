@@ -44,7 +44,7 @@ function handleSockets(socket) {
             }else{
                 path = "project/" + projectId + "/private_chat/" + id + "/" + userId;
             }
-            console.log(path);
+            //console.log(path);
            session.subscribe(path, function (uri, payload) {
                //console.log(payload.msg);
                if(payload.msg.hasOwnProperty("msg")){

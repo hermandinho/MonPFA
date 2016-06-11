@@ -91,7 +91,7 @@ class ChatRoomTopic implements TopicInterface
      */
     public function onPublish(ConnectionInterface $connection, Topic $topic, WampRequest $request, $event, array $exclude, array $eligible)
     {
-        echo $topic->getId(). PHP_EOL;
+        //echo $topic->getId(). PHP_EOL;
         $topic->broadcast(["msg" => $event, "type" => "message"], [$connection->WAMP->sessionId]);
     }
 
