@@ -43,7 +43,7 @@
                             </p>
                         </div>
                         <div class="card-action">
-                            <a href="javascript:;" class="left" title="Open Modal With member names :)">{{ random(10) }} membres</a>
+                            <a href="javascript:;" class="left" title="Open Modal With member names :)">{{ project.members|length }} membres</a>
                             <a href="{{ path("project_space_home",{"id": project.id}) }}" class="right">Voir plus ...</a>
                         </div>
                     </div>

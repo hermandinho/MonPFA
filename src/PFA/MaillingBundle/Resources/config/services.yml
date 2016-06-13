@@ -15,3 +15,7 @@ services:
     pfa_mailling.managers.mail_manager:
           class: PFA\MaillingBundle\Managers\MailManager
           arguments: ['@doctrine.orm.entity_manager']
+
+    pfa_mailling.managers.documents_manager:
+        class: PFA\MaillingBundle\Managers\DocumentsManager
+        arguments: ['@doctrine.orm.entity_manager']

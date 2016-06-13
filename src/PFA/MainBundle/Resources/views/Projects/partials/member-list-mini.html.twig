@@ -7,10 +7,20 @@
                 <p class="truncate">
                     {{ member.memeber.email }}
                 </p>
-                <a href="javascript:;" data-path="{{ path("remove_project_memeber",{"id": member.id}) }}" class="secondary-content delete-member"><i class="material-icons">delete</i></a>
+                {% if member.id != project.owner.id %}
+                    <a href="javascript:;" data-path="{{ path("remove_project_memeber",{"id": member.id }) }}" class="secondary-content delete-member tooltipped" data-position="bottom" data-delay="50" data-tooltip="Retirer ce membre"><i class="material-icons">delete</i></a>
+                {% endif %}
+
             </li>
         {% endfor %}
     </ul>
 {% else %}
     <h3>Aucun Memebre.</h3>
 {% endif %}
+
+<script>
+    $(document).ready(function () {
+        //Initialize Tooltips
+        $('.tooltipped').tooltip({delay: 50});
+    })
+</script>

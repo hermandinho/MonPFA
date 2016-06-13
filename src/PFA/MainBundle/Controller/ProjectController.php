@@ -185,7 +185,7 @@ class ProjectController extends MainController
     {
         if($project){
             $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
-            return $this->render("PFAMainBundle:Projects:partials/member-list-mini.html.twig", ["members" => $projectMembers]);
+            return $this->render("PFAMainBundle:Projects:partials/member-list-mini.html.twig", ["members" => $projectMembers, "project" => $project]);
         }
         return new Response("Projet Introuvable");
     }

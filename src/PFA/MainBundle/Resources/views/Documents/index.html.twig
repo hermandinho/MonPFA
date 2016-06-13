@@ -39,33 +39,87 @@
                     </thead>
                     <tbody>
                         {# dump(project.ressources.documents[0]) #}
-                        {% for document in project.ressources.documents %}
+                        {% for document in documents %}
                             <tr>
                                 <td>
                                     {{ loop.index }}
                                 </td>
                                 <td>
                                     {% set extension = document.imageName|split(".")|last %}
+                                    {% set title = ""  %}
                                     {% if extension == "pdf" %}
                                         {% set src = asset("bundles/pfacore/images/pdf.png") %}
-                                    {% elseif extension == "jpg" %}
+                                        {% set title = "Fichier PDF"  %}
+                                    {% elseif extension in ["jpg","png","jped","gif"] %}
                                         {% set src = asset("bundles/pfacore/images/jpg.png") %}
-                                    {% elseif extension == "doc" %}
+                                        {% set title = "Image"  %}
+                                    {% elseif extension == "doc" or  extension == "docx" %}
                                         {% set src = asset("bundles/pfacore/images/word.png") %}
+                                        {% set title = "Ficher MS Word"  %}
+                                    {% elseif extension == "xlsx" %}
+                                        {% set src = asset("bundles/pfacore/images/excel.png") %}
+                                        {% set title = "Fichier MS Excel"  %}
+                                    {% elseif extension in ["rar", "zip"] %}
+                                        {% set src = asset("bundles/pfacore/images/rar.png") %}
+                                        {% set title = "Fichier Compréssé"  %}
                                     {% else%}
-                                        {% set src = asset("bundles/pfacore/images/pdf.png") %} <!-- DEFAULT -->
+                                        {% set src = asset("bundles/pfacore/images/rar.png") %} <!-- DEFAULT -->
+                                        {% set title = "Fichier inconue"  %}
                                     {% endif %}
-                                    <img src="{{ src }}" alt="Type" class="image circle" width="45">
+                                    <img src="{{ src }}" alt="Type" class="image circle_ tooltipped" width="45" data-position="bottom" data-delay="50" data-tooltip="{{ title }}">
                                 </td>
 
                                 <td>
-                                    <ul class="_collapsible" data-collapsible="accordion">
+                                    <ul class="collapsible" data-collapsible="accordion">
                                         <li>
                                             <div class="collapsible-header">
                                                 {{ document.title }}
                                             </div>
                                             <div class="collapsible-body">
-                                                CHILDREN
+                                                <ul class="collection">
+                                                    {% if document.versions|length == 0 %}
+                                                        <li class="collection-item"><div>Aucune Version.</div></li>
+                                                    {% else %}
+                                                        {% for version in document.versions %}
+                                                            {% set v_extension = version.imageName|split(".")|last %}
+                                                            {% set v_title = ""  %}
+                                                            {% if v_extension == "pdf" %}
+                                                                {% set v_src = asset("bundles/pfacore/images/pdf.png") %}
+                                                                {% set v_title = "Fichier PDF"  %}
+                                                            {% elseif v_extension in ["jpg","png","jped","gif"] %}
+                                                                {% set v_src = asset("bundles/pfacore/images/jpg.png") %}
+                                                                {% set v_title = "Image"  %}
+                                                            {% elseif v_extension == "doc" or  extension == "docx" %}
+                                                                {% set v_src = asset("bundles/pfacore/images/word.png") %}
+                                                                {% set v_title = "Ficher MS Word"  %}
+                                                            {% elseif v_extension == "xlsx" %}
+                                                                {% set v_src = asset("bundles/pfacore/images/excel.png") %}
+                                                                {% set v_title = "Fichier MS Excel"  %}
+                                                            {% elseif v_extension in ["rar", "zip"] %}
+                                                                {% set v_src = asset("bundles/pfacore/images/rar.png") %}
+                                                                {% set v_title = "Fichier Compréssé"  %}
+                                                            {% else%}
+                                                                {% set v_src = asset("bundles/pfacore/images/rar.png") %} <!-- DEFAULT -->
+                                                                {% set v_title = "Fichier inconue"  %}
+                                                            {% endif %}
+
+
+                                                            <li class="collection-item avatar">
+                                                                <img src="{{ v_src }}" alt="{{ version.title }}" class="circle">
+                                                                <span class="title">{{ version.title }}</span>
+                                                                <p>
+                                                                    {{ version.owner.nom ~ " " ~  version.owner.prenom }} <br>
+                                                                    {{ version.updatedAt|date("d/M/Y") ~ " à " ~ version.updatedAt|date("H:i")}}
+                                                                </p>
+                                                                <span href="javascript:;" class="secondary-content">
+                                                                    <a href="{{ vich_uploader_asset(version, "imageFile") }}" target="_blank" title="Télécharger"><i class="material-icons">system_update_alt</i></a>
+                                                                    <a href="javascript:;" title="Supprimer Le cette version" class="delete-document-version" data-document="{{ version.id }}"><i class="material-icons">delete</i></a>
+                                                                </span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+
                                             </div>
                                         </li>
                                     </ul>
@@ -80,8 +134,9 @@
                                     {{ document.updatedAt|date("d/M/Y") ~ " à " ~ document.updatedAt|date("H:i") }}
                                 </td>
                                 <td>
-                                    <a href="{{vich_uploader_asset(document, "imageFile") }}" title="Télécharger" target="_blank"><i class="material-icons">system_update_alt</i></a>
-                                    <a href="javascript:;" title="Ajouter une Version" id="add_doc_version" class="modal-trigger" data-toggle="modal" data-target="#addDocumentVersionModal"><i class="material-icons">open_in_browser</i></a>
+                                    <a href="{{ vich_uploader_asset(document, "imageFile") }}" title="Télécharger" target="_blank"><i class="material-icons">system_update_alt</i></a>
+                                    <a href="javascript:;" title="Ajouter une Version" data-parent="{{ document.id }}" class="modal-trigger add_doc_version" data-toggle="modal" data-target="#addDocumentModal"><i class="material-icons">open_in_browser</i></a>
+                                    <a href="javascript:;" title="Supprimer Le ducument" class="delete-document" data-document="{{ document.id }}"><i class="material-icons">delete</i></a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -92,7 +147,7 @@
         {% endif %}
 
     </div>
-    <div class="fixed-action-btn tooltipped" data-position="left" data-delay="50" data-tooltip="Ajouter un document" style="bottom: 45px; right: 24px;" data-toggle="modal" data-target="#addDocumentModal">
+    <div class="fixed-action-btn tooltipped" data-position="left" data-delay="50" id="add_document" data-tooltip="Ajouter un document" style="bottom: 45px; right: 24px;" data-toggle="modal" data-target="#addDocumentModal">
         <a class="btn-floating btn-large red modal-trigger" href="javascript:;">
             <i class="large material-icons">add</i>
         </a>
@@ -100,7 +155,6 @@
 
     <div class="modalBox row">
         {{ render(controller("PFAMainBundle:Document:addDocument", {"project": project.id })) }}
-        {{ render(controller("PFAMainBundle:Document:addDocumentVersion", {"project": project.id })) }}
     </div>
 {% endblock %}
 
@@ -112,7 +166,36 @@
     {% endjavascripts %}
 
     <script type="text/javascript">
+
+        function deleteDocument(id) {
+            var path = "{{ path("pfa_delete_document",{"document": "XXX", "project": "YYY"}) }}";
+            path = path.replace("XXX", id);
+            path = path.replace("YYY", {{ project.id }});
+            console.log(path);
+            $.post(
+                 ""+path+"",
+                 {},
+                 function (data) {
+                    if(data.status) {
+                        window.location.reload();
+                    }
+                 }
+            )
+        }
+
         $(document).ready(function () {
+            //Initialize Tooltips
+            $('.tooltipped').tooltip({delay: 50});
+
+            $(".add_doc_version").click(function (e) {
+               $("#docType").val("child");
+               $("#docParent").val($(this).attr("data-parent"));
+            });
+
+            $("#add_document").click(function (e) {
+               $("#docType").val("parent");
+            });
+
             $(".addProject_Form").submit(function (e) {
                 e.preventDefault();
                 var data = new FormData(this);
@@ -136,6 +219,18 @@
                         console.log("Error : ", er, err);
                     }
                 });
+            });
+
+            $(".delete-document").click(function (e) {
+               if(confirm("Cette action va suprimmer toute les versions de ce document. Voullez vous continer ? ")) {
+                   deleteDocument($(this).attr("data-document"));
+               }
+            });
+
+            $(".delete-document-version").click(function (e) {
+                if(confirm(" Voullez vous vraiment supprimer cette version ? ")) {
+                    deleteDocument($(this).attr("data-document"));
+                }
             });
         })
     </script>

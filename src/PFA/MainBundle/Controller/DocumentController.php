@@ -27,7 +27,8 @@ class DocumentController extends MainController
      */
     public function indexAction(Request $request, Project $project)
     {
-        return $this->render('PFAMainBundle:Documents:index.html.twig', ['project' => $project]);
+        $documents = $this->get("pfa_mailling.managers.documents_manager")->getMainDocuments($project);
+        return $this->render('PFAMainBundle:Documents:index.html.twig', ['project' => $project, "documents" => $documents]);
     }
 
     /**
@@ -49,27 +50,49 @@ class DocumentController extends MainController
             $doc->setShareZone($project->getRessources());
             $doc->setUpdatedAt(new \DateTime());
             $doc->setOwner($this->getThisUser());
+            if($request->request->has("docType")) {
+                $type = $request->request->get("docType");
+
+                switch ($type) {
+                    case "parent":
+                        $doc->setVersion(1);break;
+                    case "child":
+                        $parent = $em->getRepository("PFAMainBundle:Documents")->find($request->request->get("docParent"));
+                        $doc->setVersion($this->get("pfa_mailling.managers.documents_manager")->doDocChildVersion($parent) + 1);
+                        $doc->setParent($parent);
+                        //die(dump($doc->getParent()->getId()));
+                        break;
+                }
+            }
+
+            //die(dump($request->request->get("docParent")));
 
             $em->persist($doc);
             $em->flush();
-            return new JsonResponse(['status', true]);
+            return new JsonResponse(['status' => true]);
         }
 
         return $this->render("PFAMainBundle:Documents:add_document.html.twig", ['form' => $form->createView()]);
     }
 
-    public function addDocumentVersionAction(Request $request, Project $project)
+    /**
+     * @param Request $request
+     * @param Documents $document
+     * @return JsonResponse
+     * @Route("/{document}/delete", name="pfa_delete_document")
+     */
+    public function deleteDocumentAction(Request $request, Documents $document)
     {
-        $doc = new Documents();
         $em = $this->getEM();
-        $form = $this->createForm(new DocumentsType());
-        $form->handleRequest($request);
+        $json = [];
 
-        if ($form->isValid()) {
-
+        if($document) {
+            $em->remove($document);
+            $em->flush();
+            $json["status"] = true;
+            $json["msg"] = "Document Retirer avec success.";
         }
 
-        return $this->render("PFAMainBundle:Documents:add_document_version.html.twig", ['form' => $form->createView()]);
-
+        return new JsonResponse($json);
     }
 }

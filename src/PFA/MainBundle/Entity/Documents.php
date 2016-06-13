@@ -4,6 +4,7 @@ namespace PFA\MainBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use PFA\CoreBundle\Entity\ShareZone;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -57,14 +58,15 @@ class Documents
     /**
      * @var string
      *
-     * @ORM\Column(name="version", type="string", length=10, nullable=true)
+     * @ORM\Column(name="version", type="integer", nullable=true)
      */
     private $version;
 
     /**
      * @var Documents
      *
-     * @ORM\Column(name="parent", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\Documents", inversedBy="version")
+     * @JoinColumn(name="parent", referencedColumnName="id",onDelete="SET NULL")
      */
     private $parent;
 
@@ -105,7 +107,7 @@ class Documents
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\Documents", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\Documents", mappedBy="parent", cascade={"remove"})
      */
     private $versions;
 
@@ -218,7 +220,7 @@ class Documents
     /**
      * Set parent
      *
-     * @param integer $parent
+     * @param Documents $parent
      *
      * @return Documents
      */
@@ -232,7 +234,7 @@ class Documents
     /**
      * Get parent
      *
-     * @return integer
+     * @return Documents
      */
     public function getParent()
     {
