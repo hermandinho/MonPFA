@@ -60,12 +60,9 @@ class DocumentController extends MainController
                         $parent = $em->getRepository("PFAMainBundle:Documents")->find($request->request->get("docParent"));
                         $doc->setVersion($this->get("pfa_mailling.managers.documents_manager")->doDocChildVersion($parent) + 1);
                         $doc->setParent($parent);
-                        //die(dump($doc->getParent()->getId()));
                         break;
                 }
             }
-
-            //die(dump($request->request->get("docParent")));
 
             $em->persist($doc);
             $em->flush();
