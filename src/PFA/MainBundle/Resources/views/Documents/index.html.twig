@@ -28,7 +28,7 @@
             </div>
         {% else %}
             <div class="col s12 m10 offset-l1">
-                <table class="bordered striped highlight responsive-table">
+                <table class="bordered striped highlight responsive-table" id="documents_table">
                     <thead>
                         <th>#</th>
                         <th>Type</th>
@@ -186,6 +186,10 @@
         $(document).ready(function () {
             //Initialize Tooltips
             $('.tooltipped').tooltip({delay: 50});
+
+            $("#documents_table").DataTable();
+
+            $('select').material_select();
 
             $(".add_doc_version").click(function (e) {
                $("#docType").val("child");
