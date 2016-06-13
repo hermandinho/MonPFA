@@ -112,4 +112,11 @@ class ShareZone
     {
         return $this->documents;
     }
+
+    function __toString()
+    {
+        return "".$this->getProject()->getId();
+    }
+
+
 }

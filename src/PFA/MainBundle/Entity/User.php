@@ -88,6 +88,11 @@ class User extends BaseUser
     private $projectsInvitedIn;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\Documents", mappedBy="owner", orphanRemoval=true)
+     */
+    private $documents;
+    /**
      * User constructor.
      */
     public function __construct()
@@ -97,6 +102,7 @@ class User extends BaseUser
         $this->projectsInvitedIn = new ArrayCollection();
         $this->setRoles(['ROLE_USER']);
         $this->setEnabled(false);
+        $this->documents = new ArrayCollection();
     }
 
 
@@ -344,5 +350,39 @@ class User extends BaseUser
     public function getTel()
     {
         return $this->tel;
+    }
+
+    /**
+     * Add document
+     *
+     * @param \PFA\MainBundle\Entity\Documents $document
+     *
+     * @return User
+     */
+    public function addDocument(\PFA\MainBundle\Entity\Documents $document)
+    {
+        $this->documents[] = $document;
+
+        return $this;
+    }
+
+    /**
+     * Remove document
+     *
+     * @param \PFA\MainBundle\Entity\Documents $document
+     */
+    public function removeDocument(\PFA\MainBundle\Entity\Documents $document)
+    {
+        $this->documents->removeElement($document);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 }

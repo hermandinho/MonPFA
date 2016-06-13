@@ -1,0 +1,142 @@
+{% extends "PFACoreBundle::layout.html.twig" %}
+
+{% block title %}
+    Documents
+{% endblock %}
+
+{% block page_title %}
+    <h5 class="center page-header">Documents {{ project.name|upper }}</h5>
+{% endblock %}
+
+{% block additional_stylesheets %}
+    {% stylesheets
+        "@PFACoreBundle/Resources/public/css/dropzone.css"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% if project.ressources.documents|length == 0 %}
+            <div class="row">
+                <div class="col md8 offset-m2 well">
+                    <h3 class="header ">
+                        Aucun document pour l'instant
+                    </h3>
+                </div>
+            </div>
+        {% else %}
+            <div class="col s12 m10 offset-l1">
+                <table class="bordered striped highlight responsive-table">
+                    <thead>
+                        <th>#</th>
+                        <th>Type</th>
+                        <th>Nom du Doc.</th>
+                        <th>Par</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        {# dump(project.ressources.documents[0]) #}
+                        {% for document in project.ressources.documents %}
+                            <tr>
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+                                <td>
+                                    {% set extension = document.imageName|split(".")|last %}
+                                    {% if extension == "pdf" %}
+                                        {% set src = asset("bundles/pfacore/images/pdf.png") %}
+                                    {% elseif extension == "jpg" %}
+                                        {% set src = asset("bundles/pfacore/images/jpg.png") %}
+                                    {% elseif extension == "doc" %}
+                                        {% set src = asset("bundles/pfacore/images/word.png") %}
+                                    {% else%}
+                                        {% set src = asset("bundles/pfacore/images/pdf.png") %} <!-- DEFAULT -->
+                                    {% endif %}
+                                    <img src="{{ src }}" alt="Type" class="image circle" width="45">
+                                </td>
+
+                                <td>
+                                    <ul class="_collapsible" data-collapsible="accordion">
+                                        <li>
+                                            <div class="collapsible-header">
+                                                {{ document.title }}
+                                            </div>
+                                            <div class="collapsible-body">
+                                                CHILDREN
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </td>
+
+                                <td>
+                                    {{ document.owner.nom ~ " " ~ document.owner.prenom }}
+                                </td>
+
+                                <td>
+                                    {{ document.updatedAt|date("d/M/Y") ~ " à " ~ document.updatedAt|date("H:i") }}
+                                </td>
+                                <td>
+                                    <a href="{{vich_uploader_asset(document, "imageFile") }}" title="Télécharger" target="_blank"><i class="material-icons">system_update_alt</i></a>
+                                    <a href="javascript:;" title="Ajouter une Version" id="add_doc_version" class="modal-trigger" data-toggle="modal" data-target="#addDocumentVersionModal"><i class="material-icons">open_in_browser</i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        {% endif %}
+
+    </div>
+    <div class="fixed-action-btn tooltipped" data-position="left" data-delay="50" data-tooltip="Ajouter un document" style="bottom: 45px; right: 24px;" data-toggle="modal" data-target="#addDocumentModal">
+        <a class="btn-floating btn-large red modal-trigger" href="javascript:;">
+            <i class="large material-icons">add</i>
+        </a>
+    </div>
+
+    <div class="modalBox row">
+        {{ render(controller("PFAMainBundle:Document:addDocument", {"project": project.id })) }}
+        {{ render(controller("PFAMainBundle:Document:addDocumentVersion", {"project": project.id })) }}
+    </div>
+{% endblock %}
+
+{% block additional_javascripts %}
+    {% javascripts
+        '@PFACoreBundle/Resources/public/js/dropzone.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".addProject_Form").submit(function (e) {
+                e.preventDefault();
+                var data = new FormData(this);
+                $("#add_document_btn").html("Envoie en cours ...").prop("disabled", true);
+                $.ajax({
+                    url: "{{ path("upload_project_document", {"project": project.id}) }}",
+                    method: $(this).attr("method"),
+                    processData: false,
+                    contentType: false,
+                    data: data,
+                    cache: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if(data.status) {
+                            $(".upload-status").html("<p>Document envoyé avec success !!!</p>").removeClass("hide");
+                            $("#add_document_btn").html("Envoyer").prop("disabled", false);
+                            window.location.reload();
+                        }
+                    },
+                    error: function (er, err) {
+                        console.log("Error : ", er, err);
+                    }
+                });
+            });
+        })
+    </script>
+{% endblock %}

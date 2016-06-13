@@ -9,6 +9,7 @@
 namespace PFA\CoreBundle\Controller;
 
 
+use Doctrine\ORM\EntityManager;
 use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Entity\ProjectMember;
 use PFA\MainBundle\Entity\User;
@@ -33,6 +34,9 @@ class MainController extends Controller
         return $this->get('jms_serializer');
     }
 
+    /**
+     * @return EntityManager
+     */
     protected function getEM()
     {
         return $this->getDoctrine()->getManager();

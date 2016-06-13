@@ -12,7 +12,7 @@
         <div class="col s12 m6 l3">
             <div class="card blue-grey darken-1">
                 <div class="card-content white-text">
-                    <span class="card-title">Sale de discussion</span>
+                    <span class="card-title">Discussions</span>
                     <p class="center">
                         <i class="large material-icons center">chat_bubble</i>
                     </p>
@@ -29,7 +29,7 @@
         <div class="col s12 m6 l3">
             <div class="card blue-grey darken-1">
                 <div class="card-content white-text">
-                    <span class="card-title">Espace de partage</span>
+                    <span class="card-title">Documents</span>
                     <p class="center">
                         <i class="large material-icons center">library_books</i>
                     </p>
@@ -38,7 +38,7 @@
                     </p>
                 </div>
                 <div class="card-action">
-                    <a href="{{ path("project_space_home",{"id": project.id}) }}" class="right">Aller</a>
+                    <a href="{{ path("project_documents_home",{"project": project.id}) }}" class="right">Aller</a>
                 </div>
             </div>
         </div>

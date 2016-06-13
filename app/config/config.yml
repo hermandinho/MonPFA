@@ -136,3 +136,18 @@ easy_admin:
           Messagerie: PFA\MaillingBundle\Entity\Mail
           Forum: PFA\CoreBundle\Entity\Forum
           Projets: PFA\CoreBundle\Entity\Project
+
+#VICH UPLOADER
+vich_uploader:
+    db_driver: orm
+    mappings:
+      profile_image:
+        uri_prefix: /profile/image
+        upload_destination: %kernel.root_dir%/../web/images/profile
+      project_ressoucces:
+        uri_prefix:  /MonPFA/web/resources
+        upload_destination: %kernel.root_dir%/../web/resources
+        namer: vich_uploader.namer_uniqid
+        inject_on_load:     false
+        delete_on_update:   true
+        delete_on_remove:   true

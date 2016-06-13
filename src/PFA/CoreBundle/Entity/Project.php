@@ -65,7 +65,7 @@ class Project
 
 
     /**
-     * @var ShareZone
+     * @var ArrayCollection
      *
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\ShareZone", inversedBy="project", orphanRemoval=true, cascade={"persist","remove"})
      */
@@ -110,6 +110,7 @@ class Project
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->ressources = new ArrayCollection();
     }
 
     /**

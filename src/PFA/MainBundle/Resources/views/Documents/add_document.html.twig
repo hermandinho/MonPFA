@@ -1,0 +1,43 @@
+{# extends 'PFACoreBundle::layout.html.twig' #}
+
+<div id="addDocumentModal" class="modal col m8 offset-m1">
+    <div class="modal-content">
+        <h4 class="center">Ajouter Un Document au projet</h4>
+        <div>
+            {{ form_start(form, {"attr": {"class": "addProject_Form"}} ) }}
+                <div class="row">
+                    <div class="input-field col s11">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title, {"attr":{}}) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s11">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, {"attr":{}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s11 file-field input-field_">
+                        <div class="btn teal">
+                            <span>{{ form_label(form.image_file) }}</span>
+                            {{ form_widget(form.image_file, {"attr":{}}) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="upload-status teal hide col md5 offset-m1"></span>
+                    <button type="submit" class="btn btn-flat red right" id="add_document_btn">Envoyer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+</div>
+
