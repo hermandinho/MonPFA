@@ -25,3 +25,7 @@ services:
         arguments: ['@gos_web_socket.websocket.client_manipulator', '@gos_web_socket.client_storage', '@doctrine.orm.entity_manager']
         tags:
             - { name: gos_web_socket.topic }
+
+    pfa_core.managers.forum_manager:
+        class: PFA\CoreBundle\Managers\ForumManager
+        arguments: ['@doctrine.orm.entity_manager']

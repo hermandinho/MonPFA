@@ -142,7 +142,7 @@ $(document).ready(function () {
             //console.log($(this));
 
             $(this).attr('data-toggle','tooltip');
-            $(this).attr('title',event.title);
+            $(this).attr('title',event.description);
             $(this).css({cursor: "pointer"});
         },
         eventMouseout: function (event, jsEvent, view) {

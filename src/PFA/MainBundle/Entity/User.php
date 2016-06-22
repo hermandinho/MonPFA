@@ -61,9 +61,9 @@ class User extends BaseUser
     private $mailBox;
 
     /**
-     * @var ForumInteractions
+     * @var ArrayCollection
      * 
-     * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\ForumInteractions", mappedBy="owner")
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ForumInteractions", mappedBy="owner")
      */
     private $forumInteraction;
 
@@ -100,6 +100,7 @@ class User extends BaseUser
         parent::__construct();
         $this->projects = new ArrayCollection();
         $this->projectsInvitedIn = new ArrayCollection();
+        $this->forumInteraction = new ArrayCollection();
         $this->setRoles(['ROLE_USER']);
         $this->setEnabled(false);
         $this->documents = new ArrayCollection();
@@ -384,5 +385,29 @@ class User extends BaseUser
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Add forumInteraction
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractions $forumInteraction
+     *
+     * @return User
+     */
+    public function addForumInteraction(\PFA\CoreBundle\Entity\ForumInteractions $forumInteraction)
+    {
+        $this->forumInteraction[] = $forumInteraction;
+
+        return $this;
+    }
+
+    /**
+     * Remove forumInteraction
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractions $forumInteraction
+     */
+    public function removeForumInteraction(\PFA\CoreBundle\Entity\ForumInteractions $forumInteraction)
+    {
+        $this->forumInteraction->removeElement($forumInteraction);
     }
 }

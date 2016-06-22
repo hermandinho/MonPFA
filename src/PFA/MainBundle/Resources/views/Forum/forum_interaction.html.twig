@@ -1,0 +1,28 @@
+<div id="comment-box">
+    <div class="row">
+        <div class="teal card col m10 s12 offset-m1 status-message hide">
+        </div>
+        <div class="col m10 s12 offset-m1">
+            {{ form_start(form, {"attr": {"class": "add-subject-form"} } ) }}
+            <div class="row">
+                <div class="input-field col s12">
+                    {{ form_widget(form.subject, {"attr":{}}) }}
+                    {{ form_label(form.subject) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    {{ form_widget(form.content, {"attr":{}}) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="m10 s12 offset-m1 col">
+                    <button type="submit" class="btn btn-bitbucket right" id="post-forum-subject">Poser</button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>

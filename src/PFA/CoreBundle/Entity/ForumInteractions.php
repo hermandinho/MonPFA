@@ -54,10 +54,16 @@ class ForumInteractions
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="forumInteraction")
+     * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="forumInteraction")
      */
     private $owner;
 
+    /**
+     * @var ForumInteractions
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date = null;
 
     /**
      * Get id
@@ -187,5 +193,29 @@ class ForumInteractions
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return ForumInteractions
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

@@ -44,7 +44,7 @@ class CalendarController extends MainController
             $em->flush();
             return new JsonResponse(["status" => true]);
         }
-        return $this->render("PFAMainBundle:Angenda:index.html.twig", ['form' => $form->createView(), "include" => "add_event"]);
+        return $this->render("PFAMainBundle:Agenda:index.html.twig", ['form' => $form->createView(), "include" => "add_event"]);
     }
 
     /**
@@ -52,7 +52,7 @@ class CalendarController extends MainController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addEventAction(Request $request)
+    public function getEventAction(Request $request)
     {
         $serializer = $this->getSerializer()->serialize($this->getThisUser()->getCalender()->getEvents(),"json");
         $response = new Response();
@@ -82,7 +82,7 @@ class CalendarController extends MainController
                 return new JsonResponse(['status' => true]);
             }
 
-            return $this->render("PFAMainBundle:Angenda:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
+            return $this->render("PFAMainBundle:Agenda:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
         }
     }
 

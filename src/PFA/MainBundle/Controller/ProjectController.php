@@ -7,7 +7,9 @@ use PFA\CoreBundle\Controller\MainController;
 use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Entity\ProjectMember;
 use PFA\CoreBundle\Form\ProjectType;
+use PFA\MainBundle\Entity\CalenderEvents;
 use PFA\MainBundle\Entity\User;
+use PFA\MainBundle\Form\CalenderEventsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -188,5 +190,72 @@ class ProjectController extends MainController
             return $this->render("PFAMainBundle:Projects:partials/member-list-mini.html.twig", ["members" => $projectMembers, "project" => $project]);
         }
         return new Response("Projet Introuvable");
+    }
+
+    /**
+     * @Route("/{project}/agenda", name="project_calender")
+     * @param Request $request
+     * @param Project $project
+     * @return Response
+     */
+    public function calenderAction(Request $request, Project $project)
+    {
+        $calenerEvents = new CalenderEvents();
+        $form = $this->createForm(new CalenderEventsType(), $calenerEvents);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+            /** @var CalenderEvents $calenerEvents */
+            $calenerEvents = $form->getData();
+            $calenerEvents->setCalender($project->getCalender());
+
+            $em = $this->getEM();
+            $em->persist($calenerEvents);
+            $em->flush();
+            return new JsonResponse(["status" => true]);
+        }
+        return $this->render("PFAMainBundle:Projects:calender.html.twig", ['form' => $form->createView(), "include" => "add_event"]);
+    }
+
+    /**
+     * @Route("/{project}/agenda/get/events", name="project_agenda_get_events")
+     * @param Request $request
+     * @param Project $project
+     * @return Response
+     */
+    public function getEventAction(Request $request, Project $project)
+    {
+        $serializer = $this->getSerializer()->serialize($project->getCalender()->getEvents(),"json");
+        $response = new Response();
+        $response->setContent(($serializer));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/{project}/agenda/events/{id}/edit", name="agenda_edit_event")
+     * @param Request $request
+     * @param CalenderEvents $events
+     * @return Response
+     */
+    public function editEventAction(Request $request, CalenderEvents $events)
+    {
+        $em = $this->getEM();
+        //$calendarEvent = $em->getRepository("PFAMainBundle:CalenderEvents")->find($id);
+        $calendarEvent = $events;
+
+        if($calendarEvent){
+            $form = $this->createForm(new CalenderEventsType(), $calendarEvent);
+            $form->handleRequest($request);
+
+            if($form->isValid()){
+                $em->persist($calendarEvent);
+                $em->flush();
+
+                return new JsonResponse(['status' => true]);
+            }
+
+            return $this->render("PFAMainBundle:Projects:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
+        }
     }
 }

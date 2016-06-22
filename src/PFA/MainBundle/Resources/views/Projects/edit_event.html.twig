@@ -1,0 +1,93 @@
+{# extends 'PFAMainBundle::layout.html.twig' #}
+{% block additional_javascripts %}
+    <script>
+        var EventId = {{ eventId }};
+    </script>
+    {% javascripts
+    "@PFACoreBundle/Resources/public/js/calendar/fullcalendar.js"
+    "@PFAMainBundle/Resources/public/js/AgendaController.js"
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+{# block content #}
+<!--<div class="row"> -->
+{{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 editEventForm"} }) }}
+<div class="row">
+    <div class="input-field col s12">
+        {{ form_widget(form.title, {"attr":{}}) }}
+        {{ form_label(form.title) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s12">
+        {{ form_widget(form.description, {"attr":{}}) }}
+        {{ form_label(form.description) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s12">
+        {{ form_widget(form.place, {"attr":{}}) }}
+        {{ form_label(form.place) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s6">
+        {{ form_widget(form.start, {"attr":{}}) }}
+        {{ form_label(form.start) }}
+    </div>
+
+    <div class="input-field col s6">
+        {{ form_widget(form.end, {"attr":{}}) }}
+        {{ form_label(form.end) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s6">
+        {{ form_widget(form.allDay, {"attr":{}}) }}
+        {{ form_label(form.allDay) }}
+    </div>
+
+    <div class="input-field col s6">
+        {{ form_widget(form.priority, {"attr":{}}) }}
+        {# form_label(form.priority) #}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s6">
+        {{ form_widget(form.url, {"attr":{}}) }}
+        {{ form_label(form.url) }}
+    </div>
+
+    <div class="input-field col s6">
+        {{ form_widget(form.color, {"attr":{}}) }}
+        {# form_label(form.color) #}
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-field col s6">
+        <button class="btn waves-effect waves-light" id="edit_event_btn" type="submit" name="addEvent">
+            Enregistrer
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
+
+    <div class="input-field col s6">
+        <button class="btn waves-effect waves-red red" id="remove_event_btn" name="removeEvent">
+            Supprimer
+            <i class="material-icons right">delete</i>
+        </button>
+    </div>
+</div>
+
+{{ form_end(form) }}
+<!--</div> -->
+{# endblock #}
+

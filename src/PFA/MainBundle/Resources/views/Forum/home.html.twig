@@ -1,0 +1,49 @@
+{% extends "PFAMainBundle::layout.html.twig" %}
+
+{% block title %}Forum{% endblock %}
+{% block page_title %}
+    <h3 class="page-header center">Forum &laquo;{{ project.name }}&raquo;</h3>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="m10 s12 offset-m1 col">
+            <button type="button" class="btn btn-bitbucket right" id="show-comment-box">Ajouter un sujet</button>
+        </div>
+
+        {% if forum|length == 0 %}
+            <div class="m10 s12 offset-m1 col teal card">
+                <h3 class="center">Aucun sujet pour le moment. </h3>
+            </div>
+        {% else %}
+            {% for item in forum %}
+                <div class="col well m10 s12 offset-m1">
+                    <div class="col m2 s2">
+                        User Image
+                    </div>
+
+                    <div class="col m8 s8">
+                        Content<br><br>
+                        <p>Another content</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {{ render(controller("PFAMainBundle:Forum:addSubject", {"forum": project.forum.id})) }}
+    </div>
+{% endblock %}
+
+{% block additional_javascripts %}
+    <script>
+        var addSubjectPath = "{{ path("add_forum_interaction", {"forum": project.forum.id, "project": project.id }) }}";
+        $("#show-comment-box").click(function (e) {
+           $("#forum_interactions_subject").focus();
+        });
+    </script>
+    {% javascripts
+        "@PFAMainBundle/Resources/public/js/ForumController.js"
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

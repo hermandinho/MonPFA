@@ -38,7 +38,7 @@
                     </p>
                 </div>
                 <div class="card-action">
-                    <a href="{{ path("project_documents_home",{"project": project.id}) }}" class="right">Aller</a>
+                    <a href="{{ path("project_documents_home",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                     </p>
                 </div>
                 <div class="card-action">
-                    <a href="{{ path("project_space_home",{"id": project.id}) }}" class="right">Aller</a>
+                    <a href="{{ path("forum_home",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                     </p>
                 </div>
                 <div class="card-action">
-                    <a href="{{ path("project_space_home",{"id": project.id}) }}" class="right">Aller</a>
+                    <a href="{{ path("project_calender",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
                         </p>
                     </div>
                     <div class="card-action">
-                        <a href="{{ path("project_settings",{"id": project.id}) }}" class="right">Aller</a>
+                        <a href="{{ path("project_settings",{"id": project.id}) }}" target="_blank" class="right">Aller</a>
                     </div>
                 </div>
             </div>
