@@ -36,3 +36,19 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro parseMessage(message) %}
+    {{
+        message|replace(
+                        {
+                            ':T': " <img src='"~ asset("bundles/pfacore/images/smiley/thug_life.png") ~"' width='25' height='25' /> ",
+                            ';)': " <img src='"~ asset("bundles/pfacore/images/smiley/face-wink.png") ~"' width='25' height='25' /> ",
+                            '(Y)': " <img src='"~ asset("bundles/pfacore/images/smiley/good.png") ~"' width='25' height='25' /> ",
+                            ':P': " <img src='"~ asset("bundles/pfacore/images/smiley/langue.png") ~"' width='25' height='25' /> ",
+                            ':M': " <img src='"~ asset("bundles/pfacore/images/smiley/me.png") ~"' width='25' height='25' /> ",
+                            ':O': " <img src='"~ asset("bundles/pfacore/images/smiley/oups.png") ~"' width='25' height='25' /> ",
+                            ':D': " <img src='"~ asset("bundles/pfacore/images/smiley/laugh.png") ~"' width='25' height='25' /> ",
+                        }
+        )|raw
+    }}
+{% endmacro %}

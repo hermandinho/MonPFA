@@ -29,11 +29,24 @@ function handleSockets(socket) {
             //console.log("Received message", payload.msg);
             if (payload.type == "message"){
                 //var data = $.parseJSON(payload.msg.msg);
-                var message = payload.msg.msg;
+                var message = parseMessage( payload.msg.msg);
                 //console.log("SEND ", payload.msg);
-                var html = "<div class='bubble you'>" + message + "</div>";
+                var html = "<div class='row'> <div class='col m1 s1'>";
+                html += " <img src='/MonPFA/web/images/profile/"+payload.msg.senderImage+"' alt='' width='40' class='pull-left tooltipped' />";
+                html += "<small>" + payload.msg.senderName + "</small>";
+                html += "</div><div class='col m10 s10'><div class='bubble you'>" + message + "</div></div></div>";
+
+                if($('.chat[data-chat=person0]').find(".chat-history-empty").length > 0) {
+                    $('.chat[data-chat=person0]').find(".chat-history-empty").remove();
+                }
+                $(".preview[data-last-message=group]").html(message);
+                $(".person[data-id='-1']").find(".time").html(moment().format("MMMM Do YYYY", payload.msg.date) + "<br>" + moment().format("h:mm" ,payload.msg.date));
                 $('.chat[data-chat=person0]').append(html);
                 $('.active-chat').scrollTop(1E10);
+
+                if(window.ACTIVE_CHAT_ID != -1){
+                    $(".person[data-id='-1']").addClass("new_message");
+                }
             }
         });
 
@@ -48,14 +61,22 @@ function handleSockets(socket) {
            session.subscribe(path, function (uri, payload) {
                //console.log(payload.msg);
                if(payload.msg.hasOwnProperty("msg")){
-                   var message = payload.msg.msg;
+                   var message = parseMessage( payload.msg.msg);
                    var chatBox = payload.msg.chatBboxIndex;
+                   var html = "<div class='row'> <div class='col m1 s1'>";
 
-                   var html = "<div class='bubble you'>" + message + "</div>";
+                   if($('.chat[data-subscribed-pattern='+ chatBox +']').find(".chat-history-empty").length > 0) {
+                       $('.chat[data-subscribed-pattern='+ chatBox +']').find(".chat-history-empty").remove();
+                   }
+
+                   html += " <img src='/MonPFA/web/images/profile/"+payload.msg.senderImage+"' alt='' width='40' class='pull-left tooltipped' />";
+                   html += "<small>" + payload.msg.senderName + "</small>";
+                   html += "</div><div class='col m10 s10'><div class='bubble you'>" + message + "</div></div></div>";
                    $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
                    $('.active-chat').scrollTop(1E10);
 
                    var personId = $(".chat[data-subscribed-pattern='" + chatBox + "']").attr("data-box-id");
+                   $(".person[data-id='"+personId+"']").find(".time").html(moment().format("MMMM Do YYYY", payload.msg.date) + "<br>" + moment().format("h:mm" ,payload.msg.date));
                    //alert(personId+ "" +window.ACTIVE_CHAT_ID+""+chatBox);
                    if(window.ACTIVE_CHAT_ID != personId){
                        $(".person[data-id='"+personId+"']").addClass("new_message");
@@ -97,13 +118,31 @@ function handleSockets(socket) {
     $(".chat-messages-box").append(html);
 } */
 
+function parseMessage(message) {
+    var finalMessage = message;
+    finalMessage = finalMessage.replace(":T", smilies.THUG_LIFE + " ")
+                                .replace(";)", smilies.FACE_WINK + " ")
+                                .replace("(Y)", smilies.GOOD + " ")
+                                .replace(":P", smilies.LANGUE + " ")
+                                .replace(":M", smilies.ME + " ")
+                                .replace(":O", smilies.OUPS + " ")
+                                .replace(":D", smilies.LAUGH + " ")
+    ;
+
+    return finalMessage;
+}
+
 function sendMessage(message) {
-    //var html = "<div class='bubble me'>" + message + "</div>";
-    //$('.chat[data-chat=person0]').append(html);
-    var html = "<div class='bubble me'>" + message + "</div>";
+
+    var html = "<div class='row'><div class='col m12 s12'><div class='bubble me'>" + parseMessage(message) + "</div></div></div>";
 
     if(window.ACTIVE_CHAT_ID == -1){
-        window.SOCKET_SESSION.publish(subscribePath, {"msg": message, "isPrivate": false});
+        if($('.chat[data-chat=person0]').find(".chat-history-empty").length > 0) {
+            $('.chat[data-chat=person0]').find(".chat-history-empty").remove();
+        }
+        $(".preview[data-last-message=group]").html( parseMessage(message));
+        $(".person[data-id='-1']").find(".time").html(moment().format("MMMM Do YYYY", moment().toDate()) + "<br>" + moment().format("h:mm", moment().toDate()));
+        window.SOCKET_SESSION.publish(subscribePath, {"msg": message, "isPrivate": false, senderName: senderCompleteName, senderImage: senderImage, date: moment().toDate()});
         $('.chat[data-chat=person0]').append(html);
         $('.active-chat').scrollTop(1E10);
     }else{
@@ -116,8 +155,13 @@ function sendMessage(message) {
             chatBox = window.ACTIVE_CHAT_USERNAME + "-" + userName;
             path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
         }
-        window.SOCKET_SESSION.publish(path, {"msg": message, "date": moment().toDate(), "isPrivate": true, "chatBboxIndex": chatBox });
+        window.SOCKET_SESSION.publish(path, {"msg": message, date: moment().toDate(), "isPrivate": true, "chatBboxIndex": chatBox, senderName: senderCompleteName, senderImage: senderImage });
 
+        if($('.chat[data-subscribed-pattern='+ chatBox +']').find(".chat-history-empty").length > 0) {
+           $('.chat[data-subscribed-pattern='+ chatBox +']').find(".chat-history-empty").remove();
+        }
+
+        $(".person[data-id='" + window.ACTIVE_CHAT_ID + "']").find(".time").html(moment().format("MMMM Do YYYY", moment().toDate()) + "<br>" + moment().format("h:mm", moment().toDate()));
         $('.chat[data-subscribed-pattern='+ chatBox +']').append(html);
         $('.active-chat').scrollTop(1E10);
     }
@@ -126,7 +170,6 @@ function sendMessage(message) {
         $(".person[data-chat-person='"+chatBox+"']").addClass("new_message");
     }
     $(".person[data-chat-person='"+chatBox+"'] .preview").html(message);
-    //$(".person[data-chat-person='"+chatBox+"']").addClass("new_message");
     $.post(
         ""+chatMessagePath+"",
         {
@@ -135,17 +178,6 @@ function sendMessage(message) {
         },
         function (data) {
             if(data.status){
-                /*if(window.ACTIVE_CHAT_ID == -1){
-                    window.SOCKET_SESSION.publish(subscribePath, {"msg": data.message, "isPrivate": false});
-                }else{
-                    var path = "";
-                    if(userId < window.ACTIVE_CHAT_ID){
-                        path = "project/" + projectId + "/private_chat/" + userId + "/" + window.ACTIVE_CHAT_ID;
-                    }else{
-                        path = "project/" + projectId + "/private_chat/" + window.ACTIVE_CHAT_ID + "/" + userId;
-                    }
-                    window.SOCKET_SESSION.publish(path, {"msg": data.message, "isPrivate": true, "chatBboxIndex": window.ACTIVE_CHAT_INDEX });
-                }*/
             }
         }
     );
@@ -155,21 +187,12 @@ function sendMessage(message) {
 
 $(document).ready(function () {
     //$("html").css("overflow", "hidden");
-    /*var socketHandle = setInterval(function () {
-        if(window.SOCKET_SESSION == null){
-            handleSockets(webSocket);
-            console.log("stiil NUUL");
-        }else{
-            clearInterval(socketHandle);
-        }
-    }, 2000); */
-    setTimeout(function () {
-        handleSockets(window.PFA_WEB_SOCKET);
-        console.log("DONE !!!");
-        console.log(window.SOCKET_SESSION);
-    }, 2000);
-    console.log(window.SOCKET_SESSION);
+    handleSockets(window.PFA_WEB_SOCKET);
     resetChatField();
+
+    $(".smille").click(function (e) {
+        $("#message").val($("#message").val() + " " + $(this).attr("data-code") + " ").focus();
+    });
 
     $('.chat[data-chat=person0]').addClass('active-chat');
     $('.person[data-chat=person0]').addClass('active');
@@ -192,7 +215,7 @@ $(document).ready(function () {
                     var html = "";
 
                     if(data.length == 0){
-                        $(".chat[data-subscribed-pattern*='"+userName+"']").html("<h5 class='center vertical'>Historique de conversation vide.</h5>");
+                        $(".chat[data-subscribed-pattern*='"+userName+"']").html("<h5 class='center vertical chat-history-empty'>Historique de conversation vide.</h5>");
                         return;
                     }
 
@@ -205,9 +228,12 @@ $(document).ready(function () {
                         }
 
                         if(item.sender.id == userId){
-                            html += "<div class='bubble me'>"+item.content+"</div>";
+                            html += "<div class='row'><div class='col m12 s12'><div class='bubble me'>"+item.content+"</div></div></div>";
                         }else{
-                            html += "<div class='bubble you'>"+item.content+"</div>";
+                            html += "<div class='row'> <div class='col m1 s1'>";
+                            html += " <img src='/MonPFA/web/images/profile/"+item.sender.image_name+"' alt='' width='40' class='pull-left tooltipped' />";
+                            html += "<small>" + item.sender.nom + "</small>";
+                            html += "</div><div class='col m10 s10'><div class='bubble you'>"+item.content+"</div></div></div>";
                         }
                     });
                     $(".chat[data-subscribed-pattern*='"+userName+"']").html(html);
@@ -239,7 +265,6 @@ $(document).ready(function () {
         var message = $.trim($(this).val());
         if(message.length > 0){
             //$("#send-message").prop("disabled", false);
-
             if(e.keyCode == 13){
                 sendMessage(message);
             }
@@ -248,7 +273,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#send-message").click(function (e) {
+    $("#send-message-btn").click(function (e) {
         var message = $.trim($("#message").val());
         if(message.length > 0){
             sendMessage(message);

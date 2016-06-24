@@ -32,6 +32,9 @@ class UserType extends AbstractType
             ->add("genre",ChoiceType::class, array(
                 "choices" => array("H" => "Homme", "F" => "Femme")
             ))
+            ->add("image_file", "file", array(
+                "label" => "Sélectionner une image de profile"
+            ))
         ;
     }
     

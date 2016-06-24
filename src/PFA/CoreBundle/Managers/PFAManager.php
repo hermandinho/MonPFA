@@ -94,6 +94,11 @@ class PFAManager
     private function handleUserListener(User $user, $changeSets = [])
     {
         if($user->getId() == null){
+
+            if(!$user->getImageFile() && !$user->getImageName()) {
+                $user->setImageName("default.png");
+            }
+
             $calendar = new Calender();
             $calendar->setOwner($user);
             $this->addBuiltAction($calendar);

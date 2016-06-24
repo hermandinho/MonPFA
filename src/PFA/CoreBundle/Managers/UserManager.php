@@ -43,4 +43,8 @@ class UserManager
     {
         return $this->em->getRepository("PFAMainBundle:ChatRoomMessages")->getUserChatHistory($user1,$user2,$project);
     }
+    
+    public function getRoomChat(Project $project) {
+        return $this->em->getRepository("PFAMainBundle:ChatRoomMessages")->findBy(["chatRoom" => $project->getChatRoom(), "receiver" => null]);
+    }
 }

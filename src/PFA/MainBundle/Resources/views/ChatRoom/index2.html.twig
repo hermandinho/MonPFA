@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block title %}
-    Chat -- {{ app.user.username }}
+    Discussion
 {% endblock %}
 
 {% block page_title %}
@@ -36,16 +36,16 @@
                 {% set hasDate = false %}
                 {% if groupChatMessages|length > 0 %}
                     {% set lastMessage = groupChatMessages|last %}
-                    {% set hasDate = false %}
+                    {% set hasDate = true %}
                 {% endif %}
                 <ul class="people">
                     <li class="person" data-id="-1" data-chat-person="group" data-chat-index="0" data-username="group" data-chat="person0">
                         <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
                         <span class="name">Group</span>
                         {% if hasDate %}
-                            <span class="time">{{ lastMessage.date|date("D d/m/Y") }}</span>
+                            <span class="time">{{ lastMessage.date|date("D d/m/Y") }}<br>{{ lastMessage.date|date("H:i") }}</span>
                         {% endif %}
-                        <span class="preview truncate">{{ lastMessage.content }}</span>
+                        <span class="preview truncate" data-last-message="group">{{ macro.parseMessage(lastMessage.content) }}</span>
                     </li>
 
                     {% set index = 1 %}
@@ -61,9 +61,9 @@
                                 {% set dataUser = member.memeber.username ~ "-" ~ app.user.username %}
                             {% endif %}
                             <li class="person" data-chat-person="{{ dataUser }}" data-id="{{ member.memeber.id }}"  data-fetched="0" data-username="{{ member.memeber.username }}" data-chat-index="{{ index }}" data-chat="person{{ loop.index }}">
-                                <img src="http://s3.postimg.org/yf86x7z1r/img2.jpg" alt="" />
+                                <img src="{{ vich_uploader_asset(member.memeber, "imageFile") }}" alt="" />
                                 <span class="name">{{ member.memeber.nom }} {{ member.memeber.prenom }}</span>
-                                <span class="time">1:44 PM</span>
+                                <span class="time"><!--1:44 PM --></span>
                                 <span class="preview truncate truncate" data-last-message="{{ dataUser }}"></span>
                             </li>
 
@@ -85,26 +85,46 @@
 
                 <div class="chat" data-chat="person0">
                     {% set chatDates = [] %}
-                    {% for message in groupChatMessages %}
+                    {% if groupChatMessages|length == 0 %}
+                        <h5 class='center vertical chat-history-empty'>Historique de conversation vide.</h5>
+                    {% else %}
+                        {% for message in groupChatMessages %}
 
-                        {% if message.date|date("d/m/Y") not in chatDates %}
-                            {% set chatDates = chatDates|merge([message.date|date("d/m/Y")]) %}
+                            {% if message.date|date("d/m/Y") not in chatDates %}
+                                {% set chatDates = chatDates|merge([message.date|date("d/m/Y")]) %}
 
-                            <div class="conversation-start">
-                                <span>{{ message.date|date("d M Y") }}</span>
-                            </div>
-                        {% endif %}
+                                <div class="conversation-start">
+                                    <span>{{ message.date|date("d M Y") }}</span>
+                                </div>
+                            {% endif %}
 
-                        {% if message.sender.id == app.user.id %}
-                            <div class="bubble me">
-                                {{ message.content }}
-                            </div>
-                        {% else %}
-                            <div class="bubble you">
-                                {{ message.content }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                            {% if message.sender.id == app.user.id %}
+                                <div class="row">
+                                    <div class="col m12 s12">
+                                        <div class="bubble me">
+                                            {{ macro.parseMessage( message.content) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <div class="row">
+                                    <div class="col m1 s1">
+                                        <img src="/MonPFA/web/images/profile/{{ message.sender.image_name }}" alt="" width="40" class="pull-left tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ message.sender.nom ~ " " ~ message.sender.prenom }}" />
+                                        <small>{{ message.sender.nom }} {{ message.date|date("d/m/Y") }}</small>
+                                    </div>
+                                    <div class="col m10 s10">
+                                        <div class="bubble you">
+                                            {{ macro.parseMessage(message.content) }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
 
 
@@ -124,8 +144,47 @@
                 <div class="write">
                     <a href="javascript:;" class="write-link attach"></a>
                     <input type="text" placeholder="Votre message !!! " id="message" />
-                    <!--<a href="javascript:;" class="write-link smiley"></a> -->
-                    <a href="javascript:;" class="write-link send"></a>
+                    <a href="javascript:;" class="write-link send pull-right" style="position: absolute;margin-left: -17%" id="send-message-btn" title="Envoyer"></a>
+
+                    <div class="btn-group dropup pull-right" style="position: absolute;margin-left: -10%">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <a href="javascript:;" class="write-link smiley write-link smiley "  id="smiley" title="Smiley" ></a>
+                        </button>
+                        <div class="dropdown-menu row">
+                            <div class="col m12">
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/face-wink.png") }}" alt="Face Wink" data-code=";)" title=";)" height="45" width="45" class="thumbnail smille">
+                                </div>
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/good.png") }}" alt="Face Wink" data-code="(Y)" title="(Y)" height="45" width="45" class="thumbnail smille">
+                                </div>
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/langue.png") }}" alt="Face Wink" data-code=":P" title=":P" height="45" width="45" class="thumbnail smille">
+                                </div>
+                            </div>
+
+                            <div class="col m12col m12">
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/me.png") }}" alt="Face Wink" data-code=":M" title=":M" height="45" width="45" class="thumbnail smille">
+                                </div>
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/oups.png") }}" alt="Face Wink" data-code=":O" title=":O" height="45" width="45" class="thumbnail smille">
+                                </div>
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/laugh.png") }}" alt="Face Wink" data-code=":D" title=":D" height="45" width="45" class="thumbnail smille">
+                                </div>
+                            </div>
+
+                            <div class="col m12">
+                                <div class="col m4">
+                                    <img src="{{ asset("bundles/pfacore/images/smiley/thug_life.png") }}" alt="Face Wink" data-code=":T" title=":T" height="45" width="45" class="thumbnail smille">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<a href="javascript:;" class="write-link smiley"></a>
+                    <a href="javascript:;" class="write-link send"></a>-->
                 </div>
             </div>
         </div>
@@ -140,10 +199,22 @@
         var userId = {{ app.user.id }};
         var userName = "{{ app.user.username }}";
         var privateChatPath = "{{ path('get_private_meaages', {"project": project.id, "user": "XXX"}) }}";
+        var senderCompleteName = "{{ app.user.nom }}";
+        var senderImage = "{{ app.user.imageName }}";
+
+        var smilies = {
+                'THUG_LIFE': "<img src='{{ asset("bundles/pfacore/images/smiley/thug_life.png")  }}' width='25' height='25' />",
+                'FACE_WINK': "<img src='{{ asset("bundles/pfacore/images/smiley/face-wink.png") }}' width='25' height='25' />",
+                'GOOD': "<img src='{{ asset("bundles/pfacore/images/smiley/good.png") }}' width='25' height='25' />",
+                'LANGUE': "<img src='{{ asset("bundles/pfacore/images/smiley/langue.png") }}' width='25' height='25' />",
+                'ME': "<img src='{{ asset("bundles/pfacore/images/smiley/me.png") }}' width='25' height='25' />",
+                'OUPS': "<img src='{{ asset("bundles/pfacore/images/smiley/oups.png") }}' width='25' height='25' />",
+                'LAUGH': "<img src='{{ asset("bundles/pfacore/images/smiley/laugh.png") }}' width='25' height='25' />"
+        };
 
     </script>
     {% javascripts
-    '@PFAMainBundle/Resources/public/js/ChatController.js'
+        '@PFAMainBundle/Resources/public/js/ChatController.js'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

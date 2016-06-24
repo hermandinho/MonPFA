@@ -43,36 +43,16 @@ class ChatRoomController extends MainController
 
         if($isProjectMember){
             $projectMembers = $this->get("pfa_core.services.project_manager")->getProjetMembers($project);
-            
-            $chatMessages = $project->getChatRoom()->getChatRoomMessages();
-
-            $data = [];
-
             $manager = $this->get("pfa_core.managers.user_manager");
-
-            /** @var ProjectMember $member */
-            foreach ($projectMembers as $member) {
-                $data[] = [
-                    "user" => $member->getMemeber()->getUsername(),
-                    "chatHistory" => $manager->getPrivateChat($member->getMemeber(), $this->getThisUser(), $project)
-                ];
-            }
-
-            $serializerDataContext = SerializationContext::create()->setGroups(array('chat_message'));
-            $serializedPrivateMessages = $this->getSerializer()->serialize($data, "json", $serializerDataContext);
-
+            $chatMessages = $manager->getRoomChat($project);
             //die(dump($serializedPrivateMessages, $data));
-
             $serializerContext = SerializationContext::create()->setGroups(array('chat_message'));
             $serializedMessages = $this->getSerializer()->serialize($chatMessages,"json", $serializerContext);
 
-            //return new JsonResponse(json_decode($serializedPrivateMessages));
-            //die(dump(json_decode($serializedPrivateMessages)));
             return $this->render('PFAMainBundle:ChatRoom:index2.html.twig', array(
                 "project" => $project,
                 "members" => $projectMembers,
-                "groupChatMessages" => json_decode($serializedMessages),
-                //"privateChat" => json_decode($serializedPrivateMessages, true)
+                "groupChatMessages" => json_decode($serializedMessages)
             ));
 
         } else {

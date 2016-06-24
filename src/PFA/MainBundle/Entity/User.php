@@ -10,12 +10,15 @@ use JMS\Serializer\Annotation as Serializer;
 use PFA\CoreBundle\Entity\ForumInteractions;
 use PFA\MaillingBundle\Entity\MailBox;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="PFA\MainBundle\Repository\UserRepository")
+ * @Vich\Uploadable
  */
 class User extends BaseUser
 {
@@ -92,6 +95,25 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="PFA\MainBundle\Entity\Documents", mappedBy="owner", orphanRemoval=true)
      */
     private $documents;
+
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="profile_image", fileNameProperty="imageName")
+     *
+     * @var File
+     * @Groups({"chat_message"})
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     *
+     * @var string
+     *  @Groups({"chat_message"})
+     */
+    private $imageName;
+
     /**
      * User constructor.
      */
@@ -101,8 +123,8 @@ class User extends BaseUser
         $this->projects = new ArrayCollection();
         $this->projectsInvitedIn = new ArrayCollection();
         $this->forumInteraction = new ArrayCollection();
-        $this->setRoles(['ROLE_USER']);
-        $this->setEnabled(false);
+        $this->addRole('ROLE_USER');
+        $this->setEnabled(true);
         $this->documents = new ArrayCollection();
     }
 
@@ -409,5 +431,49 @@ class User extends BaseUser
     public function removeForumInteraction(\PFA\CoreBundle\Entity\ForumInteractions $forumInteraction)
     {
         $this->forumInteraction->removeElement($forumInteraction);
+    }
+
+
+    /**
+     * @return File
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param File $imageFile
+     */
+    public function setImageFile(File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+        if($imageFile) {
+            $this->setLastLogin(new \DateTime("now"));
+        }
+    }
+
+    /**
+     * Set imageName
+     *
+     * @param string $imageName
+     *
+     * @return User
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    /**
+     * Get imageName
+     *
+     * @return string
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
     }
 }

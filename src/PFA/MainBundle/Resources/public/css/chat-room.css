@@ -549,3 +549,7 @@ body {
 .new_message {
     background-color: darkblue !important;
 }
+
+.smille {
+    cursor: pointer;
+}
