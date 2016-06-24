@@ -61,7 +61,7 @@
                     {{ form_start(addMemberForm, {"attr":{"class": "project-setting-add-member-form"}}) }}
                         <div class="row">
                             <div class="input-field col s7">
-                                {{ form_widget(addMemberForm.member, {"attr":{}}) }}
+                                {{ form_widget(addMemberForm.member, {"attr":{} }) }}
                                 {{ form_label(addMemberForm.member) }}
                             </div>
 
@@ -94,4 +94,34 @@
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <script>
+        $(document).ready(function () {
+            var AutocompleteUserList = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                prefetch: {
+                    url: '{{ path("get_user_list_json")  }}',
+                    filter: function(users) {
+                        return users.map(function(item){
+                            return { name: item.nom+" "+item.prenom, id: item.id};
+                        });
+                    }
+                }
+            });
+
+            AutocompleteUserList.initialize();
+
+            $('input#form_member').materialtags({
+                itemValue: 'id',
+                itemText: "name",
+                typeaheadjs: {
+                    name: 'AutocompleteUserList',
+                    displayKey: 'name',
+                    //valueKey: 'name',
+                    source: AutocompleteUserList.ttAdapter()
+                }
+            });
+        })
+    </script>
 {% endblock %}

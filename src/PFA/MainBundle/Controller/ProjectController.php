@@ -101,7 +101,9 @@ class ProjectController extends MainController
             ->add("member", null,array(
                 "attr" => array(
                     "placeholder" => "Saisisseez l'address email du contact !!!",
-                    "autocomplete" => "off"
+                    "autocomplete" => "off",
+                    //"data-role" => "materialtags",
+                    //"class" => "selectUsers"
                 ),
                 "label" => "Ajouter Un Membre"
             ))
