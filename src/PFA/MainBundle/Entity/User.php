@@ -115,6 +115,12 @@ class User extends BaseUser
     private $imageName;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ForumInteractionAnswer", mappedBy="owner", orphanRemoval=true, cascade={"persist"})
+     */
+    private $forumAnswers;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -122,6 +128,7 @@ class User extends BaseUser
         parent::__construct();
         $this->projects = new ArrayCollection();
         $this->projectsInvitedIn = new ArrayCollection();
+        $this->forumAnswers = new ArrayCollection();
         $this->forumInteraction = new ArrayCollection();
         $this->addRole('ROLE_USER');
         $this->setEnabled(true);
@@ -475,5 +482,39 @@ class User extends BaseUser
     public function getImageName()
     {
         return $this->imageName;
+    }
+
+    /**
+     * Add forumAnswer
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractionAnswer $forumAnswer
+     *
+     * @return User
+     */
+    public function addForumAnswer(\PFA\CoreBundle\Entity\ForumInteractionAnswer $forumAnswer)
+    {
+        $this->forumAnswers[] = $forumAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Remove forumAnswer
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractionAnswer $forumAnswer
+     */
+    public function removeForumAnswer(\PFA\CoreBundle\Entity\ForumInteractionAnswer $forumAnswer)
+    {
+        $this->forumAnswers->removeElement($forumAnswer);
+    }
+
+    /**
+     * Get forumAnswers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getForumAnswers()
+    {
+        return $this->forumAnswers;
     }
 }

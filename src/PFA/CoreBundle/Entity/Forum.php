@@ -108,6 +108,15 @@ class Forum
      */
     public function getInteractions()
     {
-        return $this->interactions;
+        $x = $this->interactions->toArray();
+
+        usort($x,  function ($a, $b)
+        {
+            if ($a->getDate() == $b->getDate()) {
+                return 0;
+            }
+            return ($a->getDate() > $b->getDate()) ? -1 : 1;
+        });
+        return $x;
     }
 }

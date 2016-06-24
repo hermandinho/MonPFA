@@ -2,6 +2,7 @@
 
 namespace PFA\CoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use PFA\MainBundle\Entity\BaseEntity;
 use PFA\MainBundle\Entity\User;
@@ -64,6 +65,21 @@ class ForumInteractions
      * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     private $date = null;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ForumInteractionAnswer", mappedBy="forumInteraction", orphanRemoval=true, cascade={"persist"})
+     */
+    private $answers;
+
+    /**
+     * ForumInteractions constructor.
+     */
+    public function __construct()
+    {
+        $this->answers = new ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -217,5 +233,39 @@ class ForumInteractions
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Add answer
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractionAnswer $answer
+     *
+     * @return ForumInteractions
+     */
+    public function addAnswer(\PFA\CoreBundle\Entity\ForumInteractionAnswer $answer)
+    {
+        $this->answers[] = $answer;
+
+        return $this;
+    }
+
+    /**
+     * Remove answer
+     *
+     * @param \PFA\CoreBundle\Entity\ForumInteractionAnswer $answer
+     */
+    public function removeAnswer(\PFA\CoreBundle\Entity\ForumInteractionAnswer $answer)
+    {
+        $this->answers->removeElement($answer);
+    }
+
+    /**
+     * Get answers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
     }
 }

@@ -19,12 +19,32 @@
             {% for item in forum %}
                 <div class="col well m10 s12 offset-m1">
                     <div class="col m2 s2">
-                        User Image
+                        <img src="{{ vich_uploader_asset(item.owner, "imageFile") }}" alt="" width="100" style="margin-top: 20%" class="dropdown-button thumbnail circle">
+                        <p>
+                            <strong>{{ item.owner.nom ~ " " ~ item.owner.prenom }}</strong><br>
+                           <small> {{ item.date|date("d/m/Y")  }} à {{ item.date|date("H:i:s")  }}</small>
+                        </p>
                     </div>
 
-                    <div class="col m8 s8">
-                        Content<br><br>
-                        <p>Another content</p>
+                    <div class="col m7 s7">
+                        <h3><a href="{{ path("view_forum_interaction", {"forum": project.forum.id, "interaction": item.id, "project": project.id }) }}">{{ item.subject|raw }}</a> </h3>
+                        <p class="truncat">{{ item.content|truncate(200, false, '...')|raw }}</p>
+                    </div>
+
+                    <div class="col m3 s3">
+                        <p style="margin-top: 10%; text-align: center">
+                            <strong>{{ item.answers|length }}</strong> réponse(s)<br><br>
+                            {% if item.answers|length > 0  %}
+                                <span>
+                                {% set last = item.answers|last %}
+                                    <small> Dernière réponse le {{ last.date|date("d/m/Y") }} à {{ last.date|date("H:i") }}</small> <br><br>
+                                <small>
+                                    Par:  {{ last.owner.nom ~ " " ~ last.owner.prenom }}
+                                </small> <br><br>
+                            </span>
+                            {% endif %}
+                            <a href="{{ path("view_forum_interaction", {"forum": project.forum.id, "project": project.id, "interaction": item.id }) }}" class="btn">Consulter</a>
+                        </p>
                     </div>
                 </div>
             {% endfor %}

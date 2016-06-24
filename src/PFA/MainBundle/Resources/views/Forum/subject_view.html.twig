@@ -1,0 +1,74 @@
+{% extends 'PFAMainBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ interaction.subject|raw }}
+{% endblock %}
+
+{% block page_title %}
+   <h3 class="page-header center"> {{ interaction.subject|raw }}</h3>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col well m10 s12 offset-m1">
+            <div class="col m2 s2">
+                <img src="{{ vich_uploader_asset(interaction.owner, "imageFile") }}" alt="" width="100" style="margin-top: 20%" class="dropdown-button thumbnail circle">
+                <p>
+                    <small> {{ interaction.date|date("d/m/Y")  }} à {{ interaction.date|date("H:i:s")  }}</small>
+                </p>
+            </div>
+
+            <div class="col m8 s8">
+                <h3><a href="{{ path("forum_home", { "project": interaction.forum.project.id }) }}">{{ interaction.subject|raw }}</a> </h3>
+                <p class="truncat">{{ interaction.content|raw }}</p>
+            </div>
+
+            <div class="col m2 s2">
+                <p style="margin-top: 40%; text-align: center">
+                    <strong> {{ interaction.answers|length }}</strong> réponse(s)
+                </p>
+            </div>
+        </div>
+
+        <div class="col m10 s12 offset-m1">
+            {% if interaction.answers|length == 0 %}
+                <div class=" teal card">
+                    <h3 class="center">Aucune réponse a ce sujet pour le moment. </h3>
+                </div>
+            {% else %}
+                {% for answer in interaction.answers  %}
+                    <div class="col well m10 s12 offset-m1">
+                        <div class="col m2 s2">
+                            <img src="{{ vich_uploader_asset(answer.owner, "imageFile") }}" alt="" width="100" style="margin-top: 20%" class="dropdown-button thumbnail circle">
+                            <p>
+                                <strong>{{ answer.owner.nom ~ " " ~ answer.owner.prenom }}</strong><br>
+                                <small>le {{ answer.date|date("d/m/Y")  }} à {{ answer.date|date("H:i:s")  }}</small>
+                            </p>
+                        </div>
+
+                        <div class="col m8 s8">
+                            <p class="truncat">{{ answer.content|raw }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {{ render(controller("PFAMainBundle:Forum:addSubjectAnswer", {"interaction": interaction.id})) }}
+    </div>
+{% endblock %}
+
+
+{% block additional_javascripts %}
+    <script>
+        var addSubjectAnswerPath = "{{ path("answer_forum_interaction", {"forum": interaction.forum.id, "project": interaction.forum.project.id, "interaction": interaction.id }) }}";
+        $("#show-comment-box").click(function (e) {
+            $("#forum_interactions_subject").focus();
+        });
+    </script>
+    {% javascripts
+    "@PFAMainBundle/Resources/public/js/ForumController.js"
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
