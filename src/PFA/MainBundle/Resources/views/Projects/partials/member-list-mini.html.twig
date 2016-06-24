@@ -2,7 +2,7 @@
     <ul class="collection col m12">
         {% for member in members %}
             <li class="collection-item avatar">
-                <img alt="IMG" class="circle">
+                <img alt="IMG" class="circle" src="{{ vich_uploader_asset(member.memeber, "imageFile") }}">
                 <span class="title">{{ member.memeber.nom ~ member.memeber.prenom }}</span>
                 <p class="truncate">
                     {{ member.memeber.email }}
