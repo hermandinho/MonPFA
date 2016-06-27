@@ -24,7 +24,7 @@ class User extends BaseUser
 {
     /**
      * @var int
-     * @Groups({"autocomplete", "chat_message"})
+     * @Groups({"autocomplete", "chat_message", "mail_box"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -33,7 +33,7 @@ class User extends BaseUser
 
     /**
      * @var string
-     * @Groups({"autocomplete", "chat_message"})
+     * @Groups({"autocomplete", "chat_message", "mail_box"})
      * @ORM\Column(name="nom", type="string", length=255, nullable=true)
      */
     protected $nom;
@@ -52,7 +52,7 @@ class User extends BaseUser
 
     /**
      * @var string
-     * @Groups({"autocomplete", "chat_message"})
+     * @Groups({"autocomplete", "chat_message", "mail_box"})
      * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
      */
     private $prenom;

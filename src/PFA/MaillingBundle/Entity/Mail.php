@@ -4,8 +4,9 @@ namespace PFA\MaillingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use PFA\MainBundle\Entity\BaseEntity;
-use PFA\MainBundle\Entity\User;
+use PFA\MainBundle\Entity\User;use JMS\Serializer\Annotation\Groups;
 
 /**
  * Mail
@@ -21,6 +22,7 @@ class Mail
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups("mail_box")
      */
     protected $id;
 
@@ -28,6 +30,7 @@ class Mail
      * @var string
      *
      * @ORM\Column(name="subject", type="string", length=255)
+     * @Groups("mail_box")
      */
     private $subject;
 
@@ -35,6 +38,7 @@ class Mail
      * @var string
      *
      * @ORM\Column(name="body", type="text")
+     * @Groups("mail_box")
      */
     private $body;
 
@@ -42,6 +46,7 @@ class Mail
      * @var bool
      *
      * @ORM\Column(name="is_read", type="boolean", nullable=true)
+     * @Groups("mail_box")
      */
     private $isRead;
 
@@ -49,6 +54,7 @@ class Mail
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     * @Groups("mail_box")
      */
     private $date;
 
@@ -56,6 +62,8 @@ class Mail
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User",cascade={"persist","remove"})
      * @ORM\JoinColumn(name="sender", referencedColumnName="id", unique=false)
+     *
+     * @Groups("mail_box")
      */
     private $sender;
 
@@ -75,12 +83,14 @@ class Mail
     /**
      * @var ArrayCollection
      * @ORM\Column(name="attachements", type="json_array", nullable=true)
+     * @Groups("mail_box")
      */
     private $attachements;
 
     /**
      * @var MailFolder
      *@ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailFolder")
+     * @Groups("mail_box")
      */
     private $folder;
 

@@ -1,0 +1,116 @@
+{% extends "PFAMaillingBundle::layout.html.twig" %}
+
+{% block title %}
+    Messagerie
+{% endblock %}
+
+{% block page_title %}
+    <h4 class="page-header center">Boîte Aux Lettres</h4>
+{% endblock %}
+
+{% block content %}
+    <div id="mail_Layout" class="row">
+
+        <div class="col m2 s2">
+            <ul class="collection">
+                {% for folder in folders %}
+                    <li class="collection-item" data-code="{{ folder.code }}"><a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="col s9 m9">
+            <table class="bordered striped highlight responsive-table" id="mail_table">
+                <thead>
+                    <th>#</th>
+                    <th>Par</th>
+                    <th>Sujet</th>
+                    <th>Date</th>
+                </thead>
+                {#<tbody>
+                    {% if emails|length == 0 %}
+                        <tr>
+                            <td colspan="4"><h5 class="center">Aucun Mail dans ce dossier !!!</h5></td>
+                        </tr>
+                    {% else %}
+                        {% for email in emails %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" class="email-{{ email.id }}" />
+                                </td>
+                                <td>
+                                    <strong>
+                                        {{ email.sender.nom ~ " " ~ email.sender.prenom }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span class="truncate">
+                                        {{ email.subject }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ email.date|date("d/m/Y") }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody> #}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additional_javascripts %}
+    <script>
+        $(document).ready(function () {
+            //$("#mail_table").DataTable();
+            $('select').material_select();
+
+            $(".collection-item").click(function (e) {
+                $(".collection-item").removeClass("active");
+                $(".collection-item a").removeClass("white-text");
+                $(this).addClass("active");
+                $(this).find("a").addClass("white-text");
+                var table = $("#mail_table").DataTable();
+                if ( $.fn.dataTable.isDataTable( '#mail_table' ) ) {
+                    table.destroy();
+                }
+
+                var path = "{{ path("load_folder_mail", {"code": "XXX" }) }}";
+                path = path.replace("XXX", $(this).attr('data-code'));
+                table = $("#mail_table").DataTable({
+                    "ajax": {
+                        "url": path,
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "id" },
+                        { "data": "subject" },
+                        { "data": "sender.nom" },
+                        { "data": "date" },
+                    ],
+                    'columnDefs': [{
+                        'targets': 0,
+                        'searchable':false,
+                        'orderable':false,
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta){
+                            return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + '">';
+                        }
+                    }],
+                    'order': [3, 'desc'],
+                    "deferRender": true// optimize load
+                });
+
+            });
+
+            $(".collection-item").first().click();
+
+            $('#mail_table tbody').on( 'click', 'tr', function () {
+                $(this).toggleClass('selected');
+            } );
+
+        });
+    </script>
+{% endblock %}

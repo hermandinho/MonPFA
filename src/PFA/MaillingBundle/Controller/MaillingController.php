@@ -20,9 +20,46 @@ class MaillingController extends MainController
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(new MailType());
-        $form->handleRequest($request);
-        return $this->render('PFAMaillingBundle:Default:index.html.twig',["form" => $form->createView()]);
+        $em = $this->getEM();
+        $folders = $this->get("pfa_mailling.managers.mail_folder_manager")->getUserFolders($this->getThisUser());
+        $recievedMails = null;
+
+        if(isset($folders[0])) {
+            /** @var MailFolder $reception */
+            $reception = $folders[0];
+            $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['sender'=> $this->getThisUser()->getId(), "folder" => $reception->getId()]);
+        }
+        return $this->render('PFAMaillingBundle:Default:index2.html.twig',["folders" => $folders, "emails" => $recievedMails]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/loadData/{code}", name="load_folder_mail")
+     */
+    public function loadFolderMails(Request $request, $code)
+    {
+        $em = $this->getEM();
+
+        $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code]);
+        $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['sender'=> $this->getThisUser()->getId(), "folder" => $folder->getId()]);
+        $json = [];
+
+        foreach ($data as $key => $item) {
+            $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
+            $serializedData = $this->getSerializer()->serialize($item, "json", $serializerContext);
+            $json["data"][] = json_decode($serializedData);
+        }
+
+        //die(dump(json_encode($json)));
+        $response = new Response();
+
+        $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
+        $serializedData = $this->getSerializer()->serialize($data, "json", $serializerContext);
+        $data['data'] = json_decode($serializedData);
+        $response->setContent(json_encode($json));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**
