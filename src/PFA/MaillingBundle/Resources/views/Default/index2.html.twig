@@ -14,14 +14,24 @@
         <div class="col m2 s2">
             <ul class="collection">
                 {% for folder in folders %}
-                    <li class="collection-item" data-code="{{ folder.code }}"><a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a></li>
+                    {% if folder.canBeRemoved == 0 %}
+                        <li class="collection-item" data-code="{{ folder.code }}"><a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a></li>
+                    {% else %}
+                        <li class="collection-item" data-code="{{ folder.code }}">
+                            <a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a>
+                            <a href="javascript:;" class="pull-right">
+                                <i class="material-icons tooltipped remove-folder" data-position="bottom" data-delay="5" data-tooltip="Supprimer ce dossier" >delete</i>
+                            </a>
+                        </li>
+                    {% endif %}
+
                 {% endfor %}
             </ul>
+            <a class="btn-floating waves-effect waves-light red" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
         </div>
 
-
-        <div class="col s9 m9">
-            <table class="bordered striped highlight responsive-table" id="mail_table">
+        <div class="col s9 m10">
+            <table class="bordered striped highlight responsive-table" id="mail_table" style="width: 100%">
                 <thead>
                     <th>#</th>
                     <th>Par</th>
@@ -57,7 +67,9 @@
                     {% endif %}
                 </tbody> #}
             </table>
+            <a class="btn-floating btn-large waves-effect waves-light red" data-toggle="modal" data-target="#myModal" style="bottom: 45px; right: 24px;"><i class="material-icons">add</i></a>
         </div>
+
     </div>
 {% endblock %}
 
@@ -102,6 +114,7 @@
                     'order': [3, 'desc'],
                     "deferRender": true// optimize load
                 });
+                $('select').material_select();
 
             });
 
@@ -109,7 +122,11 @@
 
             $('#mail_table tbody').on( 'click', 'tr', function () {
                 $(this).toggleClass('selected');
-            } );
+            });
+
+            $(".remove-folder").click(function (e) {
+                e.stopPropagation();
+            })
 
         });
     </script>
