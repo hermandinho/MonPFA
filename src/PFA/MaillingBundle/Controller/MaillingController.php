@@ -45,14 +45,19 @@ class MaillingController extends MainController
         $em = $this->getEM();
 
         $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code]);
-        $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['sender'=> $this->getThisUser()->getId(), "folder" => $folder->getId()]);
+        $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['mailBox'=> $this->getThisUser()->getMailBox(), "folder" => $folder->getId()]);
         $json = [];
 
-        foreach ($data as $key => $item) {
-            $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
-            $serializedData = $this->getSerializer()->serialize($item, "json", $serializerContext);
-            $json["data"][] = json_decode($serializedData);
+        if(count($data) == 0) {
+            $json['data'] = [];
+        } else {
+            foreach ($data as $key => $item) {
+                $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
+                $serializedData = $this->getSerializer()->serialize($item, "json", $serializerContext);
+                $json["data"][] = json_decode($serializedData);
+            }
         }
+
 
         //die(dump(json_encode($json)));
         $response = new Response();
