@@ -10,12 +10,15 @@ use PFA\MaillingBundle\Form\MailFolderType;
 use PFA\MaillingBundle\Form\MailType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MaillingController extends MainController
 {
     /**
+     * @param Request $request
+     * @return Response
      * @Route("/", name="mailbox_home")
      */
     public function indexAction(Request $request)
@@ -112,6 +115,40 @@ class MaillingController extends MainController
 
     /**
      * @param Request $request
+     * @return Response
+     * @Route("/create_folder", name="create_mail_folder")
+     */
+    public function createFolderAction(Request $request)
+    {
+        $em = $this->getEM();
+        $form = $this->createForm(new MailFolderType());
+        $form->handleRequest($request);
+
+        if($form->isValid()) {
+            /** @var MailFolder $mailFolder */
+            $mailFolder = $form->getData();
+
+            $mailFolder->setOwner($this->getThisUser());
+
+            if ($em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['name' => $mailFolder->getName(), "owner" => $this->getThisUser()])) {
+                return new JsonResponse(['status' => false,"msg" => "Ce dossier existe déja !!!"]);
+            }
+
+            $mailFolder->setCode(strtoupper(str_replace(" ", "_", $mailFolder->getName())));
+            $mailFolder->setIcon("folder");
+            $mailFolder->setCanBeRemoved(true);
+
+            $em->persist($mailFolder);
+            $em->flush();
+
+            return new JsonResponse(['status' => true,"msg" => "Dossier créer avec success !!!"]);
+        }
+
+        return $this->render("PFAMaillingBundle:Default:create_folder.html.twig", ['form' => $form->createView()]);
+    }
+
+    /**
+     * @param Request $request
      * @Route("/add_folder", name="add_mail_folder")
      * @return Response
      */
@@ -158,6 +195,10 @@ class MaillingController extends MainController
     {
         $form = $this->createForm(new MailType());
         $form->handleRequest($request);
+
+        if($form->isValid()) {
+            
+        }
 
         return $this->render("PFAMaillingBundle:partials:add_mail.html.twig", ["form" => $form->createView()]);
     }

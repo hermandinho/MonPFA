@@ -17,18 +17,22 @@
                     <li class="collection-item" data-code="{{ folder.code }}"><a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a></li>
                 {% endfor %}
             </ul>
+            <a class="btn-floating waves-effect waves-light red pull-right modal-trigger" href="#create_mail_folder_modal" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
         </div>
 
 
-        <div class="col s9 m9">
-            <table class="bordered striped highlight responsive-table" id="mail_table">
+        <div class="col s10 m10">
+            <table class="bordered striped highlight responsive-table mail-table" id="mail_table__">
                 <thead>
-                    <th>#</th>
+                    <th>
+                        <input type="checkbox" name="checkall" id="checkall" title="Tout Cocher">
+                        <label for="checkall"></label>
+                    </th>
                     <th>Par</th>
                     <th>Sujet</th>
                     <th>Date</th>
                 </thead>
-                {#<tbody>
+                <tbody>
                     {% if emails|length == 0 %}
                         <tr>
                             <td colspan="4"><h5 class="center">Aucun Mail dans ce dossier !!!</h5></td>
@@ -38,6 +42,7 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" class="email-{{ email.id }}" />
+                                    <label for="email-{{ email.id }}"></label>
                                 </td>
                                 <td>
                                     <strong>
@@ -55,9 +60,15 @@
                             </tr>
                         {% endfor %}
                     {% endif %}
-                </tbody> #}
+                </tbody>
             </table>
         </div>
+        <a class="btn-floating btn-large waves-effect waves-light red pull-right modal-trigger" href="#send_mail_modal" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
+    </div>
+
+    <div id="modals">
+        {{ render(controller("PFAMaillingBundle:Mailling:createFolder")) }}
+        {{ render(controller("PFAMaillingBundle:Mailling:sendMail")) }}
     </div>
 {% endblock %}
 
@@ -66,6 +77,8 @@
         $(document).ready(function () {
             //$("#mail_table").DataTable();
             $('select').material_select();
+
+            $('.modal-trigger').leanModal();
 
             $(".collection-item").click(function (e) {
                 $(".collection-item").removeClass("active");
@@ -85,12 +98,22 @@
                         "type": "GET"
                     },
                     "columns": [
-                        { "data": "id" },
+                        {
+                            "data": "id",
+                            render: function ( data, type, row ) {
+                                if ( type === 'display' ) {
+                                    return '<input type="checkbox" class="editor-active">';
+                                }
+                                return data;
+                            },
+                            //className: "dt-body-center"
+                        },
+                        //{ "data": "id" },
                         { "data": "subject" },
                         { "data": "sender.nom" },
                         { "data": "date" },
                     ],
-                    'columnDefs': [{
+                    /*'columnDefs': [{
                         'targets': 0,
                         'searchable':false,
                         'orderable':false,
@@ -98,7 +121,7 @@
                         'render': function (data, type, full, meta){
                             return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + '">';
                         }
-                    }],
+                    }], */
                     'order': [3, 'desc'],
                     "deferRender": true// optimize load
                 });
@@ -113,4 +136,10 @@
 
         });
     </script>
+
+    {% javascripts
+        "@PFAMaillingBundle/Resources/public/js/maillingScripts.js"
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

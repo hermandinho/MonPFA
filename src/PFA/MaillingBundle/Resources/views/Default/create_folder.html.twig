@@ -1,0 +1,24 @@
+<div id="create_mail_folder_modal" class="modal" style="">
+    <div class="modal-content">
+        <h4>Ajouter un dossier</h4>
+        <div id="create-folder-modal-zone">
+            {{ form_start(form, {"attr": {"class": "create_mail_folder_Form"}} ) }}
+            <div class="row">
+                <div class="input-field col s11">
+                    {{ form_label(form.name) }}
+                    {{ form_widget(form.name, {"attr":{}}) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <span class="upload-status teal hide col md5 offset-m1"></span>
+                <button type="submit" class="btn btn-flat blue right" id="create_mail_folder">Créer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!--<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Disagree</a> -->
+        <a href="javascript:;" class="modal-action modal-close waves-effect waves-green btn-flat" i>Fermer</a>
+    </div>
+</div>

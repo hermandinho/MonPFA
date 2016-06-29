@@ -3,6 +3,7 @@
 namespace PFA\MainBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Entity\ProjectMember;
@@ -36,7 +37,9 @@ class ProjectController extends MainController
     public function indexAction(Request $request)
     {
         $projectList = $this->get("pfa_core.services.project_manager")->getUserProjects($this->getThisUser());
-        $serializedData = $this->getSerializer()->serialize($projectList, "json");
+        $serializerContext = SerializationContext::create()->setGroups(array('list'));
+        $serializedData = $this->getSerializer()->serialize($projectList, "json", $serializerContext);
+        //die(dump($serializedData, $projectList));
         return $this->render('PFAMainBundle:Projects:project-list.html.twig', ["projects" => $projectList]);
     }
 
