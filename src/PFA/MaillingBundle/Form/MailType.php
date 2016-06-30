@@ -21,7 +21,7 @@ class MailType extends AbstractType
             ->add('receivers', null, [
                 "mapped" => false,
                 "required" => true,
-                "label" => "",
+                "label" => " ",
                 "attr" => [
                     "multiple" => true,
                     "data-role" => "materialtags",

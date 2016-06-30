@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         AutocompleteUserList.initialize();
 
-        $('input.selectUsers').materialtags({
+        $('input#mail_receivers').materialtags({
             itemValue: 'id',
             itemText: "name",
             typeaheadjs: {
