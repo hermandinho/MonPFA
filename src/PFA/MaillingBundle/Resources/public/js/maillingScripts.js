@@ -12,14 +12,14 @@ $(document).ready(function () {
         var AutocompleteUserList = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {
+            prefetch: "users/list/json"/*{
                 url: 'users/list/json',
                 filter: function(users) {
                     return users.map(function(item){
                         return { name: item.nom+" "+item.prenom, id: item.id};
                     });
                 }
-            }
+            }*/
         });
 
         AutocompleteUserList.initialize();

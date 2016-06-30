@@ -82,7 +82,7 @@ class Mail
 
     /**
      * @var ArrayCollection
-     * @ORM\Column(name="attachements", type="json_array", nullable=true)
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAttachements", mappedBy="mail", orphanRemoval=true)
      * @Groups("mail_box")
      */
     private $attachements;
@@ -100,6 +100,14 @@ class Mail
      * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", cascade={"persist", "remove"})
      */
     private $parent = null;
+
+    /**
+     * Mail constructor.
+     */
+    public function __construct()
+    {
+        $this->attachements = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -254,30 +262,7 @@ class Mail
     {
         return $this->mailBox;
     }
-
-    /**
-     * Set attachements
-     *
-     * @param array $attachements
-     *
-     * @return Mail
-     */
-    public function setAttachements($attachements)
-    {
-        $this->attachements = $attachements;
-
-        return $this;
-    }
-
-    /**
-     * Get attachements
-     *
-     * @return array
-     */
-    public function getAttachements()
-    {
-        return $this->attachements;
-    }
+    
 
     /**
      * Set folder
@@ -349,5 +334,39 @@ class Mail
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Add attachement
+     *
+     * @param \PFA\MaillingBundle\Entity\MailAttachements $attachement
+     *
+     * @return Mail
+     */
+    public function addAttachement(\PFA\MaillingBundle\Entity\MailAttachements $attachement)
+    {
+        $this->attachements[] = $attachement;
+
+        return $this;
+    }
+
+    /**
+     * Remove attachement
+     *
+     * @param \PFA\MaillingBundle\Entity\MailAttachements $attachement
+     */
+    public function removeAttachement(\PFA\MaillingBundle\Entity\MailAttachements $attachement)
+    {
+        $this->attachements->removeElement($attachement);
+    }
+
+    /**
+     * Get attachements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAttachements()
+    {
+        return $this->attachements;
     }
 }
