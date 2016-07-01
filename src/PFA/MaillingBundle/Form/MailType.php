@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class MailType extends AbstractType
 {
@@ -18,17 +19,23 @@ class MailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('receivers', null, [
-                "mapped" => false,
-                "required" => true,
-                "label" => " ",
-                "attr" => [
-                    "multiple" => true,
-                    "data-role" => "materialtags",
-                    "class" => "selectUsers",
-                    "placeholder" => "Liste des Destnataires...",
-                ]
-            ])
+            ->add('receivers', Select2EntityType::class, [
+                    "mapped" => false,
+                    'multiple' => true,
+                    'remote_route' => 'get_user_list_json',
+                    'class' => 'PFA\MainBundle\Entity\User',
+                    'primary_key' => 'id',
+                    'text_property' => 'nom',
+                    'minimum_input_length' => 2,
+                    'page_limit' => 10,
+                    'allow_clear' => true,
+                    'delay' => 250,
+                    'cache' => true,
+                    //'cache_timeout' => 60000, // if 'cache' is true
+                    'language' => 'fr',
+                    'placeholder' => 'Select a User',
+                 ]
+            )
             ->add('subject', TextType::class)
             ->add('body', CKEditorType::class, array(
                 "attr" => [
