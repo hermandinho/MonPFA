@@ -19,13 +19,13 @@ class MailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('receivers', Select2EntityType::class, [
+            /*->add('receivers', Select2EntityType::class, [
                     "mapped" => false,
                     'multiple' => true,
                     'remote_route' => 'get_user_list_json',
                     'class' => 'PFA\MainBundle\Entity\User',
                     'primary_key' => 'id',
-                    'text_property' => 'nom',
+                    //'text_property' => 'nom',
                     'minimum_input_length' => 2,
                     'page_limit' => 10,
                     'allow_clear' => true,
@@ -35,7 +35,7 @@ class MailType extends AbstractType
                     'language' => 'fr',
                     'placeholder' => 'Select a User',
                  ]
-            )
+            ) */
             ->add('subject', TextType::class)
             ->add('body', CKEditorType::class, array(
                 "attr" => [

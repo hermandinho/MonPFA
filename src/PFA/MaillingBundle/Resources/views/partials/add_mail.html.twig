@@ -1,13 +1,12 @@
 <div id="send_mail_modal" class="modal" style="width: 90% !important;">
     <div class="modal-content">
-        <h4>Ajouter un dossier</h4>
+        <h4>Nouveau Mail</h4>
         <div id="send-mail-modal-zone">
             {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 sendMail"} }) }}
             <div class="row">
                 <div class="row">
                     <div class="input-field col s12">
-                        {{ form_widget(form.receivers, {"attr":{}}) }}
-                        {{ form_label(form.receivers) }}
+                        <select name="recievers" id="recievers" style="width: 100%" multiple></select>
                     </div>
                 </div>
 
@@ -26,11 +25,6 @@
                 </div>
             </div>
             {{ form_end(form) }}
-            <form action="/" class="dropzone" id="zone">
-                <div class="fallback">
-                    <input name="file" type="file" multiple />
-                </div>
-            </form>
         </div>
     </div>
     <div class="modal-footer">

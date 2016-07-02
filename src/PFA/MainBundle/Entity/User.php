@@ -517,4 +517,10 @@ class User extends BaseUser
     {
         return $this->forumAnswers;
     }
+
+
+    public function __toString()
+    {
+        return $this->getNom() . " " . $this->getPrenom() . "( " . $this->getEmail() . " ) ";
+    }
 }

@@ -6,35 +6,45 @@ $(document).ready(function () {
     $('.collapsible').collapsible({
         accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
     });
-    
-    setTimeout(function () {
-        console.log("Fetching ...");
-        var AutocompleteUserList = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: "users/list/json"/*{
-                url: 'users/list/json',
-                filter: function(users) {
-                    return users.map(function(item){
-                        return { name: item.nom+" "+item.prenom, id: item.id};
-                    });
-                }
-            }*/
-        });
+    $('select').material_select(); // render selects
 
-        AutocompleteUserList.initialize();
+    $(".select-wrapper").find(".caret").remove();
+    $(".select-wrapper").find(".select-dropdown").hide();
 
-        $('input#mail_receivers').materialtags({
-            itemValue: 'id',
-            itemText: "name",
-            typeaheadjs: {
-                name: 'AutocompleteUserList',
-                displayKey: 'name',
-                //valueKey: 'name',
-                source: AutocompleteUserList.ttAdapter()
-            }
-        });
-    }, 2000);
+    $("#recievers").select2({
+        ajax: {
+            url: "users/list/json",
+            dataType: 'json',
+            delay: 25,
+            data: function (params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+                var results = data.map(function (user) {
+                   return { id: user.id, text: user.nom + " " + user.prenom } ;
+                });
+                //console.log(results);
+                return {
+                    //results: data.items,
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        tags: true,
+        placeholder: "Select a state"
+    });
 
     Materialize.updateTextFields();
 
