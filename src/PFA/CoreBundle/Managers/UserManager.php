@@ -47,4 +47,9 @@ class UserManager
     public function getRoomChat(Project $project) {
         return $this->em->getRepository("PFAMainBundle:ChatRoomMessages")->findBy(["chatRoom" => $project->getChatRoom(), "receiver" => null]);
     }
+
+    public function getFolderByCode(User $user, $code)
+    {
+        return $this->em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code, "owner" => $user->getId()]);
+    }
 }

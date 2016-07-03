@@ -2,11 +2,11 @@
     <div class="modal-content">
         <h4>Nouveau Mail</h4>
         <div id="send-mail-modal-zone">
-            {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 sendMail"} }) }}
+            {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 send_mail_form"} }) }}
             <div class="row">
                 <div class="row">
                     <div class="input-field col s12">
-                        <select name="recievers" id="recievers" style="width: 100%" multiple></select>
+                        <select name="recievers[]" id="recievers" style="width: 100%" multiple></select>
                     </div>
                 </div>
 
@@ -22,6 +22,31 @@
                         {{ form_widget(form.body, {"attr":{}}) }}
                         {{ form_label(form.body) }}
                     </div>
+                </div>
+
+                <div class="row" id="attachements">
+                    <div class='input-field col s10 attachement_row'>
+                        <div class='file-field input-field'>
+                            <div class='btn'>
+                                <span>File</span>
+                                <input type='file' name='attachement[]'>
+                            </div>
+                            <div class='file-path-wrapper'>
+                                <input class='file-path validate' type='text'>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-field col s2">
+                        <a href="javascript:;" class="btn" id="add_attachement">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <span class="upload-status teal hide col md5 offset-m1"></span>
+                    <button type="submit" class="btn btn-flat green right" id="send_mail_btn">Envoyer</button>
                 </div>
             </div>
             {{ form_end(form) }}

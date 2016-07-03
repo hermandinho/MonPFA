@@ -33,7 +33,7 @@ class MailAttachements
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="project_ressoucces", fileNameProperty="imageName")
+     * @Vich\UploadableField(mapping="mail_attachements", fileNameProperty="imageName")
      *
      * @var File
      */
@@ -120,9 +120,9 @@ class MailAttachements
     }
 
     /**
-     * @param File $imageFile
+     * @param File|null $imageFile
      */
-    public function setImageFile($imageFile)
+    public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
         if($imageFile) {

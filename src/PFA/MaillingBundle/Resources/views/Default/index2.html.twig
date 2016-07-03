@@ -59,7 +59,7 @@
                         {% for email in emails %}
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" class="email-{{ email.id }}" />
+                                    <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" class="select-email-row email-{{ email.id }}" />
                                     <label for="email-{{ email.id }}"></label>
                                 </td>
                                 <td>
@@ -92,6 +92,10 @@
 
 {% block additional_javascripts %}
     <script>
+        function getImage(user) {
+
+        }
+
         $(document).ready(function () {
             //$("#mail_table").DataTable();
             $('select').material_select();

@@ -38,6 +38,7 @@ class MailType extends AbstractType
             ) */
             ->add('subject', TextType::class)
             ->add('body', CKEditorType::class, array(
+                "label" => " ",
                 "attr" => [
                     "class" => "materialize-textarea characterCounter"
                 ]

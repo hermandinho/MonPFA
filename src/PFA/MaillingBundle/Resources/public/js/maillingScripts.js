@@ -29,7 +29,8 @@ $(document).ready(function () {
                 // scrolling can be used
                 params.page = params.page || 1;
                 var results = data.map(function (user) {
-                   return { id: user.id, text: user.nom + " " + user.prenom } ;
+                    console.log(user);
+                   return { id: user.id, text: "<img alt='IMG' src='/MonPFA/web/images/profile/" + user.image_name + "' width='25' class='circle' /> " + user.nom + " " + user.prenom } ;
                 });
                 //console.log(results);
                 return {
@@ -43,7 +44,8 @@ $(document).ready(function () {
             cache: true
         },
         tags: true,
-        placeholder: "Select a state"
+        placeholder: "Select a state",
+        escapeMarkup: function (markup) { return markup; }
     });
 
     Materialize.updateTextFields();
@@ -79,5 +81,89 @@ $(document).ready(function () {
                 laddaInstance.stop();
             }
         })
+    });
+
+    $("#add_attachement").click(function (e) {
+        e.preventDefault();
+
+        var html = `<div class="attachement_row">
+                        <div class='input-field col s10'>
+                            <div class='file-field input-field'>
+                                <div class='btn'>
+                                    <span>File</span>
+                                    <input type='file' name='attachement[]'>
+                                </div>
+                                <div class='file-path-wrapper'>
+                                    <input class='file-path validate' type='text'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-field col s2">
+                            <a href="javascript:;" class="btn remove_attachement">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </div>
+                    </div>`;
+
+        $("#attachements").append(html);
+    });
+
+    $("body").on("click", ".remove_attachement", function (e) {
+        e.preventDefault();
+        $(this).parent().parent().remove();
+    });
+
+    $(".send_mail_form").submit(function (e) {
+        e.preventDefault();
+        var laddaInstance = Ladda.create(document.querySelector( '#send_mail_btn'));
+        var formData = new FormData(this);
+
+        laddaInstance.start();
+        $.ajax({
+            url: "new_mail",
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                if(!data.status){
+                    $("#create-folder-modal-zone").prepend("<div id='create-folder-error' class=' red card'> " + data.msg + " </div>");
+                    setTimeout(function () {
+                        $("#create-folder-error").fadeOut(1000).remove();
+                    }, 2000);
+                } else {
+                    $("#create-folder-modal-zone").prepend("<div id='create-folder-error' class=' teal card'> " + data.msg + " </div>");
+                    setTimeout(function () {
+                        $("#create-folder-error").fadeOut(1000).remove();
+                        $('#modal1').closeModal();
+                        window.location.reload();
+                    }, 2000);
+                }
+
+                laddaInstance.stop();
+            }
+        })
+    });
+
+    $("#checkall").click(function (s) {
+        var $this = $(this);
+        $(".select-email-row").map(function (i,e) {
+            $(e).prop("checked", $this.prop("checked"));
+            if($this.prop("checked")) {
+                $(e).parent().parent().addClass("selected");
+            } else {
+                $(e).parent().parent().removeClass("selected");
+            }
+
+        });
+    });
+
+    $(".select-email-row").click(function (e) {
+        if($(this).prop("checked")) {
+            $(this).parent().parent().addClass("selected");
+        } else {
+            $(this).parent().parent().removeClass("selected");
+        }
     })
 });
