@@ -34,4 +34,4 @@ app/config/config_dev.yml
 composer.lock
 src/PFA/CoreBundle/Resources/public/img/
 /var/*
-web/
+/web/
