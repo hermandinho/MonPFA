@@ -43,6 +43,10 @@ class MailType extends AbstractType
                     "class" => "materialize-textarea characterCounter"
                 ]
             ))
+            ->add('attachements', "file", array(
+                "label" => "",
+                "required" => false
+            ))
             //->add('isRead')
             //->add('date', 'datetime')
             //->add('attachements')

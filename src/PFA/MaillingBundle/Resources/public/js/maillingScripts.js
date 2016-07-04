@@ -29,7 +29,7 @@ $(document).ready(function () {
                 // scrolling can be used
                 params.page = params.page || 1;
                 var results = data.map(function (user) {
-                    console.log(user);
+                    //console.log(user);
                    return { id: user.id, text: "<img alt='IMG' src='/MonPFA/web/images/profile/" + user.image_name + "' width='25' class='circle' /> " + user.nom + " " + user.prenom } ;
                 });
                 //console.log(results);
@@ -85,13 +85,12 @@ $(document).ready(function () {
 
     $("#add_attachement").click(function (e) {
         e.preventDefault();
-
         var html = `<div class="attachement_row">
                         <div class='input-field col s10'>
                             <div class='file-field input-field'>
                                 <div class='btn'>
                                     <span>File</span>
-                                    <input type='file' name='attachement[]'>
+                                    <input type='file' name='mail[attachements][]'>
                                 </div>
                                 <div class='file-path-wrapper'>
                                     <input class='file-path validate' type='text'>
@@ -106,11 +105,23 @@ $(document).ready(function () {
                     </div>`;
 
         $("#attachements").append(html);
+
+
+        if($(".attachement_row").length > 0) {
+            $("#mail_attachements").attr("name","mail[attachements][]");
+        } else {
+            $("#mail_attachements").attr("name", "mail[attachements]");
+        }
     });
 
     $("body").on("click", ".remove_attachement", function (e) {
         e.preventDefault();
         $(this).parent().parent().remove();
+        if($(".attachement_row").length > 0) {
+            $("#mail_attachements").attr("name","mail[attachements][]");
+        } else {
+            $("#mail_attachements").attr("name", "mail[attachements]");
+        }
     });
 
     $(".send_mail_form").submit(function (e) {
@@ -155,8 +166,13 @@ $(document).ready(function () {
             } else {
                 $(e).parent().parent().removeClass("selected");
             }
-
         });
+
+        if($(".select-email-row:checked").length > 0) {
+            resetBlockActions(true);
+        } else {
+            resetBlockActions(false);
+        }
     });
 
     $(".select-email-row").click(function (e) {
@@ -165,5 +181,61 @@ $(document).ready(function () {
         } else {
             $(this).parent().parent().removeClass("selected");
         }
-    })
+
+        if($(".select-email-row:checked").length > 0) {
+            resetBlockActions(true);
+        } else {
+            resetBlockActions(false);
+        }
+    });
+
+    $(".block_mark_read").click(function(e) {
+        e.preventDefault();
+        var ids = [];
+        $(".select-email-row:checked").map(function(i,row) {
+           ids.push(row.value);
+        });
+
+        $.post(
+            "mark_read",
+            {
+                ids: ids
+            }, 
+            function (data) {
+                $(".select-email-row:checked").map(function(i,row) {
+                    $(this).parents("tr").removeClass("unread").addClass("read");
+                });
+            }
+        )
+    });
+
+    $(".block_delete").click(function(e) {
+        e.preventDefault();
+        var ids = [];
+        $(".select-email-row:checked").map(function(i,row) {
+           ids.push(row.value);
+        });
+
+        $.post(
+            "delete_mail",
+            {
+                ids: ids
+            },
+            function (data) {
+                $(".select-email-row:checked").map(function(i,row) {
+                    $(this).parents("tr").removeClass("unread").addClass("read");
+                });
+            }
+        )
+    });
+
 });
+
+function resetBlockActions(state)
+{
+   if(state == true) {
+       $(".block_actions").find("a").removeClass("disabled");
+   } else {
+       $(".block_actions").find("a").addClass("disabled");
+   }
+}

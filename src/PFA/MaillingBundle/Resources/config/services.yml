@@ -14,7 +14,7 @@ services:
 
     pfa_mailling.managers.mail_manager:
           class: PFA\MaillingBundle\Managers\MailManager
-          arguments: ['@doctrine.orm.entity_manager']
+          arguments: ['@doctrine.orm.entity_manager', '@twig', '@swiftmailer.mailer', '@router', '@fos_user.util.token_generator', '@security.token_storage']
 
     pfa_mailling.managers.documents_manager:
         class: PFA\MaillingBundle\Managers\DocumentsManager

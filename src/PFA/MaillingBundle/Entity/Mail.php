@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use PFA\MainBundle\Entity\BaseEntity;
 use PFA\MainBundle\Entity\User;use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Mail
@@ -339,11 +340,11 @@ class Mail
     /**
      * Add attachement
      *
-     * @param \PFA\MaillingBundle\Entity\MailAttachements $attachement
+     * @param UploadedFile $attachement
      *
      * @return Mail
      */
-    public function addAttachement(\PFA\MaillingBundle\Entity\MailAttachements $attachement)
+    public function addAttachement(UploadedFile $attachement)
     {
         $this->attachements[] = $attachement;
 

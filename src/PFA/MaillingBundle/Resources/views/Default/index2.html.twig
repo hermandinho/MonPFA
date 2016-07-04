@@ -34,9 +34,19 @@
         <div class="col s10 m10">
 
             <div class="row">
-                <div class="col m5 s12 pull-left">
-                    <i class="material-icons">delete</i>
-                    <i class="material-icons">folder</i>
+                <div class="col m5 s12 pull-left block_actions">
+                    <a href="javascript:;" class="btn mail_block_action block_delete disabled tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer"> <i class="material-icons">delete</i></a>
+
+                    {#<a href="javascript:;" class="btn mail_block_action block_folder disabled tooltipped dropdown-button" data-activates='folders' data-position="bottom" data-delay="5" data-tooltip="Changer de dossier"><i class="material-icons">folder</i></a>
+                    <ul id='folders' class='dropdown-content'>
+                        <li><a href="#!">one</a></li>
+                        <li><a href="#!">two</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#!">three</a></li>
+                    </ul> #}
+
+
+                    <a href="javascript:;" class="btn mail_block_action block_mark_read disabled tooltipped" data-position="bottom" data-delay="5" data-tooltip="Marqué comme lu."><i class="material-icons">visibility</i></a>
                 </div>
             </div>
 
@@ -57,9 +67,14 @@
                         </tr>
                     {% else %}
                         {% for email in emails %}
-                            <tr>
+                            {% if email.isRead %}
+                                {% set maisCLass = "read" %}
+                            {% else %}
+                                {% set maisCLass = "unread" %}
+                            {% endif %}
+                            <tr class="{{ maisCLass }}">
                                 <td>
-                                    <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" class="select-email-row email-{{ email.id }}" />
+                                    <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" value="{{ email.id }}" class="select-email-row email-{{ email.id }}" />
                                     <label for="email-{{ email.id }}"></label>
                                 </td>
                                 <td>
