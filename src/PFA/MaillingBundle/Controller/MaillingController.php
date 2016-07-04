@@ -5,11 +5,14 @@ namespace PFA\MaillingBundle\Controller;
 use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MaillingBundle\Entity\Mail;
+use PFA\MaillingBundle\Entity\MailAttachements;
 use PFA\MaillingBundle\Entity\MailFolder;
 use PFA\MaillingBundle\Form\MailFolderType;
 use PFA\MaillingBundle\Form\MailType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +33,7 @@ class MaillingController extends MainController
         if(isset($folders[0])) {
             /** @var MailFolder $reception */
             $reception = $folders[0];
-            $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['sender'=> $this->getThisUser()->getId(), "folder" => $reception->getId()]);
+            $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['receiver'=> $this->getThisUser()->getId(), "folder" => $reception->getId()]);
         }
         return $this->render('PFAMaillingBundle:Default:index2.html.twig',["folders" => $folders, "emails" => $recievedMails]);
     }
@@ -198,11 +201,48 @@ class MaillingController extends MainController
      */
     public function sendMailAction(Request $request)
     {
+        $em = $this->getEM();
         $form = $this->createForm(new MailType());
         $form->handleRequest($request);
 
         if($form->isValid()) {
-            
+
+            $attachements = $form->get("attachements")->getData();
+            foreach ($request->request->get("recievers") as $key => $item) {
+                $mail = new Mail();
+                $mailData = $request->request->get("mail");
+                $mail->setSubject($mailData["subject"]);
+                $mail->setBody($mailData["body"]);
+                $receiver = $em->getRepository("PFAMainBundle:User")->find($item);
+                $mail->setReceiver($receiver);
+                $mail->setSender($this->getThisUser());
+                $mail->setDate(new \DateTime());
+                $mail->setMailBox($this->getThisUser()->getMailBox());
+                if($this->getThisUser()->getId() == $receiver->getId()) {
+                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getSender(), "ENVOYE"));
+                } else {
+                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getReceiver(), "BOITE_RECEPTION"));
+                }
+                $mail->setIsRead(false);
+
+                /** @var UploadedFile $file */
+                foreach ($attachements as $f => $file) {
+                    $mail_attachement = new MailAttachements();
+                    $mail_attachement->setImageFile();
+                    $mail_attachement->setUpdatedAt(new \DateTime());
+                    $mail_attachement->setMail($mail);
+                    $mail_attachement->setImageName(uniqid("ATT_"));
+                    $em->persist($mail_attachement);
+                    //$mail->addAttachement($file);
+                    //$em->flush();
+                }
+                $em->persist($mail);
+
+                //die;
+            }
+
+            $em->flush();
+            return new JsonResponse(["status" => true]);
         }
 
         return $this->render("PFAMaillingBundle:partials:add_mail.html.twig", ["form" => $form->createView()]);
@@ -225,5 +265,57 @@ class MaillingController extends MainController
         $response->setContent(($serializedData));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     * @Route("/mark_read", name="marque_mail_as_read")
+     */
+    public function markAsReadAction(Request $request)
+    {
+        $em = $this->getEM();
+        $ids = $request->request->get("ids");
+        foreach ($ids as $key => $id) {
+            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
+
+            if(!$mail) {
+                throw new \Exception("Ce mail n'existe pas.");
+            }
+
+            $em = $this->getEM();
+
+            $mail->setIsRead(true);
+            $em->persist($mail);
+        }
+        $em->flush();
+        return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     * @Route("/delete_mail", name="delete_email")
+     */
+    public function deleteMailAction(Request $request)
+    {
+        $em = $this->getEM();
+        $ids = $request->request->get("ids");
+        foreach ($ids as $key => $id) {
+            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
+
+            if(!$mail) {
+                throw new \Exception("Ce mail n'existe pas.");
+            }
+
+            $em = $this->getEM();
+
+            $mail->setIsRead(true);
+            $em->remove($mail);
+        }
+        $em->flush();
+        return new JsonResponse(['status' => true]);
     }
 }

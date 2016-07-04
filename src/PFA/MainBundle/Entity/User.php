@@ -102,7 +102,7 @@ class User extends BaseUser
      * @Vich\UploadableField(mapping="profile_image", fileNameProperty="imageName")
      *
      * @var File
-     * @Groups({"chat_message"})
+     *
      */
     private $imageFile;
 
@@ -110,7 +110,7 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255)
      *
      * @var string
-     *  @Groups({"chat_message"})
+     *  @Groups({"autocomplete", "chat_message", "mail_box"})
      */
     private $imageName;
 
@@ -516,5 +516,11 @@ class User extends BaseUser
     public function getForumAnswers()
     {
         return $this->forumAnswers;
+    }
+
+
+    public function __toString()
+    {
+        return $this->getNom() . " " . $this->getPrenom() . "( " . $this->getEmail() . " ) ";
     }
 }

@@ -17,6 +17,7 @@
                 '@PFACoreBundle/Resources/public/css/datetimepicker.css'
                 '@PFACoreBundle/Resources/public/css/materialize-tags.css'
                 '@PFACoreBundle/Resources/public/css/jquery.dataTables.css'
+                '@PFACoreBundle/Resources/public/css/select2.css'
                 filter='cssrewrite'
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
@@ -117,9 +118,11 @@
             '@PFACoreBundle/Resources/public/js/Global.js'
             '@PFACoreBundle/Resources/public/js/jquery.dataTables.js'
             '@PFACoreBundle/Resources/public/js/dropzone.js'
+            '@PFACoreBundle/Resources/public/js/select2.full.js'
             %}
                 <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
+            <script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
             <script src="{{ asset("bundles/ivoryckeditor/ckeditor.js") }}"></script>
             {{ ws_client() }}
 

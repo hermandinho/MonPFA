@@ -24,3 +24,14 @@ li.collection-item.avatar.unread {
 {
     z-index: 10055 !important;
 }
+
+tr.selected {
+    background-color: darkgrey;
+    font-weight: bold;
+}
+
+tr.unread {
+    background-color: honeydew !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+}

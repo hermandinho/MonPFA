@@ -1,13 +1,12 @@
 <div id="send_mail_modal" class="modal" style="width: 90% !important;">
     <div class="modal-content">
-        <h4>Ajouter un dossier</h4>
+        <h4>Nouveau Mail</h4>
         <div id="send-mail-modal-zone">
-            {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 sendMail"} }) }}
+            {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 send_mail_form", "enctype": "multipart/form-data"} }) }}
             <div class="row">
                 <div class="row">
                     <div class="input-field col s12">
-                        {{ form_widget(form.receivers, {"attr":{}}) }}
-                        {{ form_label(form.receivers) }}
+                        <select name="recievers[]" id="recievers" style="width: 100%" multiple></select>
                     </div>
                 </div>
 
@@ -24,13 +23,33 @@
                         {{ form_label(form.body) }}
                     </div>
                 </div>
+
+                <div class="row" id="attachements">
+                   <div class='input-field col s10 attachement_row_'>
+                      <div class='file-field input-field'>
+                            <div class='btn'>
+                                <span>File</span>
+                                {{ form_widget(form.attachements) }}
+                            </div>
+                            <div class='file-path-wrapper'>
+                                <input class='file-path validate' type='text'>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-field col s2">
+                        <a href="javascript:;" class="btn tooltipped" id="add_attachement" data-position="bottom" data-delay="5" data-tooltip="Ajouter une pièce jointe.">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <span class="upload-status teal hide col md5 offset-m1"></span>
+                    <button type="submit" class="btn btn-flat green right" id="send_mail_btn" >Envoyer</button>
+                </div>
             </div>
             {{ form_end(form) }}
-            <form action="/" class="dropzone" id="zone">
-                <div class="fallback">
-                    <input name="file" type="file" multiple />
-                </div>
-            </form>
         </div>
     </div>
     <div class="modal-footer">
