@@ -1,0 +1,37 @@
+{% if data|length == 0 %}
+    <tr>
+        <td colspan="4"><h5 class="center">Aucun Mail dans ce dossier !!!</h5></td>
+    </tr>
+{% else %}
+    {% for email in data %}
+        {% if email.isRead %}
+            {% set maisCLass = "read" %}
+        {% else %}
+            {% set maisCLass = "unread" %}
+        {% endif %}
+        <tr class="{{ maisCLass }}">
+            <td>
+                <input type="checkbox" name="email[{{ email.id }}]" id="email-{{ email.id }}" value="{{ email.id }}"
+                       class="select-email-row email-{{ email.id }}"/>
+                <label for="email-{{ email.id }}"></label>
+            </td>
+            <td>
+                <strong>
+                    <a href="{{ path("view_mail", {"mail": email.id }) }}">
+                        {{ email.sender.nom ~ " " ~ email.sender.prenom }}
+                    </a>
+                </strong>
+            </td>
+            <td>
+                <span class="truncate">
+                    <a href="{{ path("view_mail", {"mail": email.id }) }}">
+                        {{ email.subject }}
+                    </a>
+                </span>
+            </td>
+            <td>
+                {{ email.date|date("d/m/Y") }}
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}

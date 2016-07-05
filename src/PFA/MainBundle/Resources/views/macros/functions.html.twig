@@ -52,3 +52,48 @@
         )|raw
     }}
 {% endmacro %}
+
+{% macro displayMailAttachements(mail) %}
+    <div class="row well">
+        {% for attachement in mail.attachements %}
+            {% set extension = attachement.imageName|split(".")|last %}
+
+            {% if extension == "pdf" %}
+                {% set src = asset("bundles/pfacore/images/pdf.png") %}
+                {% set title = "Fichier PDF"  %}
+            {% elseif extension in ["jpg","png","jped","gif"] %}
+                {% set src = asset("bundles/pfacore/images/jpg.png") %}
+                {% set title = "Image"  %}
+            {% elseif extension == "doc" or  extension == "docx" %}
+                {% set src = asset("bundles/pfacore/images/word.png") %}
+                {% set title = "Ficher MS Word"  %}
+            {% elseif extension == "xlsx" %}
+                {% set src = asset("bundles/pfacore/images/excel.png") %}
+                {% set title = "Fichier MS Excel"  %}
+            {% elseif extension == "txt" %}
+                {% set src = asset("bundles/pfacore/images/txt.png") %}
+                {% set title = "Fichier Texte"  %}
+            {% elseif extension in ["rar", "zip"] %}
+                {% set src = asset("bundles/pfacore/images/rar.png") %}
+                {% set title = "Fichier Compréssé"  %}
+            {% else%}
+                {% set src = asset("bundles/pfacore/images/ras.png") %} <!-- DEFAULT -->
+                {% set title = "Fichier inconue"  %}
+            {% endif %}
+            <div class="card_ col m1 s2">
+                <div class="card-image_">
+                    <img src="{{ src }}" alt="Type" class="image circle_ tooltipped" width="45" data-position="bottom" data-delay="50" data-tooltip="{{ title }}"><br>
+                            <span class="card-title">
+                              <a href="{{ vich_uploader_asset(attachement, "imageFile") }}" target="_blank" title="Télécharger"><i class="material-icons">system_update_alt</i></a>
+                            </span>
+                </div>
+                <div class="card-content">
+                    <p></p>
+                </div>
+                <div class="card-action">
+                    <a href="#"></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

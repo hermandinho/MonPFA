@@ -60,8 +60,8 @@
                     <th>Sujet</th>
                     <th>Date</th>
                 </thead>
-                <tbody>
-                    {% if emails|length == 0 %}
+                <tbody id="mail-list-zone">
+                   {# {% if emails|length == 0 %}
                         <tr>
                             <td colspan="4"><h5 class="center">Aucun Mail dans ce dossier !!!</h5></td>
                         </tr>
@@ -79,12 +79,16 @@
                                 </td>
                                 <td>
                                     <strong>
-                                        {{ email.sender.nom ~ " " ~ email.sender.prenom }}
+                                        <a href="{{ path("view_mail", {"mail": email.id }) }}">
+                                            {{ email.sender.nom ~ " " ~ email.sender.prenom }}
+                                        </a>
                                     </strong>
                                 </td>
                                 <td>
                                     <span class="truncate">
-                                        {{ email.subject }}
+                                        <a href="{{ path("view_mail", {"mail": email.id }) }}">
+                                            {{ email.subject }}
+                                        </a>
                                     </span>
                                 </td>
                                 <td>
@@ -92,7 +96,7 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                    {% endif %}
+                    {% endif %} #}
                 </tbody>
             </table>
         </div>
@@ -111,6 +115,8 @@
 
         }
 
+        var loadMailsPath = "{{ path("load_folder_mail", {"code": "CODE"}) }}";
+
         $(document).ready(function () {
             //$("#mail_table").DataTable();
             $('select').material_select();
@@ -122,47 +128,26 @@
                 $(".collection-item a").removeClass("white-text");
                 $(this).addClass("active");
                 $(this).find("a").addClass("white-text");
-                var table = $("#mail_table").DataTable();
-                if ( $.fn.dataTable.isDataTable( '#mail_table' ) ) {
-                    table.destroy();
-                }
-
-                var path = "{{ path("load_folder_mail", {"code": "XXX" }) }}";
-                path = path.replace("XXX", $(this).attr('data-code'));
-                table = $("#mail_table").DataTable({
-                    "ajax": {
-                        "url": path,
-                        "type": "GET"
-                    },
-                    "columns": [
-                        {
-                            "data": "id",
-                            render: function ( data, type, row ) {
-                                if ( type === 'display' ) {
-                                    return '<input type="checkbox" class="editor-active">';
-                                }
-                                return data;
-                            },
-                            //className: "dt-body-center"
-                        },
-                        //{ "data": "id" },
-                        { "data": "subject" },
-                        { "data": "sender.nom" },
-                        { "data": "date" },
-                    ],
-                    /*'columnDefs': [{
-                        'targets': 0,
-                        'searchable':false,
-                        'orderable':false,
-                        'className': 'dt-body-center',
-                        'render': function (data, type, full, meta){
-                            return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + '">';
-                        }
-                    }], */
-                    'order': [3, 'desc'],
-                    "deferRender": true// optimize load
-                });
                 $('select').material_select();
+
+                $("#mail-list-zone").html(`<tr> <td colspan="4"><div class="preloader-wrapper big active center" style="left: 50%" >
+                        <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                        <div class="circle"></div>
+                        </div><div class="gap-patch">
+                        <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                        </div>
+                        </div>
+                        </div></td></tr>`);
+                $.get(
+                        loadMailsPath.replace('CODE', $(this).data('code')),
+                        {},
+                        function (data) {
+                            $("#mail-list-zone").html(data);
+                        }
+                );
 
             });
 

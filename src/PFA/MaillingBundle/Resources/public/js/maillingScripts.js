@@ -89,7 +89,7 @@ $(document).ready(function () {
                         <div class='input-field col s10'>
                             <div class='file-field input-field'>
                                 <div class='btn'>
-                                    <span>File</span>
+                                    <span>Sélectionner un Fichier</span>
                                     <input type='file' name='mail[attachements][]'>
                                 </div>
                                 <div class='file-path-wrapper'>
@@ -228,6 +228,8 @@ $(document).ready(function () {
             }
         )
     });
+
+    $("#mail_attachements").attr('name', "mail[attachements][]");
 
 });
 

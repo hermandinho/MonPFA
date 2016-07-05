@@ -12,3 +12,5 @@ parameters:
     secret: 6ab3acaad1b3db1d6ae6b366e292c39b7784814f
     websocket_host: localhost
     websocket_port: 1337
+    attachements_tmp_dir: '%kernel.root_dir%/../web/uploads/tmp'
+    attachements_dir: '%kernel.root_dir%/../web/attachements'
