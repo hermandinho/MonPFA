@@ -1,22 +1,9 @@
-<div id="send_mail_modal" class="modal" style="width: 90% !important;">
-    <div class="modal-content">
-        <h4>Nouveau Mail</h4>
+<div id="answer-mail" class="" style="width: 90% !important;">
+    <div class="">
+        <h4>Répondre</h4>
         <div id="send-mail-modal-zone">
-            {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 send_mail_form", "enctype": "multipart/form-data"} }) }}
+            {{ form_start(form, {"attr": {"class": "answer_mail_form", "enctype": "multipart/form-data"} }) }}
             <div class="row">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <select name="recievers[]" id="recievers" style="width: 100%" multiple></select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="input-field col s12">
-                        {{ form_widget(form.subject, {"attr":{}}) }}
-                        {{ form_label(form.subject) }}
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="input-field col s12">
                         {{ form_widget(form.body, {"attr":{}}) }}
@@ -51,9 +38,5 @@
             </div>
             {{ form_end(form) }}
         </div>
-    </div>
-    <div class="modal-footer">
-        <!--<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Disagree</a> -->
-        <a href="javascript:;" class="modal-action modal-close waves-effect waves-green btn-flat" i>Fermer</a>
     </div>
 </div>

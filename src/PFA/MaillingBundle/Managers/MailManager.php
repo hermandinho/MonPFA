@@ -63,7 +63,7 @@ class MailManager
 
     public function sendNormalMail(User $from, User $to, Mail $mail)
     {
-        $body = $this->renderConfirmationEmail($from, $to, $mail);
+        $body = $this->renderConfirmationEmail($mail);
 
         $message = \Swift_Message::newInstance()
                 ->setSubject($mail->getSubject())
@@ -83,13 +83,11 @@ class MailManager
         return $this->mailRepo->getMailChildren($mail);
     }
 
-    private function renderConfirmationEmail(User $from, User $to, Mail $mail)
+    private function renderConfirmationEmail(Mail $mail)
     {
         return $this->twig->render(
             'PFAMaillingBundle:partials:send_normal_mail.html.twig',
             array(
-                'sender' => $from,
-                'reciever' => $to,
                 'mail' => $mail
             )
         );

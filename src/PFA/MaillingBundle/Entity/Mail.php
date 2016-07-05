@@ -103,11 +103,18 @@ class Mail
     private $parent = null;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="parent")
+     */
+    private $answers;
+
+    /**
      * Mail constructor.
      */
     public function __construct()
     {
         $this->attachements = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     /**
@@ -369,5 +376,39 @@ class Mail
     public function getAttachements()
     {
         return $this->attachements;
+    }
+
+    /**
+     * Add answer
+     *
+     * @param \PFA\MaillingBundle\Entity\Mail $answer
+     *
+     * @return Mail
+     */
+    public function addAnswer(\PFA\MaillingBundle\Entity\Mail $answer)
+    {
+        $this->answers[] = $answer;
+
+        return $this;
+    }
+
+    /**
+     * Remove answer
+     *
+     * @param \PFA\MaillingBundle\Entity\Mail $answer
+     */
+    public function removeAnswer(\PFA\MaillingBundle\Entity\Mail $answer)
+    {
+        $this->answers->removeElement($answer);
+    }
+
+    /**
+     * Get answers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
     }
 }

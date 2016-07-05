@@ -11,6 +11,8 @@ use PFA\MaillingBundle\Form\MailFolderType;
 use PFA\MaillingBundle\Form\MailType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,28 +51,8 @@ class MaillingController extends MainController
 
         $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code]);
         $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['mailBox'=> $this->getThisUser()->getMailBox(), "folder" => $folder->getId()]);
-        $json = [];
 
-        if(count($data) == 0) {
-            $json['data'] = [];
-        } else {
-            foreach ($data as $key => $item) {
-                $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
-                $serializedData = $this->getSerializer()->serialize($item, "json", $serializerContext);
-                $json["data"][] = json_decode($serializedData);
-            }
-        }
-
-
-        //die(dump(json_encode($json)));
-        $response = new Response();
-
-        $serializerContext = SerializationContext::create()->setGroups(array("mail_box"));
-        $serializedData = $this->getSerializer()->serialize($data, "json", $serializerContext);
-        $data['data'] = json_decode($serializedData);
-        $response->setContent(json_encode($json));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        return $this->render("PFAMaillingBundle:partials:mail_list.html.twig", ["data" => $data]);
     }
 
     /**
@@ -208,6 +190,14 @@ class MaillingController extends MainController
         if($form->isValid()) {
 
             $attachements = $form->get("attachements")->getData();
+            /** @var UploadedFile $file */
+            foreach ($attachements as $f => $file) {
+                if($file) {
+                    $fileName = md5(uniqid()).".".$file->guessExtension();
+                    $file->move($this->getParameter("attachements_tmp_dir"), $fileName);
+                }
+            }
+
             foreach ($request->request->get("recievers") as $key => $item) {
                 $mail = new Mail();
                 $mailData = $request->request->get("mail");
@@ -219,29 +209,45 @@ class MaillingController extends MainController
                 $mail->setDate(new \DateTime());
                 $mail->setMailBox($this->getThisUser()->getMailBox());
                 if($this->getThisUser()->getId() == $receiver->getId()) {
-                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getSender(), "ENVOYE"));
+                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getSender(), "BOITE_RECEPTION"));
                 } else {
-                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getReceiver(), "BOITE_RECEPTION"));
+                    $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getReceiver(), "ENVOYE"));
                 }
                 $mail->setIsRead(false);
 
-                /** @var UploadedFile $file */
-                foreach ($attachements as $f => $file) {
-                    $mail_attachement = new MailAttachements();
-                    $mail_attachement->setImageFile();
-                    $mail_attachement->setUpdatedAt(new \DateTime());
-                    $mail_attachement->setMail($mail);
-                    $mail_attachement->setImageName(uniqid("ATT_"));
-                    $em->persist($mail_attachement);
-                    //$mail->addAttachement($file);
-                    //$em->flush();
+                $finder = new Finder();
+                $finder->files()->in($this->getParameter("attachements_tmp_dir"));
+
+                /** @var SplFileInfo $file */
+                foreach ($finder as  $file) {
+                    if($file) {
+                        $newFile = uniqid("ATT_"). '.' . $file->getExtension();
+                        if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
+                        {
+                            $mail_attachement = new MailAttachements();
+                            // $mail_attachement->setImageFile();
+                            $mail_attachement->setUpdatedAt(new \DateTime());
+                            $mail_attachement->setMail($mail);
+                            $mail_attachement->setImageName($newFile);
+                            $em->persist($mail_attachement);
+                            //$em->flush();
+                        }
+                    }
                 }
                 $em->persist($mail);
-
+                $this->get("pfa_mailling.managers.mail_manager")->sendNormalMail($this->getThisUser(), $receiver, $mail);
                 //die;
             }
-
             $em->flush();
+
+            $finder = new Finder();
+            $finder->files()->in($this->getParameter("attachements_tmp_dir"));
+
+            /** @var SplFileInfo $f */
+            foreach ($finder as $f) {
+                unlink($f->getPathname());
+            }
+
             return new JsonResponse(["status" => true]);
         }
 
@@ -317,5 +323,136 @@ class MaillingController extends MainController
         }
         $em->flush();
         return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Mail $mail
+     * @return Response
+     * @Route("{mail}/view", name="view_mail")
+     */
+    public function viewMailAction(Request $request, $mail)
+    {
+        $em = $this->getEM();
+        $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($mail);
+
+        if(!$mail) {
+            //TODO 404
+            die("PFFFFF");
+        }
+
+        if(!in_array($this->getThisUser()->getId(), [$mail->getSender()->getId(), $mail->getReceiver()->getId()])) {
+            //TODO 404
+            die("PFFFFF 2");
+        }
+        if(!$mail->getIsRead()) {
+            $mail->setIsRead(true);
+            $em->persist($mail);
+            $em->flush();
+        }
+        $folders = $this->get("pfa_mailling.managers.mail_folder_manager")->getUserFolders($this->getThisUser());
+
+        return $this->render("PFAMaillingBundle:partials:view_mail.html.twig", ["mail" => $mail, "folders" => $folders]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("{mail}/in/{folder}", name="change_folder")
+     */
+    public function changeMailFolderAction(Request $request, Mail $mail, MailFolder $folder)
+    {
+        if($mail && $folder && ($folder->getOwner()->getId() == $this->getThisUser()->getId()) )
+        {
+            $em = $this->getEM();
+            $mail->setFolder($folder);
+            $em->persist($mail);
+            $em->flush();
+            return new JsonResponse(['status' => true]);
+        }
+        return new JsonResponse(['status' => false]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Mail $mail
+     * @return Response
+     * @Route("{mail}/answer", name="anwser_mail")
+     */
+    public function answerMailAction(Request $request, Mail $mail)
+    {
+        if(!$mail) {
+            // TODO 404
+            die("404");
+        }
+
+        $em = $this->getEM();
+        $form = $this->createForm(new MailType(['is_answer' => true]));
+        $form->handleRequest($request);
+
+        if($form->isValid()) {
+            $mailAnswer = new Mail();
+            $mailData = $request->request->get("mail");
+            $mailAnswer->setSubject("Réponse à " . $mail->getSubject());
+            $mailAnswer->setBody($mailData["body"]);
+            $mailAnswer->setReceiver(null);
+            $mailAnswer->setSender($this->getThisUser());
+            $mailAnswer->setParent($mail);
+            $mailAnswer->setDate(new \DateTime());
+            $mailAnswer->setMailBox($mail->getMailBox());
+            $mailAnswer->setFolder(null);
+            $mailAnswer->setIsRead(true);
+
+            $attachements = $form->get("attachements")->getData();
+            /** @var UploadedFile $file */
+            foreach ($attachements as $f => $file) {
+                if($file) {
+                    $fileName = md5(uniqid()).".".$file->guessExtension();
+                    $file->move($this->getParameter("attachements_tmp_dir"), $fileName);
+                }
+            }
+
+            $finder = new Finder();
+            $finder->files()->in($this->getParameter("attachements_tmp_dir"));
+
+            /** @var SplFileInfo $file */
+            foreach ($finder as  $file) {
+                if($file) {
+                    $newFile = uniqid("ATT_"). '.' . $file->getExtension();
+                    if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
+                    {
+                        $mail_attachement = new MailAttachements();
+                        // $mail_attachement->setImageFile();
+                        $mail_attachement->setUpdatedAt(new \DateTime());
+                        $mail_attachement->setMail($mailAnswer);
+                        $mail_attachement->setImageName($newFile);
+                        $em->persist($mail_attachement);
+                    }
+                }
+            }
+            $em->persist($mailAnswer);
+
+            $em->flush();
+
+            /** @var SplFileInfo $f */
+            foreach ($finder as $f) {
+                unlink($f->getPathname());
+            }
+
+            return new JsonResponse(['status' => true]);
+        }
+
+        return $this->render("PFAMaillingBundle:partials:add_mail_answer.html.twig", ["mail" => $mail, "form" => $form->createView()]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Mail $mail
+     * @return Response
+     * @Route("{mail}/test", name="mail_test")
+     */
+    public function testAction(Request $request, Mail $mail) {
+        $this->get("pfa_mailling.managers.mail_manager")->sendNormalMail($this->getThisUser(), $this->getThisUser(), $mail);
+        return $this->render("PFAMaillingBundle:Default:test.html.twig");
     }
 }

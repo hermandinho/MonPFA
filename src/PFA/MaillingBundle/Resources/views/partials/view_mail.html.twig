@@ -1,0 +1,106 @@
+{% extends "PFAMaillingBundle::layout.html.twig" %}
+{% import "@PFAMain/macros/functions.html.twig" as macro %}
+{% block title %}
+    {{ mail.subject }}
+{% endblock %}
+
+{% block page_title %}
+    <h5 class="page-header center">{{ mail.subject }}</h5>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col m3 s3 offset-m1">
+            <span class="left"><img src="{{ vich_uploader_asset(mail.sender, "imageFile") }}"  alt="{{ mail.sender.nom }}" class="thumbnail" width="100" height="100"></span>
+            <span>
+                <strong>{{ mail.sender.nom ~ " " ~ mail.sender.prenom }}</strong> <br>
+                <small>{{ mail.sender.email }}</small> <br>
+                <small>le {{ mail.date|date("d/m/Y") ~ " à " ~ mail.date|date("H:i") }}</small> <br>
+                  <span class="chip" id="folder_name">
+                    {{ mail.folder.name }}
+                  </span>
+            </span>
+        </div>
+
+        <div class="col m6 s12 pull-right block_actions">
+            <a href="{{ path("mailbox_home") }}" class="btn mail_block_action block_mark_read tooltipped" data-position="bottom" data-delay="5" data-tooltip="Retour."><i class="material-icons">skip_previous</i></a>
+
+            <a href="javascript:;" class="btn mail_block_action block_delete tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer"> <i class="material-icons">delete</i></a>
+
+            <div class="btn-group">
+                <a class="btn dropdown-toggle btn-select tooltipped folder-select" data-toggle="dropdown" data-position="bottom" data-delay="5" data-tooltip="Dossier" href="javascript:;">{{ mail.folder.name }} <span class="caret"></span></a>
+                <ul class="dropdown-menu folder-select-list">
+                    {% for folder in folders %}
+                        {% if folder.code == mail.folder.code %}
+                            <li class="active" data-code="{{ folder.code }}"><a data-id="{{ folder.id }}"  href="javascript:;">{{ folder.name }}</a></li>
+                        {% else %}
+                            <li data-code="{{ folder.code }}"><a data-id="{{ folder.id }}" href="javascript:;">{{ folder.name }}</a></li>
+                        {% endif %}
+
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col m10 s12 offset-m1 well_ mail-viewer">
+            {{ mail.body|raw }}
+            {{ macro.displayMailAttachements(mail) }}
+            <hr>
+            <div class="row" id="mail-anwsers">
+                <ul class="collapsible" data-collapsible="accordion">
+                    {% for answer in mail.answers %}
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons"></i>
+                                <strong>
+                                    {{ answer.subject }} - Par
+                                    {% if answer.sender.id == app.user.id %}
+                                       <span style="font-weight: bolder">moi</span>
+                                    {% else %}
+                                        <span style="font-weight: bolder"> {{ answer.sender.nom  }}</span>
+                                    {% endif %}
+                                </strong>
+                                <small class="pull-right">
+                                    Le {{ answer.date|date("d/m/Y") ~ " à " ~ answer.date|date("H:i") }}
+                                </small>
+                            </div>
+                            <div class="collapsible-body">
+                                {{ answer.body|raw }}
+                                {{ macro.displayMailAttachements(answer) }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="col m10 s12 offset-m1 well_ mail-answer">
+            {{ render(controller('PFAMaillingBundle:Mailling:answerMail', {"mail": mail.id})) }}
+        </div>
+
+
+
+    </div>
+{% endblock %}
+
+
+{% block additional_javascripts %}
+    <script>
+        var changeFolderPath = "{{ path("change_folder", {"mail": mail.id, "folder": "XXX" }) }}";
+        var sendAnswer = "{{ path("anwser_mail", {"mail": mail.id}) }}";
+
+        $(document).ready(function () {
+            //$("#mail_table").DataTable();
+            $('select').material_select();
+
+            $('.modal-trigger').leanModal();
+
+        });
+    </script>
+
+    {% javascripts
+    "@PFAMaillingBundle/Resources/public/js/maillView.js"
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
