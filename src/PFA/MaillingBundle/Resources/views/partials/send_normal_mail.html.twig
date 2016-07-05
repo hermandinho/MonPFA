@@ -1,1 +1,9 @@
-My content here
+{% extends "PFAMaillingBundle::mail_layout.html.twig" %}
+
+{% block title %}
+    {{ mail.subject }}
+{% endblock %}
+
+{% block content %}
+    {{ mail.body|raw }}
+{% endblock %}

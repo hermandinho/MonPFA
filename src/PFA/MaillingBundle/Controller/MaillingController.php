@@ -444,4 +444,15 @@ class MaillingController extends MainController
 
         return $this->render("PFAMaillingBundle:partials:add_mail_answer.html.twig", ["mail" => $mail, "form" => $form->createView()]);
     }
+
+    /**
+     * @param Request $request
+     * @param Mail $mail
+     * @return Response
+     * @Route("{mail}/test", name="mail_test")
+     */
+    public function testAction(Request $request, Mail $mail) {
+        $this->get("pfa_mailling.managers.mail_manager")->sendNormalMail($this->getThisUser(), $this->getThisUser(), $mail);
+        return $this->render("PFAMaillingBundle:Default:test.html.twig");
+    }
 }

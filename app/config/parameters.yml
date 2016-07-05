@@ -6,6 +6,8 @@ parameters:
     database_user: root
     database_password: null
     mailer_transport: gmail
+    mailer_encryption: ssl
+    mailer_auth_mode: login
     mailer_host: smtp.gmail.com
     mailer_user: hdemsongtsamo@gmail.com
     mailer_password: herman654321
@@ -14,3 +16,6 @@ parameters:
     websocket_port: 1337
     attachements_tmp_dir: '%kernel.root_dir%/../web/uploads/tmp'
     attachements_dir: '%kernel.root_dir%/../web/attachements'
+
+
+    #https://www.google.com/settings/security/lesssecureapps => turn off this to send mails from localhost
