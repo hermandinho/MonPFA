@@ -59,11 +59,14 @@
                                     {% elseif extension == "xlsx" %}
                                         {% set src = asset("bundles/pfacore/images/excel.png") %}
                                         {% set title = "Fichier MS Excel"  %}
+                                    {% elseif extension == "txt" %}
+                                        {% set src = asset("bundles/pfacore/images/txt.png") %}
+                                        {% set title = "Fichier Texte"  %}
                                     {% elseif extension in ["rar", "zip"] %}
                                         {% set src = asset("bundles/pfacore/images/rar.png") %}
                                         {% set title = "Fichier Compréssé"  %}
                                     {% else%}
-                                        {% set src = asset("bundles/pfacore/images/rar.png") %} <!-- DEFAULT -->
+                                        {% set src = asset("bundles/pfacore/images/ras.png") %} <!-- DEFAULT -->
                                         {% set title = "Fichier inconue"  %}
                                     {% endif %}
                                     <img src="{{ src }}" alt="Type" class="image circle_ tooltipped" width="45" data-position="bottom" data-delay="50" data-tooltip="{{ title }}">
@@ -95,11 +98,14 @@
                                                             {% elseif v_extension == "xlsx" %}
                                                                 {% set v_src = asset("bundles/pfacore/images/excel.png") %}
                                                                 {% set v_title = "Fichier MS Excel"  %}
+                                                            {% elseif v_extension == "txt" %}
+                                                                {% set v_src = asset("bundles/pfacore/images/txt.png") %}
+                                                                {% set v_title = "Fichier Texte"  %}
                                                             {% elseif v_extension in ["rar", "zip"] %}
                                                                 {% set v_src = asset("bundles/pfacore/images/rar.png") %}
                                                                 {% set v_title = "Fichier Compréssé"  %}
                                                             {% else%}
-                                                                {% set v_src = asset("bundles/pfacore/images/rar.png") %} <!-- DEFAULT -->
+                                                                {% set v_src = asset("bundles/pfacore/images/ras.png") %} <!-- DEFAULT -->
                                                                 {% set v_title = "Fichier inconue"  %}
                                                             {% endif %}
 
