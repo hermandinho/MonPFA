@@ -34,7 +34,7 @@ class MaillingController extends MainController
 
         if(isset($folders[0])) {
             /** @var MailFolder $reception */
-            $reception = $folders[0];
+            $reception = $this->get("pfa_core.managers.user_manager")->getFolderByCode($this->getThisUser(), "BOITE_RECEPTION");
             $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['receiver'=> $this->getThisUser()->getId(), "folder" => $reception->getId()]);
         }
         return $this->render('PFAMaillingBundle:Default:index2.html.twig',["folders" => $folders, "emails" => $recievedMails]);
@@ -49,9 +49,13 @@ class MaillingController extends MainController
     {
         $em = $this->getEM();
 
-        $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code]);
-        $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['mailBox'=> $this->getThisUser()->getMailBox(), "folder" => $folder->getId()]);
-
+        if($code == "ENVOYE") {
+            $data = $this->get("pfa_mailling.managers.mail_manager")->loadSentMails($this->getThisUser());
+        } else {
+            $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code,"owner" => $this->getThisUser()]);
+            $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(["folder" => $folder->getId()]);
+            //$data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['mailBox'=> $this->getThisUser()->getMailBox(), "folder" => $folder->getId()]);
+        }
         return $this->render("PFAMaillingBundle:partials:mail_list.html.twig", ["data" => $data]);
     }
 
@@ -188,16 +192,17 @@ class MaillingController extends MainController
         $form->handleRequest($request);
 
         if($form->isValid()) {
-
+            $tmpFiles = [];
+            $attachementsFromTmp = [];
             $attachements = $form->get("attachements")->getData();
             /** @var UploadedFile $file */
             foreach ($attachements as $f => $file) {
                 if($file) {
                     $fileName = md5(uniqid()).".".$file->guessExtension();
+                    $attachementsFromTmp[] = $fileName;
                     $file->move($this->getParameter("attachements_tmp_dir"), $fileName);
                 }
             }
-
             foreach ($request->request->get("recievers") as $key => $item) {
                 $mail = new Mail();
                 $mailData = $request->request->get("mail");
@@ -208,11 +213,12 @@ class MaillingController extends MainController
                 $mail->setSender($this->getThisUser());
                 $mail->setDate(new \DateTime());
                 $mail->setMailBox($this->getThisUser()->getMailBox());
-                if($this->getThisUser()->getId() == $receiver->getId()) {
+                $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getReceiver(), "BOITE_RECEPTION"));
+                /*if($this->getThisUser()->getId() == $receiver->getId()) {
                     $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getSender(), "BOITE_RECEPTION"));
                 } else {
                     $mail->setFolder($this->get("pfa_core.managers.user_manager")->getFolderByCode($mail->getReceiver(), "ENVOYE"));
-                }
+                } */
                 $mail->setIsRead(false);
 
                 $finder = new Finder();
@@ -221,16 +227,20 @@ class MaillingController extends MainController
                 /** @var SplFileInfo $file */
                 foreach ($finder as  $file) {
                     if($file) {
-                        $newFile = uniqid("ATT_"). '.' . $file->getExtension();
-                        if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
-                        {
-                            $mail_attachement = new MailAttachements();
-                            // $mail_attachement->setImageFile();
-                            $mail_attachement->setUpdatedAt(new \DateTime());
-                            $mail_attachement->setMail($mail);
-                            $mail_attachement->setImageName($newFile);
-                            $em->persist($mail_attachement);
-                            //$em->flush();
+                        if(in_array($file->getFilename(), $attachementsFromTmp)) {
+                            $newFile = uniqid("ATT_"). '.' . $file->getExtension();
+                            if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
+                            {
+                                $mail_attachement = new MailAttachements();
+                                // $mail_attachement->setImageFile();
+                                $mail_attachement->setUpdatedAt(new \DateTime());
+                                $mail_attachement->setMail($mail);
+                                $mail_attachement->setImageName($newFile);
+                                $em->persist($mail_attachement);
+                                if(!in_array($file->getPathname(), $tmpFiles)) {
+                                    $tmpFiles[] = $file->getPathname();
+                                }
+                            }
                         }
                     }
                 }
@@ -240,12 +250,8 @@ class MaillingController extends MainController
             }
             $em->flush();
 
-            $finder = new Finder();
-            $finder->files()->in($this->getParameter("attachements_tmp_dir"));
-
-            /** @var SplFileInfo $f */
-            foreach ($finder as $f) {
-                unlink($f->getPathname());
+            foreach ($tmpFiles as $f) {
+                unlink($f);
             }
 
             return new JsonResponse(["status" => true]);
@@ -303,26 +309,53 @@ class MaillingController extends MainController
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
-     * @Route("/delete_mail", name="delete_email")
+     * @Route("/mail/delete", name="block_delete_email")
      */
-    public function deleteMailAction(Request $request)
+    public function blockDeleteMailAction(Request $request)
     {
         $em = $this->getEM();
         $ids = $request->request->get("ids");
-        foreach ($ids as $key => $id) {
-            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
+        if(is_array($ids)) {
+            foreach ($ids as $key => $id) {
+                $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
 
-            if(!$mail) {
-                throw new \Exception("Ce mail n'existe pas.");
+                if(!$mail) {
+                    throw new \Exception("Ce mail n'existe pas.");
+                }
+
+                $em = $this->getEM();
+
+                $mail->setIsRead(true);
+                $em->remove($mail);
             }
-
-            $em = $this->getEM();
-
-            $mail->setIsRead(true);
+        } else {
+            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($ids);
             $em->remove($mail);
         }
         $em->flush();
         return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Mail $mail
+     * @return JsonResponse
+     * @Route("/{mail}/delete", name="delete_email")
+     */
+    public function deleteMailAction(Request $request, Mail $mail)
+    {
+        $em = $this->getEM();
+        /** @var Mail $answer */
+        foreach ($mail->getAnswers() as $answer) {
+            foreach ($answer->getAttachements() as $attachement) {
+                $em->remove($attachement);
+            }
+            $em->remove($answer);
+        }
+        $em->remove($mail);
+        $em->flush();
+
+        return $this->redirectToRoute("mailbox_home");
     }
 
     /**
@@ -336,14 +369,18 @@ class MaillingController extends MainController
         $em = $this->getEM();
         $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($mail);
 
+        if($mail->getParent()) {
+            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($mail->getParent());
+        }
+
         if(!$mail) {
             //TODO 404
-            die("PFFFFF");
+            die("Contenue Indisponible");
         }
 
         if(!in_array($this->getThisUser()->getId(), [$mail->getSender()->getId(), $mail->getReceiver()->getId()])) {
             //TODO 404
-            die("PFFFFF 2");
+            die("Contenue Indisponible");
         }
         if(!$mail->getIsRead()) {
             $mail->setIsRead(true);
@@ -383,7 +420,7 @@ class MaillingController extends MainController
     {
         if(!$mail) {
             // TODO 404
-            die("404");
+            die("Contenue Indisponible");
         }
 
         $em = $this->getEM();
@@ -391,6 +428,8 @@ class MaillingController extends MainController
         $form->handleRequest($request);
 
         if($form->isValid()) {
+            $tmpFiles = [];
+            $attachementsFromTmp = [];
             $mailAnswer = new Mail();
             $mailData = $request->request->get("mail");
             $mailAnswer->setSubject("Réponse à " . $mail->getSubject());
@@ -408,6 +447,7 @@ class MaillingController extends MainController
             foreach ($attachements as $f => $file) {
                 if($file) {
                     $fileName = md5(uniqid()).".".$file->guessExtension();
+                    $attachementsFromTmp[] = $fileName;
                     $file->move($this->getParameter("attachements_tmp_dir"), $fileName);
                 }
             }
@@ -418,25 +458,30 @@ class MaillingController extends MainController
             /** @var SplFileInfo $file */
             foreach ($finder as  $file) {
                 if($file) {
-                    $newFile = uniqid("ATT_"). '.' . $file->getExtension();
-                    if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
-                    {
-                        $mail_attachement = new MailAttachements();
-                        // $mail_attachement->setImageFile();
-                        $mail_attachement->setUpdatedAt(new \DateTime());
-                        $mail_attachement->setMail($mailAnswer);
-                        $mail_attachement->setImageName($newFile);
-                        $em->persist($mail_attachement);
+                    if(in_array($file->getFilename(), $attachementsFromTmp)) {
+                        $newFile = uniqid("ATT_"). '.' . $file->getExtension();
+                        if (copy($file->getPathname(), $this->getParameter("attachements_dir")."/". $newFile))
+                        {
+                            $mail_attachement = new MailAttachements();
+                            // $mail_attachement->setImageFile();
+                            $mail_attachement->setUpdatedAt(new \DateTime());
+                            $mail_attachement->setMail($mailAnswer);
+                            $mail_attachement->setImageName($newFile);
+                            $em->persist($mail_attachement);
+                            if(!in_array($file->getPathname(), $tmpFiles)) {
+                                $tmpFiles[] = $file->getPathname();
+                            }
+                        }
                     }
+
                 }
             }
             $em->persist($mailAnswer);
 
             $em->flush();
 
-            /** @var SplFileInfo $f */
-            foreach ($finder as $f) {
-                unlink($f->getPathname());
+            foreach ($tmpFiles as $f) {
+                unlink($f);
             }
 
             return new JsonResponse(['status' => true]);

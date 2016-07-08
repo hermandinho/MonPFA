@@ -92,4 +92,8 @@ class MailManager
             )
         );
     }
+
+    public function loadSentMails(User $owner) {
+        return $this->mailRepo->findBy(['sender' => $owner->getId()]);
+    }
 }

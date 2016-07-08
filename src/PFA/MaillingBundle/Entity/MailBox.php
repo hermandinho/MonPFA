@@ -33,7 +33,7 @@ class MailBox
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="mailBox")
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="mailBox", cascade={"persist","remove", "merge"}, orphanRemoval=true)
      */
     private $emails;
 

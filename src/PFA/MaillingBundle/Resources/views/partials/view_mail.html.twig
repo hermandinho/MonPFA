@@ -25,7 +25,7 @@
         <div class="col m6 s12 pull-right block_actions">
             <a href="{{ path("mailbox_home") }}" class="btn mail_block_action block_mark_read tooltipped" data-position="bottom" data-delay="5" data-tooltip="Retour."><i class="material-icons">skip_previous</i></a>
 
-            <a href="javascript:;" class="btn mail_block_action block_delete tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer"> <i class="material-icons">delete</i></a>
+            <a href="{{ path("delete_email", {"mail": mail.id }) }}" class="btn mail_block_action block_delete tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer"> <i class="material-icons">delete</i></a>
 
             <div class="btn-group">
                 <a class="btn dropdown-toggle btn-select tooltipped folder-select" data-toggle="dropdown" data-position="bottom" data-delay="5" data-tooltip="Dossier" href="javascript:;">{{ mail.folder.name }} <span class="caret"></span></a>

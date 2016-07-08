@@ -34,4 +34,9 @@ tr.unread {
     background-color: honeydew !important;
     font-weight: bold !important;
     font-style: italic !important;
+    color: black;
+}
+
+tr.read {
+    color: #000;
 }

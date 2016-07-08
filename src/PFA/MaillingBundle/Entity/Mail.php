@@ -77,13 +77,13 @@ class Mail
 
     /**
      * @var MailBox
-     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailBox", inversedBy="emails")
      */
     private $mailBox;
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAttachements", mappedBy="mail", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAttachements", mappedBy="mail", orphanRemoval=true, cascade={"persist","remove"})
      * @Groups("mail_box")
      */
     private $attachements;
@@ -98,13 +98,13 @@ class Mail
     /**
      * @var Mail
      *
-     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", inversedBy="answers")
      */
     private $parent = null;
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="parent", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $answers;
 

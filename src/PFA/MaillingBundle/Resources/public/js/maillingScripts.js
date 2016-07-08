@@ -174,8 +174,7 @@ $(document).ready(function () {
             resetBlockActions(false);
         }
     });
-
-    $(".select-email-row").click(function (e) {
+    $("body").on("click", ".select-email-row", function (e) {
         if($(this).prop("checked")) {
             $(this).parent().parent().addClass("selected");
         } else {
