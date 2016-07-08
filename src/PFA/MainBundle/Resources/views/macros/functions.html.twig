@@ -64,7 +64,7 @@
             {% elseif extension in ["jpg","png","jped","gif"] %}
                 {% set src = asset("bundles/pfacore/images/jpg.png") %}
                 {% set title = "Image"  %}
-            {% elseif extension == "doc" or  extension == "docx" %}
+            {% elseif extension  in ["rtf","doc","docx"] %}
                 {% set src = asset("bundles/pfacore/images/word.png") %}
                 {% set title = "Ficher MS Word"  %}
             {% elseif extension == "xlsx" %}

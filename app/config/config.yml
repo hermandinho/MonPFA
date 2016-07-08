@@ -137,7 +137,23 @@ ivory_ck_editor:
 easy_admin:
     site_name: "EPI PFA 2016"
     entities:
-          Utilisateurs: PFA\MainBundle\Entity\User
+          Utilisateurs:
+              class: PFA\MainBundle\Entity\User
+              list:
+                fields:
+                  - { property: "nom"  }
+                  - { property: "prenom"  }
+                  - { property: "email"  }
+                  - { property: "enabled", label: "Activé?"  }
+                  - { property: "imageName", type: "image", base_path: '%profile_image_dir%', label: "Image" }
+              edit:
+                fields:
+                  - { property: "nom"  }
+                  - { property: "prenom"  }
+                  - { property: "email"  }
+                  - { property: "enabled", label: "Activé?"  }
+                  - { property: "imageName", base_path: '%profile_image_dir%', label: "Image" }
+
           Messagerie: PFA\MaillingBundle\Entity\Mail
           Forum: PFA\CoreBundle\Entity\Forum
           Projets: PFA\CoreBundle\Entity\Project

@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use PFA\MaillingBundle\Entity\Mail;
 use PFA\MainBundle\Entity\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
@@ -71,6 +72,12 @@ class MailManager
                 ->setTo($to->getEmail())
                 ->setBody($body)
                 ->setContentType("text/html");
+
+        /** @var UploadedFile $attachement */
+        foreach ($mail->getAttachements() as $attachement) {
+            $message->attach(\Swift_Attachment::fromPath($attachement->getPathname()));
+        }
+
         $this->mailer->send($message);
     }
 
@@ -94,6 +101,6 @@ class MailManager
     }
 
     public function loadSentMails(User $owner) {
-        return $this->mailRepo->findBy(['sender' => $owner->getId()]);
+        return $this->mailRepo->findBy(['sender' => $owner->getId()],["date" => "DESC"]);
     }
 }

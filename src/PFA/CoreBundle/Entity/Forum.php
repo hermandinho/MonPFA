@@ -119,4 +119,11 @@ class Forum
         });
         return $x;
     }
+
+    function __toString()
+    {
+        return "Forum #".$this->getId();
+    }
+
+
 }

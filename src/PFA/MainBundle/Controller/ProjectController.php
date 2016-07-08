@@ -45,6 +45,17 @@ class ProjectController extends MainController
 
     /**
      * @param Request $request
+     * @param Project $project
+     * @return Response
+     * @Route("/{project}/members", name="project_view_members")
+     */
+    public function viewMembersAction(Request $request, Project $project)
+    {
+        return $this->render("PFAMainBundle:Projects/partials:member-list-modal.html.twig", ['project' => $project]);
+    }
+
+    /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/project/add", name="project_add")
      */
@@ -55,6 +66,7 @@ class ProjectController extends MainController
         $form->handleRequest($request);
         //die(dump($request->query->all(), $form->isSubmitted()));
         if($form->isSubmitted() && $form->isValid()){
+            /** @var Project $project */
             $project = $form->getData();
             $em->persist($project);
 

@@ -28,7 +28,7 @@ $(document).ready(function () {
                             <div class='file-field input-field'>
                                 <div class='btn'>
                                     <span>Sélectionner un Fichier</span>
-                                    <input type='file' name='mail[attachements][]'>
+                                    <input type='file' name='mail_answer[attachements][]'>
                                 </div>
                                 <div class='file-path-wrapper'>
                                     <input class='file-path validate' type='text'>
@@ -46,9 +46,9 @@ $(document).ready(function () {
 
 
         if($(".attachement_row").length > 0) {
-            $("#mail_attachements").attr("name","mail[attachements][]");
+            $("#mail_answer_attachements").attr("name","mail_answer[attachements][]");
         } else {
-            $("#mail_attachements").attr("name", "mail[attachements]");
+            $("#mail_answer_attachements").attr("name", "mail_answer[attachements]");
         }
     });
 
@@ -56,13 +56,13 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).parent().parent().remove();
         if($(".attachement_row").length > 0) {
-            $("#mail_attachements").attr("name","mail[attachements][]");
+            $("#mail_answer_attachements").attr("name","mail_answer[attachements][]");
         } else {
-            $("#mail_attachements").attr("name", "mail[attachements]");
+            $("#mail_answer_attachements").attr("name", "mail_answer[attachements]");
         }
     });
 
-    $("#mail_attachements").attr('name', "mail[attachements][]");
+    $("#mail_answer_attachements").attr('name', "mail_answer[attachements][]");
 
     $(".answer_mail_form").submit(function (e) {
         e.preventDefault();

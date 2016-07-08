@@ -110,4 +110,9 @@ class Calender
     {
         return $this->events;
     }
+
+    function __toString()
+    {
+        return "Calendar #".$this->getId();
+    }
 }

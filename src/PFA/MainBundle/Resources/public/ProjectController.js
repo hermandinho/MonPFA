@@ -14,6 +14,18 @@ $(document).ready(function () {
         )
    });
 
+    $(".members-list").click(function (e) {
+        $.get(
+            "" + $(this).data('id') + "/members",
+            {},
+            function (data) {
+                //console.log(form);
+                $('#membersList').find(".modal-content-here").html(data);
+                $("#membersList").openModal();
+            }
+        )
+   });
+
     $("body").on("submit","form[name='project']",function (e) {
         e.preventDefault();
         var laddaInstance = Ladda.create(document.querySelector('#btn-save-project'));

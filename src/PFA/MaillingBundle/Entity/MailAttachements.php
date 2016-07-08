@@ -25,10 +25,16 @@ class MailAttachements
     private $id;
 
     /**
-     * @var 
+     * @var Mail
      * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", inversedBy="attachements")
      */
     private $mail;
+
+    /**
+     * @var Mail
+     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\MailAnswer", inversedBy="attachements")
+     */
+    private $mailAnswer;
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -152,5 +158,34 @@ class MailAttachements
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set mailAnswer
+     *
+     * @param \PFA\MaillingBundle\Entity\MailAnswer $mailAnswer
+     *
+     * @return MailAttachements
+     */
+    public function setMailAnswer(\PFA\MaillingBundle\Entity\MailAnswer $mailAnswer = null)
+    {
+        $this->mailAnswer = $mailAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Get mailAnswer
+     *
+     * @return \PFA\MaillingBundle\Entity\MailAnswer
+     */
+    public function getMailAnswer()
+    {
+        return $this->mailAnswer;
+    }
+
+    function __toString()
+    {
+        return "Attachment #".$this->getId();
     }
 }

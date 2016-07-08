@@ -112,4 +112,9 @@ class MailBox
     {
         return $this->emails;
     }
+
+    function __toString()
+    {
+        return "MailBox #".$this->getId();
+    }
 }

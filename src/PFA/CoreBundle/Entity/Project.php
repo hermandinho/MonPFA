@@ -65,7 +65,7 @@ class Project
 
 
     /**
-     * @var ArrayCollection
+     * @var ShareZone
      *
      * @ORM\OneToOne(targetEntity="PFA\CoreBundle\Entity\ShareZone", inversedBy="project", orphanRemoval=true, cascade={"persist","remove"})
      */
@@ -110,7 +110,7 @@ class Project
     public function __construct()
     {
         $this->members = new ArrayCollection();
-        $this->ressources = new ArrayCollection();
+        //$this->ressources = new ArrayCollection();
     }
 
     /**
@@ -198,11 +198,11 @@ class Project
     /**
      * Set ressources
      *
-     * @param \PFA\CoreBundle\Entity\ShareZone $ressources
+     * @param ShareZone $ressources
      *
      * @return Project
      */
-    public function setRessources(\PFA\CoreBundle\Entity\ShareZone $ressources = null)
+    public function setRessources(ShareZone $ressources = null)
     {
         $this->ressources = $ressources;
 
@@ -212,7 +212,7 @@ class Project
     /**
      * Get ressources
      *
-     * @return \PFA\CoreBundle\Entity\ShareZone
+     * @return ShareZone
      */
     public function getRessources()
     {
@@ -222,11 +222,11 @@ class Project
     /**
      * Set forum
      *
-     * @param \PFA\CoreBundle\Entity\Forum $forum
+     * @param Forum $forum
      *
      * @return Project
      */
-    public function setForum(\PFA\CoreBundle\Entity\Forum $forum = null)
+    public function setForum(Forum $forum = null)
     {
         $this->forum = $forum;
 
@@ -236,7 +236,7 @@ class Project
     /**
      * Get forum
      *
-     * @return \PFA\CoreBundle\Entity\Forum
+     * @return Forum
      */
     public function getForum()
     {
@@ -246,11 +246,11 @@ class Project
     /**
      * Set chatRoom
      *
-     * @param \PFA\MainBundle\Entity\ChatRoom $chatRoom
+     * @param ChatRoom $chatRoom
      *
      * @return Project
      */
-    public function setChatRoom(\PFA\MainBundle\Entity\ChatRoom $chatRoom = null)
+    public function setChatRoom(ChatRoom $chatRoom = null)
     {
         $this->chatRoom = $chatRoom;
 
@@ -260,7 +260,7 @@ class Project
     /**
      * Get chatRoom
      *
-     * @return \PFA\MainBundle\Entity\ChatRoom
+     * @return ChatRoom
      */
     public function getChatRoom()
     {
@@ -270,11 +270,11 @@ class Project
     /**
      * Set owner
      *
-     * @param \PFA\MainBundle\Entity\User $owner
+     * @param User $owner
      *
      * @return Project
      */
-    public function setOwner(\PFA\MainBundle\Entity\User $owner = null)
+    public function setOwner(User $owner = null)
     {
         $this->owner = $owner;
 
@@ -284,7 +284,7 @@ class Project
     /**
      * Get owner
      *
-     * @return \PFA\MainBundle\Entity\User
+     * @return User
      */
     public function getOwner()
     {
@@ -294,11 +294,11 @@ class Project
     /**
      * Set calender
      *
-     * @param \PFA\MainBundle\Entity\Calender $calender
+     * @param Calender $calender
      *
      * @return Project
      */
-    public function setCalender(\PFA\MainBundle\Entity\Calender $calender = null)
+    public function setCalender(Calender $calender = null)
     {
         $this->calender = $calender;
 
@@ -308,7 +308,7 @@ class Project
     /**
      * Get calender
      *
-     * @return \PFA\MainBundle\Entity\Calender
+     * @return Calender
      */
     public function getCalender()
     {
@@ -366,11 +366,11 @@ class Project
     /**
      * Add member
      *
-     * @param \PFA\MainBundle\Entity\User $member
+     * @param User $member
      *
      * @return Project
      */
-    public function addMember(\PFA\MainBundle\Entity\User $member)
+    public function addMember(User $member)
     {
         $this->members[] = $member;
 
@@ -380,9 +380,9 @@ class Project
     /**
      * Remove member
      *
-     * @param \PFA\MainBundle\Entity\User $member
+     * @param User $member
      */
-    public function removeMember(\PFA\MainBundle\Entity\User $member)
+    public function removeMember(User $member)
     {
         $this->members->removeElement($member);
     }
@@ -395,5 +395,10 @@ class Project
     public function getMembers()
     {
         return $this->members;
+    }
+
+    function __toString()
+    {
+        return "Project #".$this->getId();
     }
 }

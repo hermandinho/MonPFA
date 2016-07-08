@@ -16,6 +16,7 @@ parameters:
     websocket_port: 1337
     attachements_tmp_dir: '%kernel.root_dir%/../web/uploads/tmp'
     attachements_dir: '%kernel.root_dir%/../web/attachements'
+    profile_image_dir: '/MonPFA/web/images/profile'
 
 
     #https://www.google.com/settings/security/lesssecureapps => turn off this to send mails from localhost

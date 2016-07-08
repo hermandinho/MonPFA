@@ -83,7 +83,7 @@ class Mail
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAttachements", mappedBy="mail", orphanRemoval=true, cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAttachements", mappedBy="mail")
      * @Groups("mail_box")
      */
     private $attachements;
@@ -96,15 +96,8 @@ class Mail
     private $folder;
 
     /**
-     * @var Mail
-     *
-     * @ORM\ManyToOne(targetEntity="PFA\MaillingBundle\Entity\Mail", inversedBy="answers")
-     */
-    private $parent = null;
-
-    /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\Mail", mappedBy="parent", cascade={"persist","remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PFA\MaillingBundle\Entity\MailAnswer", mappedBy="parent")
      */
     private $answers;
 
@@ -318,30 +311,6 @@ class Mail
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * Set parent
-     *
-     * @param \PFA\MaillingBundle\Entity\Mail $parent
-     *
-     * @return Mail
-     */
-    public function setParent(\PFA\MaillingBundle\Entity\Mail $parent = null)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return \PFA\MaillingBundle\Entity\Mail
-     */
-    public function getParent()
-    {
-        return $this->parent;
     }
 
     /**

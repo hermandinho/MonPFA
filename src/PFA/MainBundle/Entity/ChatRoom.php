@@ -90,4 +90,9 @@ class ChatRoom
     {
         return $this->chatRoomMessages;
     }
+
+    function __toString()
+    {
+        return "Room #".$this->getId();
+    }
 }

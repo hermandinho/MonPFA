@@ -268,4 +268,9 @@ class ForumInteractions
     {
         return $this->answers;
     }
+
+    function __toString()
+    {
+        return "Intération #".$this->getId(). "(" . $this->getSubject() . ")";
+    }
 }

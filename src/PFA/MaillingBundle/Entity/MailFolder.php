@@ -186,4 +186,9 @@ class MailFolder
     {
         return $this->code;
     }
+
+    function __toString()
+    {
+        return "Folder #".$this->getId();
+    }
 }

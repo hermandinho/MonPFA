@@ -43,7 +43,7 @@
                             </p>
                         </div>
                         <div class="card-action">
-                            <a href="javascript:;" class="left" title="Open Modal With member names :)">{{ project.members|length }} membres</a>
+                            <a href="javascript:;" class="left members-list tooltipped" data-position="bottom" data-delay="5" data-tooltip="Cliquez pour afficher la liste." data-id="{{ project.id }}" title="">{{ project.members|length }} membre{% if project.members|length > 1 %}s {% endif %}</a>
                             <a href="{{ path("project_space_home",{"id": project.id}) }}" class="right">Voir plus ...</a>
                         </div>
                     </div>
@@ -79,6 +79,15 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="membersList" class="modal" style="width: 90% !important;margin-top: 1%">
+        <div class="modal-content-here">
+        </div>
+        <div class="modal-footer">
+            <!--<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Disagree</a> -->
+            <a href="javascript:;" class="modal-action modal-close waves-effect waves-green btn-flat" i>Fermer</a>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additional_javascripts %}

@@ -1,0 +1,20 @@
+<div class="modal-content">
+    <h4>Membres du projet: {{ project.name }}</h4>
+    <hr>
+    <div class="row">
+        {% for member in project.members %}
+            <div class="col m2 s3">
+                <img alt="IMG" class="circle thumbnail" width="100" src="{{ vich_uploader_asset(member.memeber, "imageFile") }}"> <br>
+                {{ member.memeber.nom ~ " " ~ member.memeber.prenom }} <br>
+                <small>({{ member.memeber.email }})</small>  <br>
+
+                {% if project.owner.id == app.user.id %}
+                    {% if project.owner.id != member.memeber.id %}
+                        <a href="javascript:;" id="remove-member" data-id="{{ member.memeber.id }}"><i class="material-icons tooltipped" data-position="bottom" data-delay="5" data-tooltip="Retirer du projet">delete</i></a>
+                    {% endif %}
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    </div>
+</div>

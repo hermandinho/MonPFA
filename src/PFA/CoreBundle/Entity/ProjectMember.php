@@ -123,4 +123,9 @@ class ProjectMember
     {
         return $this->memberType;
     }
+
+    function __toString()
+    {
+        return $this->memeber->getNom() . " ". $this->memeber->getPrenom();
+    }
 }
