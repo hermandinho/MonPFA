@@ -271,11 +271,14 @@ class MaillingController extends MainController
      */
     public function getJsonUserListAction(Request $request)
     {
-        $users = $this->get("pfa_core.managers.user_manager")->getUserList();
-        //$users = $this->getEM()->getRepository("PFAMainBundle:User")->findBy([]);
+        if($request->query->get("q")) {
+            $users = $this->get("pfa_core.managers.user_manager")->searchUser($request->query->get("q"));
+        } else {
+            $users = $this->get("pfa_core.managers.user_manager")->getUserList();
+        }
+
         $serializerContext = SerializationContext::create()->setGroups(array('autocomplete'));
         $serializedData = $this->getSerializer()->serialize($users, "json",  $serializerContext);
-
         $response = new Response();
         $response->setContent(($serializedData));
         $response->headers->set('Content-Type', 'application/json');

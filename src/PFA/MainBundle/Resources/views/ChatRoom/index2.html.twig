@@ -81,7 +81,12 @@
             </div>
 
             <div class="right">
-                <div class="top"><span>Discution Avec: <span class="name">Group</span></span></div>
+                <div class="top">
+                    <span>Discution Avec: <span class="name">Group</span></span>
+                    {% if project.status == "ARCHIVED"%}
+                        <span class="alert alert-danger">Discutions impossible car le Projet est archivé.</span>
+                    {% endif %}
+                </div>
 
                 <div class="chat" data-chat="person0">
                     {% set chatDates = [] %}
@@ -141,51 +146,54 @@
                     {% endif %}
                 {% endfor %}
 
-                <div class="write">
-                    <a href="javascript:;" class="write-link attach"></a>
-                    <input type="text" placeholder="Votre message !!! " id="message" />
-                    <a href="javascript:;" class="write-link send pull-right" style="position: absolute;margin-left: -17%" id="send-message-btn" title="Envoyer"></a>
+                {% if project.status != "ARCHIVED" %}
+                    <div class="write">
+                        <a href="javascript:;" class="write-link attach"></a>
+                        <input type="text" placeholder="Votre message !!! " id="message" />
+                        <a href="javascript:;" class="write-link send pull-right" style="position: absolute;margin-left: -17%" id="send-message-btn" title="Envoyer"></a>
 
-                    <div class="btn-group dropup pull-right" style="position: absolute;margin-left: -10%">
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <a href="javascript:;" class="write-link smiley write-link smiley "  id="smiley" title="Smiley" ></a>
-                        </button>
-                        <div class="dropdown-menu row">
-                            <div class="col m12">
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/face-wink.png") }}" alt="Face Wink" data-code=";)" title=";)" height="45" width="45" class="thumbnail smille">
+                        <div class="btn-group dropup pull-right" style="position: absolute;margin-left: -10%">
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <a href="javascript:;" class="write-link smiley write-link smiley "  id="smiley" title="Smiley" ></a>
+                            </button>
+                            <div class="dropdown-menu row">
+                                <div class="col m12">
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/face-wink.png") }}" alt="Face Wink" data-code=";)" title=";)" height="45" width="45" class="thumbnail smille">
+                                    </div>
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/good.png") }}" alt="Face Wink" data-code="(Y)" title="(Y)" height="45" width="45" class="thumbnail smille">
+                                    </div>
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/langue.png") }}" alt="Face Wink" data-code=":P" title=":P" height="45" width="45" class="thumbnail smille">
+                                    </div>
                                 </div>
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/good.png") }}" alt="Face Wink" data-code="(Y)" title="(Y)" height="45" width="45" class="thumbnail smille">
-                                </div>
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/langue.png") }}" alt="Face Wink" data-code=":P" title=":P" height="45" width="45" class="thumbnail smille">
-                                </div>
-                            </div>
 
-                            <div class="col m12col m12">
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/me.png") }}" alt="Face Wink" data-code=":M" title=":M" height="45" width="45" class="thumbnail smille">
+                                <div class="col m12col m12">
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/me.png") }}" alt="Face Wink" data-code=":M" title=":M" height="45" width="45" class="thumbnail smille">
+                                    </div>
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/oups.png") }}" alt="Face Wink" data-code=":O" title=":O" height="45" width="45" class="thumbnail smille">
+                                    </div>
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/laugh.png") }}" alt="Face Wink" data-code=":D" title=":D" height="45" width="45" class="thumbnail smille">
+                                    </div>
                                 </div>
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/oups.png") }}" alt="Face Wink" data-code=":O" title=":O" height="45" width="45" class="thumbnail smille">
-                                </div>
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/laugh.png") }}" alt="Face Wink" data-code=":D" title=":D" height="45" width="45" class="thumbnail smille">
-                                </div>
-                            </div>
 
-                            <div class="col m12">
-                                <div class="col m4">
-                                    <img src="{{ asset("bundles/pfacore/images/smiley/thug_life.png") }}" alt="Face Wink" data-code=":T" title=":T" height="45" width="45" class="thumbnail smille">
+                                <div class="col m12">
+                                    <div class="col m4">
+                                        <img src="{{ asset("bundles/pfacore/images/smiley/thug_life.png") }}" alt="Face Wink" data-code=":T" title=":T" height="45" width="45" class="thumbnail smille">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!--<a href="javascript:;" class="write-link smiley"></a>
-                    <a href="javascript:;" class="write-link send"></a>-->
-                </div>
+                        <!--<a href="javascript:;" class="write-link smiley"></a>
+                        <a href="javascript:;" class="write-link send"></a>-->
+                    </div>
+                {% endif %}
+
             </div>
         </div>
     </div>

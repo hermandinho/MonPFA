@@ -1,0 +1,13 @@
+{% extends "PFAMaillingBundle::mail_layout.html.twig" %}
+
+{% block title %}
+    Quitter le projet
+{% endblock %}
+
+{% block content %}
+    <p>
+        Cher Cordonnateur,<br><br>
+
+        le membre {{ member.nom ~ " " ~ member.prenom }} <small>({{ member.email }})</small> à décider de quitter le projet : <strong>{{ project.name }}</strong> le {{ "now"|date("d/m/Y") }}.
+    </p>
+{% endblock %}

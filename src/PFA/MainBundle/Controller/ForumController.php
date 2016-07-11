@@ -107,4 +107,24 @@ class ForumController extends MainController
 
         return $this->render("PFAMainBundle:Forum:comment_forum_subject.html.twig", ['form' => $form->createView()]);
     }
+
+    /**
+     * @param Request $request
+     * @param ForumInteractions $interaction
+     * @return JsonResponse
+     * @Route("{interaction}/solved", name="interaction_solved")
+     */
+    public function markAsSolvedAction(Request $request, ForumInteractions $interaction)
+    {
+        $em = $this->getEM();
+
+        if ($interaction) {
+            $interaction->setStatus(true);
+            $em->persist($interaction);
+            $em->flush();
+
+            return new JsonResponse(['status' => true]);
+        }
+        return new JsonResponse(['status' => false]);
+    }
 }

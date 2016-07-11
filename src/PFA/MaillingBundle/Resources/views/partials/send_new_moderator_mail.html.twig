@@ -1,0 +1,13 @@
+{% extends "PFAMaillingBundle::mail_layout.html.twig" %}
+
+{% block title %}
+    Modératrur de Forum
+{% endblock %}
+
+{% block content %}
+    <p>
+        Cher {{ receiver.nom ~ " " ~ receiver.prenom }}, <br><br>
+
+        vous avez été attribué le droit de <strong>MODERATEUR</strong> du forum dans le project {{ project.name }} par {{ sender.nom ~ " " ~ sender.prenom }} <strong>({{ sender.email }})</strong> le {{ "now"|date("d/m/Y") }}.
+    </p>
+{% endblock %}

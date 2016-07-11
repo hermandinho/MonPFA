@@ -91,6 +91,9 @@
 {% endblock %}
 
 {% block additional_javascripts %}
+    <script>
+        var leavePath = "{{ path('leave_project', {"project": "PPP"}) }}";
+    </script>
     {% javascripts
         '@PFAMainBundle/Resources/public/ProjectController.js'
     %}

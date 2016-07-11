@@ -52,4 +52,8 @@ class UserManager
     {
         return $this->em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code, "owner" => $user->getId()]);
     }
+    
+    public function searchUser($str) {
+        return $this->em->getRepository("PFAMainBundle:User")->searchUser($str);
+    }
 }

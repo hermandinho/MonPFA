@@ -7,6 +7,7 @@ use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\CoreBundle\Entity\Project;
 use PFA\CoreBundle\Entity\ProjectMember;
+use PFA\CoreBundle\Entity\ProjectModerator;
 use PFA\CoreBundle\Form\ProjectType;
 use PFA\MainBundle\Entity\CalenderEvents;
 use PFA\MainBundle\Entity\User;
@@ -141,6 +142,31 @@ class ProjectController extends MainController
 
             if($memberAddForm->isSubmitted() && $memberAddForm->isValid()){
                 $data = $memberAddForm->getData();
+                $members = explode(",",$data['member']);
+                $errors = [];
+                $added = [];
+
+                foreach ($members as $key => $member) {
+                    $member = $em->getRepository("PFAMainBundle:User")->find($member);
+                    if($member){
+                        $check = $em->getRepository("PFACoreBundle:ProjectMember")->findOneBy(['project' => $id, "memeber" => $member]);
+                        if($check){
+                            //return new JsonResponse(['status' => false, "msg" => "Ce membre fait déjà parti de ce projet."]);
+                            $errors[] = "Le membre ".$check->getMemeber()->getEmail()." fait déjà parti de ce projet.";
+                        } else {
+                            $projectMember = new ProjectMember();
+                            $projectMember->setProject($id);
+                            $projectMember->setMemeber($member);
+                            $projectMember->setMemberType("INVITED");
+                            $em->persist($projectMember);
+                            $added[] = $member->getNom()."(".$member->getEmail().")";
+                        }
+                    }
+                }
+
+                $em->flush();
+                return new JsonResponse(["status" => (count($errors) == 0), "errors" => $errors, "added" => $added]);
+                /*
                 $member = $em->getRepository("PFAMainBundle:User")->findOneBy(["email" => $data['member']]);
                 if($member){
 
@@ -159,7 +185,7 @@ class ProjectController extends MainController
                     return new JsonResponse(["status" => true, "member" => $member]);
                 } else {
                     return new JsonResponse(["status" => false,"msg" => "Aucun membre avec cette email <".$data['member']."> trouvé." ]);
-                }
+                } */
             }
         }
 
@@ -273,6 +299,71 @@ class ProjectController extends MainController
             }
 
             return $this->render("PFAMainBundle:Projects:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param Project $project
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("project/{project}/leave", name="leave_project")
+     */
+    public function leaveProjectAction(Request $request, Project $project)
+    {
+        $em = $this->getEM();
+        $pm = $em->getRepository("PFACoreBundle:ProjectMember")->findOneBy(['project' => $project, "memeber" => $this->getThisUser()]);
+        if($pm) {
+            $this->get("pfa_mailling.managers.mail_manager")->sendMemberLeaveProjectMail($project, $pm->getMemeber());
+            $em->remove($pm);
+            $em->flush();
+
+            return new JsonResponse(['status' => true]);
+        }
+        return $this->redirectToRoute("project_list_home_page");
+    }
+
+    /**
+     * @param Request $request
+     * @param Project $project
+     * @param User $user
+     * @return JsonResponse
+     * @Route("project/{project}/moderator/{user}/add", name="add_project_moderator")
+     */
+    public function addProjectModeratorAction(Request $request, Project $project, User $user)
+    {
+        $em = $this->getEM();
+        if(!$project->isModerator($user)) {
+            $moderator = new ProjectModerator();
+            $moderator->setMember($user);
+            $moderator->setProject($project);
+            $em->persist($moderator);
+            $em->flush();
+
+            $this->get("pfa_mailling.managers.mail_manager")->sendNewModeratorMail($project, $this->getThisUser(), $user);
+
+            return new JsonResponse(['status' => true]);
+        } else {
+            return new JsonResponse(['status' => false, "msg"=>"Ce memebre est déjà modérateur de ce projet."]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param Project $project
+     * @param User $user
+     * @return JsonResponse
+     * @Route("project/{project}/moderator/{user}/remove", name="remove_project_moderator")
+     */
+    public function removeFormModerators(Request $request, Project $project, User $user)
+    {
+        $em = $this->getEM();
+        if($project->isModerator($user)) {
+            $moderator = $em->getRepository("PFACoreBundle:ProjectModerator")->findOneBy(['project' => $project, "member" => $user]);
+            $em->remove($moderator);
+            $em->flush();
+            return new JsonResponse(['status' => true]);
+        } else {
+            return new JsonResponse(['status' => false, "msg"=>"Ce memebre est déjà modérateur de ce projet."]);
         }
     }
 }

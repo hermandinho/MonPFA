@@ -73,6 +73,13 @@ class ForumInteractions
     private $answers;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", options={"default": 0})
+     */
+    private $status = 0;
+
+    /**
      * ForumInteractions constructor.
      */
     public function __construct()
@@ -272,5 +279,29 @@ class ForumInteractions
     function __toString()
     {
         return "Intération #".$this->getId(). "(" . $this->getSubject() . ")";
+    }
+
+    /**
+     * Set status
+     *
+     * @param boolean $status
+     *
+     * @return ForumInteractions
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return boolean
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

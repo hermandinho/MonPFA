@@ -54,6 +54,18 @@ $(document).ready(function () {
     });
 
     $(".leave-project").click(function (e) {
-        alert("Quitter le projet "+ $(this).attr("data-id"));
+        if(confirm("Voullez vous quitter le projet ?")) {
+            var id = $(this).data("id");
+
+            $.post(
+                "" + leavePath.replace("PPP", id) + "",
+                {},
+                function (data) {
+                    if(data.status) {
+                        window.location.reload();
+                    }
+                }
+            )
+        }
     });
 });

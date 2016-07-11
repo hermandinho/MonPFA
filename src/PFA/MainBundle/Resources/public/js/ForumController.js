@@ -66,4 +66,21 @@ $(document).ready(function () {
             }
         })
     });
+
+    $(".subject-solved").click(function (e) {
+        e.preventDefault();
+        $(this).prop("disabled", true);
+        $(this).html("En cours ...");
+        $.post(
+            "" + markSolvedPath.replace("III", $(this).data('id') )+"",
+            {},
+            function (data) {
+                if(data.status) {
+                    $(this).prop("disabled", false);
+                    $(this).html("Marquer comme Résolu");
+                    window.location.reload();
+                }
+            }
+        )
+    });
 });

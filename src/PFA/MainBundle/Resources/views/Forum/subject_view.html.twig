@@ -10,6 +10,16 @@
 
 {% block content %}
     <div class="row">
+        <div class="col m2 s2 offset-s9 offset-m9">
+            {% if interaction.status == 1 %}
+                <span class="alert alert-info">Sujet Résolu.</span>
+            {% else %}
+                {% if interaction.forum.project.status != "ARCHIVED" and ( interaction.owner.id == app.user.id  or interaction.forum.project.moderator(app.user) ) %}
+                    <a href="javascript:;" class="btn teal subject-solved" data-id="{{ interaction.id }}">Marquer comme Résolu</a>
+                {% endif %}
+            {% endif %}
+
+        </div>
         <div class="col well m10 s12 offset-m1">
             <div class="col m2 s2">
                 <img src="{{ vich_uploader_asset(interaction.owner, "imageFile") }}" alt="" width="100" style="margin-top: 20%" class="dropdown-button thumbnail circle">
@@ -53,8 +63,9 @@
                 {% endfor %}
             {% endif %}
         </div>
-
-        {{ render(controller("PFAMainBundle:Forum:addSubjectAnswer", {"interaction": interaction.id})) }}
+        {% if interaction.forum.project.status != "ARCHIVED" %}
+            {{ render(controller("PFAMainBundle:Forum:addSubjectAnswer", {"interaction": interaction.id})) }}
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -62,6 +73,7 @@
 {% block additional_javascripts %}
     <script>
         var addSubjectAnswerPath = "{{ path("answer_forum_interaction", {"forum": interaction.forum.id, "project": interaction.forum.project.id, "interaction": interaction.id }) }}";
+        var markSolvedPath = "{{ path('interaction_solved', {"interaction": "III","project": interaction.forum.project.id,}) }}";
         $("#show-comment-box").click(function (e) {
             $("#forum_interactions_subject").focus();
         });

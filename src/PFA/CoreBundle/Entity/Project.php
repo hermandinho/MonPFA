@@ -3,6 +3,7 @@
 namespace PFA\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use JMS\Serializer\Annotation\Groups;
@@ -92,6 +93,12 @@ class Project
     private $members;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="PFA\CoreBundle\Entity\ProjectModerator", mappedBy="project")
+     */
+    private $moderators;
+
+    /**
      * @var User
      * 
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User", inversedBy="projects")
@@ -110,6 +117,7 @@ class Project
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->moderators = new ArrayCollection();
         //$this->ressources = new ArrayCollection();
     }
 
@@ -400,5 +408,53 @@ class Project
     function __toString()
     {
         return "Project #".$this->getId();
+    }
+
+    /**
+     * Add moderator
+     *
+     * @param \PFA\CoreBundle\Entity\ProjectModerator $moderator
+     *
+     * @return Project
+     */
+    public function addModerator(\PFA\CoreBundle\Entity\ProjectModerator $moderator)
+    {
+        $this->moderators[] = $moderator;
+
+        return $this;
+    }
+
+    /**
+     * Remove moderator
+     *
+     * @param \PFA\CoreBundle\Entity\ProjectModerator $moderator
+     */
+    public function removeModerator(\PFA\CoreBundle\Entity\ProjectModerator $moderator)
+    {
+        $this->moderators->removeElement($moderator);
+    }
+
+    /**
+     * Get moderators
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getModerators()
+    {
+        return $this->moderators;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isModerator(User $user) {
+        /** @var ProjectModerator $moderator */
+        foreach ($this->getModerators() as $moderator) {
+            if($moderator->getMember()->getId() == $user->getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -8,7 +8,9 @@
 {% block content %}
     <div class="row">
         <div class="m10 s12 offset-m1 col">
-            <button type="button" class="btn btn-bitbucket right" id="show-comment-box">Ajouter un sujet</button>
+            {% if project.status != "ARCHIVED"%}
+                <button type="button" class="btn btn-bitbucket right" id="show-comment-box">Ajouter un sujet</button>
+            {% endif %}
         </div>
 
         {% if forum|length == 0 %}
@@ -44,13 +46,29 @@
                             </span>
                             {% endif %}
                             <a href="{{ path("view_forum_interaction", {"forum": project.forum.id, "project": project.id, "interaction": item.id }) }}" class="btn">Consulter</a>
+                            <br><br>
+
+                            {% if project.moderator(app.user) %}
+                                <a href="" class="btn red">Supprimer</a>
+                            {% endif %}
+
+
+                            {% if item.status == 1 %}
+                                <br><br>
+                                <span class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Sujet Résolu."><i class="material-icons">thumb_up</i></span>
+                            {% else %}
+                                <br><br>
+                                <span class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Sujet non Résolu."><i class="material-icons">thumb_down</i></span>
+                            {% endif %}
                         </p>
                     </div>
                 </div>
             {% endfor %}
         {% endif %}
+        {% if project.status != "ARCHIVED"%}
+            {{ render(controller("PFAMainBundle:Forum:addSubject", {"forum": project.forum.id})) }}
+        {% endif %}
 
-        {{ render(controller("PFAMainBundle:Forum:addSubject", {"forum": project.forum.id})) }}
     </div>
 {% endblock %}
 

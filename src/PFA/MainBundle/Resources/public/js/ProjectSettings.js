@@ -33,7 +33,7 @@ $(document).ready(function () {
             contentType: false,
             type: 'POST',
             success: function (data) {
-                console.log(data);
+                //console.log(data);
                 if(data.status){
                     laddaInstance.stop();
                     $(".status-message").html("Paramètres du Projet Enregistrés avec success !!!");
@@ -63,7 +63,20 @@ $(document).ready(function () {
             contentType: false,
             type: 'POST',
             success: function (data) {
-                if(data.status){
+                var addedd = data.added.map(function(user){
+                   return "<li>" + user + " ajouté</li>"
+                });
+
+                var exists = data.errors.map(function(item){
+                   return  "<li>" +item+ "</li>";
+                });
+
+                $(".status-message").html("<div class='teal'><ul>"+addedd+"</ul></div> <div class='red'><ul>"+exists+"</ul></div> ");
+                $(".settings-update-status").removeClass("hide");
+                resetProjectMembersList();
+                laddaInstance.stop();
+
+                /*if(data.status){
                     laddaInstance.stop();
                     $(".status-message").html("Un Membre ajouter avec success !!!");
                     $(".status-message").removeClass("red").addClass("teal");
@@ -79,7 +92,7 @@ $(document).ready(function () {
                     $(".status-message").html(data.msg);
                     $(".status-message").removeClass("teal").addClass("red");
                     $(".settings-update-status").removeClass("hide");
-                }
+                } */
             },
             error: function (er, err) {
                 console.log(er, err)
@@ -101,7 +114,7 @@ $(document).ready(function () {
             type: 'GET',
             success: function (data) {
                 if(data.status){
-                    console.log($(e).closest("li"), $(e));
+                    //console.log($(e).closest("li"), $(e));
                     $(this).closest("li").remove();
                     $(".status-message").html("Un membre rétirer avec success !!!");
                     $(".status-message").removeClass("red").addClass("teal");
@@ -111,4 +124,67 @@ $(document).ready(function () {
             }
         })
     });
+
+    $("body").on("click",".promote-member-to-moderator",function (e) {
+        if(!confirm("Voullez vous vraiment définir ce membre comme modératuer?")){
+            e.preventDefault();
+            return;
+        }
+
+        $.ajax({
+            url: $(this).attr("data-path"),
+            cache: false,
+            processData: false,
+            contentType: false,
+            type: 'GET',
+            success: function (data) {
+                if(data.status){
+                    //console.log($(e).closest("li"), $(e));
+                    $(this).closest("li").remove();
+                    $(".status-message").html("Un modérateur ajouté avec success !!!");
+                    $(".status-message").removeClass("red").addClass("teal");
+                    $(".settings-update-status").removeClass("hide");
+                    resetProjectMembersList();
+                } else {
+                    $(this).closest("li").remove();
+                    $(".status-message").html(data.msg);
+                    $(".status-message").removeClass("teal").addClass("red");
+                    $(".settings-update-status").removeClass("hide");
+                    resetProjectMembersList();
+                }
+            }
+        })
+    });
+
+    $("body").on("click",".remove-member-from-moderators",function (e) {
+        if(!confirm("Voullez vous vraiment retirer ce membre des modératuers?")){
+            e.preventDefault();
+            return;
+        }
+
+        $.ajax({
+            url: $(this).attr("data-path"),
+            cache: false,
+            processData: false,
+            contentType: false,
+            type: 'GET',
+            success: function (data) {
+                if(data.status){
+                    //console.log($(e).closest("li"), $(e));
+                    $(this).closest("li").remove();
+                    $(".status-message").html("Un modérateur ajouté avec success !!!");
+                    $(".status-message").removeClass("red").addClass("teal");
+                    $(".settings-update-status").removeClass("hide");
+                    resetProjectMembersList();
+                } else {
+                    $(this).closest("li").remove();
+                    $(".status-message").html(data.msg);
+                    $(".status-message").removeClass("teal").addClass("red");
+                    $(".settings-update-status").removeClass("hide");
+                    resetProjectMembersList();
+                }
+            }
+        })
+    });
+
 });

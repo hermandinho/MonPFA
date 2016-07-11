@@ -3,12 +3,18 @@
         {% for member in members %}
             <li class="collection-item avatar">
                 <img alt="IMG" class="circle" src="{{ vich_uploader_asset(member.memeber, "imageFile") }}">
-                <span class="title">{{ member.memeber.nom ~ member.memeber.prenom }}</span>
+                <span class="title">{{ member.memeber.nom ~ " " ~ member.memeber.prenom }}</span>
                 <p class="truncate">
                     {{ member.memeber.email }}
                 </p>
-                {% if member.id != project.owner.id %}
-                    <a href="javascript:;" data-path="{{ path("remove_project_memeber",{"id": member.id }) }}" class="secondary-content delete-member tooltipped" data-position="bottom" data-delay="50" data-tooltip="Retirer ce membre"><i class="material-icons">delete</i></a>
+                {% if project.isModerator(member.memeber) %}
+                    <a href="javascript:;" data-path="{{ path("remove_project_moderator",{"project": project.id, "user": member.memeber.id }) }}" style="right: 40px" class="secondary-content remove-member-from-moderators tooltipped" data-position="bottom" data-delay="50" data-tooltip="Retirer des modératuers."><i class="material-icons">assignment_late</i></a>
+                {% else %}
+                    <a href="javascript:;" data-path="{{ path("add_project_moderator",{"project": project.id, "user": member.memeber.id }) }}" style="right: 40px" class="secondary-content promote-member-to-moderator tooltipped" data-position="bottom" data-delay="50" data-tooltip="Définir comme modératuer"><i class="material-icons">person_pin</i></a>
+                {% endif %}
+
+                {% if member.memeber.id != project.owner.id %}
+                    <a href="javascript:;" data-path="{{ path("remove_project_memeber",{"id": member.memeber.id }) }}" class="secondary-content delete-member tooltipped" data-position="bottom" data-delay="50" data-tooltip="Retirer ce membre"><i class="material-icons">delete</i></a>
                 {% endif %}
 
             </li>
