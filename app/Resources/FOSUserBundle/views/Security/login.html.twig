@@ -6,15 +6,19 @@
     Connexion
 {% endblock %}
 
+{% block page_title %}
+    Connexion
+{% endblock %}
+
 {% block fos_user_content %}
-    <div class="container">
+    <div class="container" style="padding-bottom: 18px;">
         {% if error %}
             <div class="card-panel red lighten-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <div class="row z-depth-3" style="margin-top: 20%">
-            <div class="col s4 offset-s3">
-                <h2 class="header">Welcome</h2>
+        <div class="row" style="padding-bottom: 93px;background: #fff;">
+            <div class="col-md-offset-4 col-md-4">
+                <h2 class="">Bienvenu</h2>
                 <form action="{{ path("fos_user_security_check") }}" method="post">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
@@ -34,8 +38,8 @@
                     </div> -->
 
 
-                    <button class="btn waves-effect waves-light  right" type="submit" id="_submit" name="_submit">{{ 'security.login.submit'|trans }}
-                        <i class="material-icons right">send</i>
+                    <button class="btn waves-effect waves-light right form-control" type="submit" id="_submit" name="_submit">{{ 'security.login.submit'|trans }}
+                        <i class="material-icons right"></i>
                     </button>
                 </form>
             </div>
