@@ -9,6 +9,7 @@
 namespace PFA\MainBundle\Controller;
 
 
+use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MainBundle\Entity\CalenderEvents;
 use PFA\MainBundle\Form\CalenderEventsType;
@@ -54,7 +55,9 @@ class CalendarController extends MainController
      */
     public function getEventAction(Request $request)
     {
-        $serializer = $this->getSerializer()->serialize($this->getThisUser()->getCalender()->getEvents(),"json");
+        $serializerContext = SerializationContext::create()->setGroups(array('display'));
+        $serializer = $this->getSerializer()->serialize($this->getThisUser()->getCalender()->getEvents(),"json",$serializerContext);
+        //die(dump($serializer));
         $response = new Response();
         $response->setContent(($serializer));
         $response->headers->set('Content-Type', 'application/json');

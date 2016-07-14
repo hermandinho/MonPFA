@@ -3,6 +3,8 @@
 namespace PFA\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * CalenderEvents
@@ -18,6 +20,7 @@ class CalenderEvents
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups("display")
      */
     private $id;
 
@@ -25,6 +28,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Groups("display")
      */
     private $title;
 
@@ -32,6 +36,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
+     * @Groups("display")
      */
     private $description;
 
@@ -39,6 +44,7 @@ class CalenderEvents
      * @var \DateTime
      *
      * @ORM\Column(name="start", type="date")
+     * @Groups("display")
      */
     private $start;
 
@@ -46,6 +52,7 @@ class CalenderEvents
      * @var \DateTime
      *
      * @ORM\Column(name="end", type="date", nullable=true)
+     * @Groups("display")
      */
     private $end;
 
@@ -53,6 +60,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="place", type="string", length=255, nullable=true)
+     * @Groups("display")
      */
     private $place;
 
@@ -60,6 +68,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="priority", type="string", length=255, nullable=true)
+     * @Groups("display")
      */
     private $priority;
 
@@ -67,6 +76,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="all_day", type="boolean")
+     * @Groups("display")
      */
     private $allDay;
 
@@ -74,6 +84,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     * @Groups("display")
      */
     private $url;
 
@@ -81,6 +92,7 @@ class CalenderEvents
      * @var string
      *
      * @ORM\Column(name="color", type="string", length=255, nullable=true)
+     * @Groups("display")
      */
     private $color;
 

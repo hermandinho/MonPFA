@@ -104,7 +104,7 @@ $(document).ready(function () {
         /*events: [
             {
                 title: 'XXL',
-                start: '2016-05-22'
+                start: '2016-07-22'
             }
         ],*/
         events: {
@@ -115,7 +115,6 @@ $(document).ready(function () {
                 console.log("An error occured !!!");
             },
             success: function (datas) {
-                //console.log("PFFF ", datas[0])
             }
         },
         /*events: function (start, end, timezone, callback) {
