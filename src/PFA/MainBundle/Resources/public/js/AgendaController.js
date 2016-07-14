@@ -150,7 +150,7 @@ $(document).ready(function () {
         },
         eventClick: function (event, jsEvent, view) {
             $.get(
-                "agenda/events/"+event.id+"/edit",
+                "" + editPath.replace('XXX', event.id) +"",
                 {},
                 function(data){
                     $(".editModalBody").html(data);

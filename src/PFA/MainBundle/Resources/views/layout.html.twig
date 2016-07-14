@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block additional_javascripts %}
+    <script>
+        var editPath = "{{ path('personal_agenda_edit_event', {"id": "XXX"}) }}";
+    </script>
     {% javascripts
         "@PFACoreBundle/Resources/public/js/calendar/fullcalendar.js"
         "@PFAMainBundle/Resources/public/js/AgendaController.js"

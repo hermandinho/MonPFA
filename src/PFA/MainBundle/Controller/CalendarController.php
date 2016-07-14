@@ -65,7 +65,7 @@ class CalendarController extends MainController
     }
 
     /**
-     * @Route("/agenda/events/{id}/edit", name="agenda_edit_event")
+     * @Route("/agenda/personal_events/{id}/edit", name="personal_agenda_edit_event")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
