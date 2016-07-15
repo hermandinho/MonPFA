@@ -87,6 +87,7 @@ class CalendarController extends MainController
 
             return $this->render("PFAMainBundle:Agenda:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
         }
+        return new Response("No Data to display.");
     }
 
     /**
