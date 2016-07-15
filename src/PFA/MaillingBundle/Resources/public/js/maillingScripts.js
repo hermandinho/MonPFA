@@ -44,7 +44,7 @@ $(document).ready(function () {
             cache: true
         },
         tags: true,
-        placeholder: "Select a state",
+        placeholder: "Sélectionner Un Utilisatuer",
         escapeMarkup: function (markup) { return markup; }
     });
 

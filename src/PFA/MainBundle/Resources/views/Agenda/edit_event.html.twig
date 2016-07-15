@@ -2,6 +2,7 @@
 {% block additional_javascripts %}
     <script>
         var EventId = {{ eventId }};
+        var editPath = "{{ path('personal_agenda_edit_event', {"id": "XXX"}) }}";
     </script>
     {% javascripts
     "@PFACoreBundle/Resources/public/js/calendar/fullcalendar.js"
@@ -13,7 +14,7 @@
 {% endblock %}
 {# block content #}
     <!--<div class="row"> -->
-        {{ form_start(form, {"attr": {"class": "col s6_ well_ offset-m3 editEventForm"} }) }}
+        {{ form_start(form, {"attr": {"class": "_col s6_ well_ _offset-m3 editEventForm"} }) }}
             <div class="row">
                 <div class="input-field col s12">
                     {{ form_widget(form.title, {"attr":{}}) }}
