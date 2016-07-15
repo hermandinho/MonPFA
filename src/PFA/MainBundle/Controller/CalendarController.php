@@ -9,6 +9,7 @@
 namespace PFA\MainBundle\Controller;
 
 
+use JMS\Serializer\SerializationContext;
 use PFA\CoreBundle\Controller\MainController;
 use PFA\MainBundle\Entity\CalenderEvents;
 use PFA\MainBundle\Form\CalenderEventsType;
@@ -54,7 +55,9 @@ class CalendarController extends MainController
      */
     public function getEventAction(Request $request)
     {
-        $serializer = $this->getSerializer()->serialize($this->getThisUser()->getCalender()->getEvents(),"json");
+        $serializerContext = SerializationContext::create()->setGroups(array('display'));
+        $serializer = $this->getSerializer()->serialize($this->getThisUser()->getCalender()->getEvents(),"json",$serializerContext);
+        //die(dump($serializer));
         $response = new Response();
         $response->setContent(($serializer));
         $response->headers->set('Content-Type', 'application/json');
@@ -62,7 +65,7 @@ class CalendarController extends MainController
     }
 
     /**
-     * @Route("/agenda/events/{id}/edit", name="agenda_edit_event")
+     * @Route("/agenda/personal_events/{id}/edit", name="personal_agenda_edit_event")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -84,6 +87,7 @@ class CalendarController extends MainController
 
             return $this->render("PFAMainBundle:Agenda:edit_event.html.twig", ['form' => $form->createView(), "include" => "edit_event", "eventId" => $calendarEvent->getId()]);
         }
+        return new Response("No Data to display.");
     }
 
     /**

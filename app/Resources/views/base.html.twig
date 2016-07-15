@@ -17,83 +17,152 @@
                 '@PFACoreBundle/Resources/public/css/datetimepicker.css'
                 '@PFACoreBundle/Resources/public/css/materialize-tags.css'
                 '@PFACoreBundle/Resources/public/css/jquery.dataTables.css'
+                '@PFACoreBundle/Resources/public/css/styles.css'
+                '@PFACoreBundle/Resources/public/css/open-sans.css'
                 '@PFACoreBundle/Resources/public/css/select2.css'
-                filter='cssrewrite'
+
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
             {% endstylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
         {% endblock %}
 
         {% block additional_stylesheets %}
         {% endblock %}
     </head>
     <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background-color: #ee6e73;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><span>Project</span>Tools</a>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        <ul class="user-menu">
+                            <li class="dropdown pull-right">
+                                <img src="{{ vich_uploader_asset(app.user, "imageFile") }}" alt="" width="50" class="dropdown-button thumbnail circle" data-toggle="dropdown">
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;">Profile</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ path("fos_user_security_logout") }}">Déconnexion</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </div>
 
-        <div class="">
-            {% block body %}
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+                <form role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                </form>
+                <ul class="nav menu">
+                    <li class="active"><a href="index.html">
+                            Dashboard</a></li>
+                    <li>
+                        <a
+                            href="{{ path("mailbox_home") }}"
+                            class="side-menu"
+                            data-position="bottom"
+                            data-delay="5"
+                            data-tooltip="Boîte aux lèttres">
+                            <i class="fa fa-globe"></i>
+                            Mes E-mail
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ path("agenda_home") }}"
+                            class="side-menu"
+                            data-position="bottom"
+                            data-delay="5"
+                            data-tooltip="Boîte aux lèttres">
+                            <i class="fa fa-folder-open"></i>
+                            <span class="">Mon Agenda du jour</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ path("project_list_home_page") }}"
+                            class="side-menu"
+                            data-position="bottom"
+                            data-delay="5"
+                            data-tooltip="Boîte aux lèttres">
+                            <i class="fa fa-get-pocket"></i>
+                            Mes Projets
+                        </a>
+                    </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
+                            <a
+                                href="{{ path("fos_user_security_logout") }}"
+                                class="side-menu"
+                            >
+                                <i class="fa fa-sign-out"></i>
+                                Déconnexion
+                            </a>
+                        </li>
+
+                </ul>
+
+            </div>
+            <!--/.sidebar-->
+        {% endif %}
+        <div
+            class="
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2
+                {% else %}
+                col-md-12
+                {% endif %}
+                main"
+        >
+            <div class="row">
+                <h1 class="page-header">Tableau de bord
+                    <small>
+                        <!-- Block Page Title -->
+                        {% block  page_title %}
+                        {% endblock %}
+                        <!-- End Block Page Title -->
+                    </small>
+                </h1>
+            </div>
+            <!--/.row-->
+            <div class="row">
                 <!-- Block Header -->
                 {% block header %}
-                    <header>
-                        <nav>
-                            <div class="nav-wrapper">
-                                <a href="#!" class="brand-logo">Logo</a>
-                                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-                                <ul class="right hide-on-med-and-down">
-                                    <li class="_active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
-                                    <li><a href="{{ path("agenda_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
-                                    <!--<li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Messages"><i class="material-icons medium">message</i> </a></li> -->
-                                    <li><a href="{{ path('project_list_home_page') }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
-                                    <li>
-                                        <div class="dropdown">
-                                            <img src="{{ vich_uploader_asset(app.user, "imageFile") }}" alt="" width="50" class="dropdown-button thumbnail circle" data-toggle="dropdown">
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="javascript:;">Profile</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="{{ path("fos_user_security_logout") }}">Déconnexion</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
 
-                                <ul class="side-nav" id="mobile-demo">
-                                    <li class="_active"><a href="{{ path("mailbox_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Boîte aux lèttres"><i class="material-icons medium">email</i></a></li>
-                                    <li><a href="{{ path("agenda_home") }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Agenda"><i class="material-icons medium">today</i></a></li>
-                                    <!--<li><a href="javascript:;" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Messages"><i class="material-icons medium">message</i> </a></li> -->
-                                    <li><a href="{{ path('project_list_home_page') }}" class="tooltipped" data-position="bottom" data-delay="5" data-tooltip="Group de Travail"><i class="material-icons">supervisor_account</i></a></li>
-                                    <li>
-                                        <div class="dropdown">
-                                            <img src="{{ vich_uploader_asset(app.user, "imageFile") }}" alt="" width="50" class="dropdown-button thumbnail circle" data-toggle="dropdown">
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="javascript:;">Profile</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="{{ path("fos_user_security_logout") }}">Déconnexion</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </header>
                 {% endblock %}
                 <!-- End Block Header -->
+            </div>
+            <div class="row">
+                {% block body %}
+                    <!-- Block Content -->
+                    {% block content %}
 
-                <!-- Block Page Title -->
-                {% block  page_title %}
+                    {% endblock %}
+                    <!-- Block Content -->
                 {% endblock %}
-                <!-- End Block Page Title -->
-
-                <!-- Block Content -->
-                {% block content %}
-
-                {% endblock %}
-                <!-- Block Content -->
-
+            </div>
+            <div class="row">
                 <!-- Block Footer -->
                 {% block footer %}
 
                 {% endblock %}
                 <!-- Block Footer -->
-            {% endblock %}
+            </div>
+
+            <!--/.row-->
         </div>
 
         {% block javascripts %}

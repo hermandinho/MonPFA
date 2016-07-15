@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block page_title %}
-    <h3 class="center page-header">Espace {{ project.name|upper }}</h3>
+    Espace {{ project.name|upper }}
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -14,15 +14,15 @@
                 <div class="card-content white-text">
                     <span class="card-title">Discussions</span>
                     <p class="center">
-                        <i class="large material-icons center">chat_bubble</i>
+                        <i class="fa fa-photo center fa-4x"></i>
                     </p>
                     <p class="truncate">
                         Espace de discution de ce projet.
                     </p>
                 </div>
-                <div class="card-action">
-                    <a href="{{ path("chat_room_home",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
-                </div>
+                <span>
+                    <a class="card-action card-action-block" href="{{ path("chat_room_home",{"project": project.id}) }}" target="_blank" class="right">Discuter</a>
+                </span>
             </div>
         </div>
 
@@ -31,15 +31,15 @@
                 <div class="card-content white-text">
                     <span class="card-title">Documents</span>
                     <p class="center">
-                        <i class="large material-icons center">library_books</i>
+                        <i class="fa fa-book center fa-4x"></i>
                     </p>
                     <p class="truncate">
                         Espace de de partage de ressources(documents, fichiers ...) de ce projet.
                     </p>
                 </div>
-                <div class="card-action">
-                    <a href="{{ path("project_documents_home",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
-                </div>
+                <span>
+                    <a class="card-action card-action-block" href="{{ path("project_documents_home",{"project": project.id}) }}" target="_blank" class="right">Partager les ressources</a>
+                </span>
             </div>
         </div>
 
@@ -48,15 +48,15 @@
                 <div class="card-content white-text">
                     <span class="card-title">Forum</span>
                     <p class="center">
-                        <i class="large material-icons center">forum</i>
+                        <i class="fa fa-users center fa-4x"></i>
                     </p>
                     <p class="truncate">
                         Espace de de d'échange de ce projet.
                     </p>
                 </div>
-                <div class="card-action">
-                    <a href="{{ path("forum_home",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
-                </div>
+                <span>
+                    <a class="card-action card-action-block" href="{{ path("forum_home",{"project": project.id}) }}" target="_blank" class="right">Ecnhanger les idées</a>
+                </span>
             </div>
         </div>
 
@@ -65,15 +65,15 @@
                 <div class="card-content white-text">
                     <span class="card-title">Calendrier</span>
                     <p class="center">
-                        <i class="large material-icons center">today</i>
+                        <i class="fa fa-calendar center fa-4x"></i>
                     </p>
                     <p class="truncate">
                         Calendrier de ce projet.
                     </p>
                 </div>
-                <div class="card-action">
-                    <a href="{{ path("project_calender",{"project": project.id}) }}" target="_blank" class="right">Aller</a>
-                </div>
+                <span>
+                    <a class="card-action card-action-block" href="{{ path("project_calender",{"project": project.id}) }}" target="_blank" class="right">Définir le calendrier</a>
+                </span>
             </div>
         </div>
 
@@ -83,15 +83,15 @@
                     <div class="card-content white-text">
                         <span class="card-title">Paramétrages</span>
                         <p class="center">
-                            <i class="large material-icons center">settings</i>
+                            <i class="fa fa-gear center fa-4x"></i>
                         </p>
                         <p class="truncate">
                             Espace de configuration du projet.
                         </p>
                     </div>
-                    <div class="card-action">
-                        <a href="{{ path("project_settings",{"id": project.id}) }}" target="_blank" class="right">Aller</a>
-                    </div>
+                    <span>
+                        <a class="card-action card-action-block" href="{{ path("project_settings",{"id": project.id}) }}" target="_blank" class="right">Configurer le projet</a>
+                    </span>
                 </div>
             </div>
         {% endif %}

@@ -74,3 +74,38 @@
     0% { transform: rotate(0deg); transform: rotate(0deg); }
     100% { transform: rotate(360deg); transform: rotate(360deg); }
 }
+
+.side-menu{
+    font-size: 15px;
+}
+
+.side-menu:hover{
+    background: #30a5ff !important;
+    color: #ffffff !important;
+}
+
+
+/** Custom style for card add on 2016-07-13*/
+.card-action-block{
+    display: inline-block;
+    width: 100%;
+    padding: 10px !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all .4s;
+}
+.card-action-block:hover{
+    background: #001f3f;
+    text-decoration: none;
+    color: #ffffff;
+    transition: all .4s;
+}
+
+.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px solid #30a5ff;
+}
+.main{
+    background: #f1f1f1 !important;
+}

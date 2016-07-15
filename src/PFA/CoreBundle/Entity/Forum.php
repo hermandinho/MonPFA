@@ -5,6 +5,13 @@ namespace PFA\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * La c'est kdms++
+ *
+ */
+
+
+
+/**
  * Forum
  *
  * @ORM\Table(name="forum")
