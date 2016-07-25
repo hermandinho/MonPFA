@@ -15,12 +15,11 @@
     </div>
     <!-- Modal Trigger -->
     <!--<a class="modal-trigger waves-effect waves-light btn" href="#modal1">Modal</a> -->
-
-    <div id="addEventModal" class="modal fade" style="width: 60% !important;">
+    <div id="addEventModal" class="modal" style="width: 65% !important;">
         <div class="modal-content">
             <h4>Ajouter un Evénement</h4>
-            {% set includeName = include %}
-            {% include "PFAMainBundle:Agenda:" ~ includeName ~ ".html.twig" with {"form": form} %}
+            {#{% set includeName = include %}
+            {% include "PFAMainBundle:Agenda:" ~ includeName ~ ".html.twig" with {"form": form} %} #}
         </div>
         <div class="modal-footer">
             <!--<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Disagree</a> -->
@@ -31,8 +30,9 @@
     <div id="editEventModal" class="modal fade" style="width: 90% !important;">
         <div class="modal-content">
             <h4>Modifié un Evénement</h4>
-            {% set includeName = include %}
-            {% include "PFAMainBundle:Agenda:" ~ includeName ~ ".html.twig" with {"form": form} %}
+            <div class="editModalBody"></div>
+            {#{% set includeName = include %}
+            {% include "PFAMainBundle:Agenda:" ~ includeName ~ ".html.twig" with {"form": form} %} #}
         </div>
         <div class="modal-footer">
             <!--<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Disagree</a> -->

@@ -10,8 +10,7 @@
 
 {% block content %}
     <div id="mail_Layout" class="row">
-
-        <div class="col m2 s2">
+        <div class="col m3 s3">
             <ul class="collection">
                 {% for folder in folders %}
                     {% if folder.canBeRemoved == 0 %}
@@ -30,9 +29,7 @@
             <a class="btn-floating waves-effect waves-light red pull-right modal-trigger" href="#create_mail_folder_modal" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
         </div>
 
-
-        <div class="col s10 m10">
-
+        <div class="col s9 m9">
             <div class="row">
                 <div class="col m5 s12 pull-left block_actions">
                     <a href="javascript:;" class="btn mail_block_action block_delete disabled tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer"> <i class="material-icons">delete</i></a>
@@ -100,13 +97,16 @@
                 </tbody>
             </table>
         </div>
-        <a class="btn-floating btn-large waves-effect waves-light red pull-right modal-trigger" href="#send_mail_modal" data-toggle="modal" data-target="#myModal"><i class="material-icons">add</i></a>
-    </div>
 
-    <div id="modals">
+        <div id="modals">
         {{ render(controller("PFAMaillingBundle:Mailling:createFolder")) }}
         {{ render(controller("PFAMaillingBundle:Mailling:sendMail")) }}
     </div>
+    </div>
+{% endblock %}
+
+{% block before_footer %}
+    <a class="btn-floating btn-large waves-effect waves-light red pull-right modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Ajouter un événement" href="#send_mail_modal"><i class="material-icons">add</i></a>
 {% endblock %}
 
 {% block additional_javascripts %}

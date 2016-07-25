@@ -77,7 +77,6 @@ $(document).ready(function () {
                         window.location.reload();
                     }, 2000);
                 }
-
                 laddaInstance.stop();
             }
         })

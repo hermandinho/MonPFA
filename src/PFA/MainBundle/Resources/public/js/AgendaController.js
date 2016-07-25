@@ -55,7 +55,7 @@ $(document).ready(function () {
         var formData = new FormData(document.querySelector(".editEventForm"));
 
         $.ajax({
-            url: "agenda/events/"+ EventId +"/edit",
+            url:  ""+ editPath.replace("XXX", EventId) + "",
             data: formData,
             cache: false,
             processData: false,
@@ -64,7 +64,7 @@ $(document).ready(function () {
             success: function (data) {
                 if(data.status){
                     laddaInstance.stop();
-                    $("#editEventModal").modal("hide");
+                    $("#editEventModal").closeModal();
                     $('#calendar').fullCalendar( 'refetchEvents' );
                 }
             }
@@ -153,8 +153,9 @@ $(document).ready(function () {
                 "" + editPath.replace('XXX', event.id) +"",
                 {},
                 function(data){
+                    //alert("OKLM");
                     $(".editModalBody").html(data);
-                    $("#editEventModal").modal();
+                    $("#editEventModal").openModal();
                 }
             )
 

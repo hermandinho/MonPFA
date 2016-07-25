@@ -21,11 +21,11 @@
                 '@PFACoreBundle/Resources/public/css/open-sans.css'
                 '@PFACoreBundle/Resources/public/css/select2.css'
                 '@PFACoreBundle/Resources/public/fonts/iconfont/material-icons.css'
+                '@PFACoreBundle/Resources/public/css/bootstap-font-awesome.css'
 
             %}
             <link rel="stylesheet" href="{{ asset_url }}" media="screen,projection" />
             {% endstylesheets %}
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
         {% endblock %}
 
         {% block additional_stylesheets %}
@@ -68,9 +68,10 @@
                     </div>
                 </form>
                 <ul class="nav menu">
-                    <li class="active"><a href="index.html">
-                            Dashboard</a></li>
-                    <li>
+                    {#<li class="active"><a href="{{ path("mailbox_home") }}">
+                            Dashboard</a>
+                    </li>#}
+                    <li class="active">
                         <a
                             href="{{ path("mailbox_home") }}"
                             class="side-menu"
@@ -165,6 +166,7 @@
 
             <!--/.row-->
         </div>
+        {% block before_footer %}{% endblock %}
 
         {% block javascripts %}
             {% javascripts
