@@ -35,3 +35,4 @@ composer.lock
 src/PFA/CoreBundle/Resources/public/img/
 /var/*
 /web/
+var
