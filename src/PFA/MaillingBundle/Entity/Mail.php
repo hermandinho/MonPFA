@@ -52,6 +52,14 @@ class Mail
     private $isRead;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_visible", type="boolean", nullable=true, options={"default": true})
+     * @Groups("mail_box")
+     */
+    private $is_visible;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -379,5 +387,29 @@ class Mail
     public function getAnswers()
     {
         return $this->answers;
+    }
+
+    /**
+     * Set isVisible
+     *
+     * @param boolean $isVisible
+     *
+     * @return Mail
+     */
+    public function setIsVisible($isVisible)
+    {
+        $this->is_visible = $isVisible;
+
+        return $this;
+    }
+
+    /**
+     * Get isVisible
+     *
+     * @return boolean
+     */
+    public function getIsVisible()
+    {
+        return $this->is_visible;
     }
 }

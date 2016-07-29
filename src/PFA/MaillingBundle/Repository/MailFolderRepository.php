@@ -16,6 +16,8 @@ class MailFolderRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->createQueryBuilder("f")
                 ->where("f.owner = :owner")
                 ->setParameter("owner", $user)
+                ->andWhere("f.is_visible = :visible")
+                ->setParameter("visible", true)
                 ->getQuery();
         return $query->getResult();
     }

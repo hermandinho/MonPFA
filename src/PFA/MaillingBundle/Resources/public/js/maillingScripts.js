@@ -207,7 +207,7 @@ $(document).ready(function () {
         )
     });
 
-    $(".block_delete").click(function(e) {
+    /*$(".block_delete").click(function(e) {
         e.preventDefault();
         var ids = [];
         $(".select-email-row:checked").map(function(i,row) {
@@ -225,7 +225,7 @@ $(document).ready(function () {
                 });
             }
         )
-    });
+    }); */
 
     $("#mail_attachements").attr('name', "mail[attachements][]");
 

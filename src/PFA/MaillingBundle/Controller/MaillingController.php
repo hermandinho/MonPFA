@@ -37,7 +37,7 @@ class MaillingController extends MainController
         if(isset($folders[0])) {
             /** @var MailFolder $reception */
             $reception = $this->get("pfa_core.managers.user_manager")->getFolderByCode($this->getThisUser(), "BOITE_RECEPTION");
-            $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['receiver'=> $this->getThisUser()->getId(), "folder" => $reception->getId()]);
+            $recievedMails = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['receiver'=> $this->getThisUser()->getId(), "folder" => $reception->getId(), "is_visible" => true]);
         }
         return $this->render('PFAMaillingBundle:Default:index2.html.twig',["folders" => $folders, "emails" => $recievedMails]);
     }
@@ -55,7 +55,7 @@ class MaillingController extends MainController
             $data = $this->get("pfa_mailling.managers.mail_manager")->loadSentMails($this->getThisUser());
         } else {
             $folder = $em->getRepository("PFAMaillingBundle:MailFolder")->findOneBy(['code' => $code,"owner" => $this->getThisUser()]);
-            $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(["folder" => $folder->getId()], ['date' => "desc"]);
+            $data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(["folder" => $folder->getId(), "is_visible" => true ], ['date' => "desc"]);
             //$data = $em->getRepository("PFAMaillingBundle:Mail")->findBy(['mailBox'=> $this->getThisUser()->getMailBox(), "folder" => $folder->getId()]);
         }
         return $this->render("PFAMaillingBundle:partials:mail_list.html.twig", ["data" => $data]);
@@ -93,7 +93,7 @@ class MaillingController extends MainController
      */
     public function getMailChildren(Request $request, $id)
     {
-        $mail = $this->getDoctrine()->getManager()->getRepository("PFAMaillingBundle:Mail")->find($id);
+        $mail = $this->getDoctrine()->getManager()->getRepository("PFAMaillingBundle:Mail")->findOneBy(["id" => $id, "is_visible" => true]);
         $serializedMail = $this->getSerializer()->serialize($mail, "json");
         $manager = $this->get("pfa_mailling.managers.mail_manager")->getMailChildren($mail);
         $serializedData = $this->getSerializer()->serialize($manager, "json");
@@ -251,7 +251,6 @@ class MaillingController extends MainController
                 $this->get("pfa_mailling.managers.mail_manager")->sendNormalMail($this->getThisUser(), $receiver, $mail);
                 //die;
             }
-            
 
             foreach ($tmpFiles as $f) {
                 unlink($f);
@@ -315,13 +314,13 @@ class MaillingController extends MainController
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
-     * @Route("/mail/delete", name="block_delete_email")
+     * @Route("block_delete", name="block_delete_email")
      */
     public function blockDeleteMailAction(Request $request)
     {
         $em = $this->getEM();
         $ids = $request->request->get("ids");
-        if(is_array($ids)) {
+        /*if(is_array($ids)) {
             foreach ($ids as $key => $id) {
                 $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
 
@@ -337,6 +336,12 @@ class MaillingController extends MainController
         } else {
             $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($ids);
             $em->remove($mail);
+        } */
+
+        foreach ($ids as $key => $id) {
+            $mail = $em->getRepository("PFAMaillingBundle:Mail")->find($id);
+            $mail->setIsVisible(false);
+            $em->persist($mail);
         }
         $em->flush();
         return new JsonResponse(['status' => true]);
@@ -359,7 +364,9 @@ class MaillingController extends MainController
             //$em->remove($answer);
         }
         //die(dump($mail));
-        $em->remove($mail);
+        $mail->setIsVisible(false);
+        //$em->remove($mail);
+        $em->persist($mail);
         $em->flush();
 
         return $this->redirectToRoute("mailbox_home");
@@ -380,8 +387,13 @@ class MaillingController extends MainController
             //TODO 404
             die("Contenue Indisponible");
         }
+        //dump($mail);
+        $elligableReaders = [$mail->getSender()->getId()];
+        if($mail->getReceiver()) {
+            $elligableReaders[] = $mail->getReceiver()->getId();
+        }
 
-        if(!in_array($this->getThisUser()->getId(), [$mail->getSender()->getId(), $mail->getReceiver()->getId()])) {
+        if(!in_array($this->getThisUser()->getId(), $elligableReaders)) {
             //TODO 404
             die("Contenue Indisponible");
         }
@@ -411,6 +423,23 @@ class MaillingController extends MainController
             return new JsonResponse(['status' => true]);
         }
         return new JsonResponse(['status' => false]);
+    }
+
+    /**
+     * @param Request $request
+     * @param MailFolder $folder
+     * @return JsonResponse
+     * @Route("/folder/{folder}/remove", name="pfa_remove_folder")
+     */
+    public function deleteFolderAction(Request $request, MailFolder $folder)
+    {
+        $em = $this->getEM();
+        //$em->remove($folder);
+        $folder->setIsVisible(false);
+        $em->persist($folder);
+        $em->flush();
+
+        return new JsonResponse(["status" => true]);
     }
 
     /**

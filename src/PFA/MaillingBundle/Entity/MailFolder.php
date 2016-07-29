@@ -51,6 +51,13 @@ class MailFolder
     private $canBeRemoved;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_visible", type="boolean", nullable=true, options={"default": true} )
+     */
+    private $is_visible;
+
+    /**
      * @var User
      * @ORM\ManyToOne(targetEntity="PFA\MainBundle\Entity\User")
      */
@@ -190,5 +197,29 @@ class MailFolder
     function __toString()
     {
         return "Folder #".$this->getId();
+    }
+
+    /**
+     * Set isVisible
+     *
+     * @param boolean $isVisible
+     *
+     * @return MailFolder
+     */
+    public function setIsVisible($isVisible)
+    {
+        $this->is_visible = $isVisible;
+
+        return $this;
+    }
+
+    /**
+     * Get isVisible
+     *
+     * @return boolean
+     */
+    public function getIsVisible()
+    {
+        return $this->is_visible;
     }
 }

@@ -18,8 +18,8 @@
                     {% else %}
                         <li class="collection-item" data-code="{{ folder.code }}">
                             <a href="javascript:;" data-code="{{ folder.code }}" data-id="{{ folder.id }}">{{ folder.name }}</a>
-                            <a href="javascript:;" class="pull-right">
-                                <i class="material-icons tooltipped remove-folder" data-position="bottom" data-delay="5" data-tooltip="Supprimer ce dossier" >delete</i>
+                            <a href="javascript:;" class="pull-right remove-folder" data-id="{{ folder.id }}">
+                                <i class="material-icons tooltipped" data-position="bottom" data-delay="5" data-tooltip="Supprimer ce dossier" >delete</i>
                             </a>
                         </li>
                     {% endif %}
@@ -41,7 +41,6 @@
                         <li class="divider"></li>
                         <li><a href="#!">three</a></li>
                     </ul> #}
-
 
                     <a href="javascript:;" class="btn mail_block_action block_mark_read disabled tooltipped" data-position="bottom" data-delay="5" data-tooltip="Marqué comme lu."><i class="material-icons">visibility</i></a>
                 </div>
@@ -159,8 +158,41 @@
 
             $(".remove-folder").click(function (e) {
                 e.stopPropagation();
-            })
+                var path = "{{ path("pfa_remove_folder", {"folder": "XXX" } ) }} ",
+                        $this = $(this);
+                $.post(
+                        path.replace("XXX", $(this).data("id")),
+                        {},
+                        function (data) {
+                            $this.parent().fadeOut();
+                            $(".collection-item").first().click();
+                        }
+                );
+            });
 
+            $(".block_delete").click(function (e) {
+                e.preventDefault();
+                var path = "", ids = [];
+
+                $(".email:checked").map(function() {
+                    ids.push($(this).val());
+                });
+
+                if(!confirm("Voullez vous vraiment supprimer ces " + ids.length + " emails ?")) {
+                    return false;
+                } else {
+                    $.post(
+                            "{{ path("block_delete_email") }}",
+                            {
+                                ids: ids
+                            }, function (data) {
+                                $(".collection-item.active").click();
+                                $("#checkall").prop("checked", false);
+                            }
+                    )
+                }
+
+            })
         });
     </script>
 

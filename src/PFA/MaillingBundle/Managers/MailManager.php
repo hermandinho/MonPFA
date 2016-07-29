@@ -145,7 +145,7 @@ class MailManager
 
 
     public function loadSentMails(User $owner) {
-        return $this->mailRepo->findBy(['sender' => $owner->getId()],["date" => "DESC"]);
+        return $this->mailRepo->findBy(['sender' => $owner->getId(),"is_visible" => true],["date" => "DESC"]);
     }
 
 

@@ -22,6 +22,8 @@ class MailRepository extends \Doctrine\ORM\EntityRepository
                 ->andWhere("m.parent IS NULL")
                 ->andWhere("m.sender = :sender")
                 ->setParameter("reciever", $mailBox->getOwner())
+                ->andWhere("m.is_visible = :visible")
+                ->setParameter("visible", true)
                 ;
         //echo $query->getQuery()->getSQL().PHP_EOL;
         return $query->getQuery()->getResult();
